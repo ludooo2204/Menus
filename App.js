@@ -6,9 +6,9 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {StyleSheet, Text, View, Dimensions, StatusBar} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable,Modal} from 'react-native';
 
 import listePlatsProposés from './menu';
 import Layout from './TestLayout';
@@ -26,42 +26,63 @@ const demiJournée = ['midi', 'Soir'];
 // <Layout/>
 //   );
 // };
+
 const App = () => {
   return (
+    
+    <View style={{flex: 1}}>
+ 
+      <Menu />
+      <View style={{flex: 1}}>
+        
+        <Text>kjnknkjnk</Text>
+      </View>
+    </View>
+  );
+};
+const Menu = () => {
+  
+  const [modalVisible,setModalVisible]=useState(false)
+  return (
     <View style={styles.FlatGridContainer}>
-      <StatusBar backgroundColor="grey"></StatusBar>
-      <View style={{flex: 1, borderColor: 'white', borderWidth: 3}}>
+      <StatusBar backgroundColor="lightgrey"></StatusBar>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello World!</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      <View style={styles.midiSoirContainer}>
         <View
           style={{
-            borderColor: 'blue',
-            borderWidth: 3,
-            marginLeft: (windowWidth * 0.98) / 15,
-            alignContent:"center",
+            width: (windowWidth * 0.98) / 3,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          <FlatGrid
-            itemDimension={(windowWidth * 0.98) / 4}
-            // fixed
-            spacing={0}
-            data={demiJournée}
-            // itemContainerStyle={{backgroundColor:"green"}}
-            style={{
-              backgroundColor: 'red',
-              width: windowWidth - (windowWidth * 0.98) / 15,
-              // marginLeft: (windowWidth * 0.98) / 15,
-              padding:10
-              // height:(windowWidth * 0.98) / 15
-              // alignContent : 'center',
-              // justifyContent:"space-around",
-              // marginRight:0
-            }}
-            renderItem={({item, index}) => {
-              return (
-                <View style={styles.demiJourContainer}>
-                  <Text style={styles.demiJour}>{item}</Text>
-                </View>
-              );
-            }}
-          />
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>midi</Text>
+        </View>
+        <View
+          style={{
+            width: (windowWidth * 0.98) / 3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>soir</Text>
         </View>
       </View>
       <View style={styles.grille}>
@@ -71,10 +92,8 @@ const App = () => {
           // spacing={10}
           data={joursDeLaSemaine}
           style={{
-            backgroundColor: 'lightblue',
+            backgroundColor: 'lightgrey',
             width: (windowWidth * 0.98) / 15,
-            // height:((windowHeight * 0.98) / 8) * 7 +40
-            // marginTop:20,
           }}
           renderItem={({item, index}) => {
             return (
@@ -91,52 +110,88 @@ const App = () => {
           // spacing={10}
           data={listePlatsProposés}
           style={{
-            backgroundColor: 'lightyellow',
+            backgroundColor: 'lightgrey',
           }}
           renderItem={({item, index}) => {
             return (
-              <View style={styles.plat}>
+              <Pressable style={styles.plat} onPress={()=>setModalVisible(true)}>
                 <Text style={styles.textPlat}>{item}</Text>
-              </View>
+              </Pressable>
             );
           }}
         />
       </View>
 
-      <View>
-        <Text>LOLO</Text>
-      </View>
+      
     </View>
   );
 };
-
 const styles = StyleSheet.create({
-  FlatGridContainer: {
+  centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    // paddingVertical:30,
-    // a:'center',
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  FlatGridContainer: {
+    flex: 8,
     backgroundColor: 'lightgrey',
   },
   grille: {
-    flex: 15,
+    flex: 30,
     alignItems: 'flex-start',
-    // justifyContent:'center',
-    // height:100,
-    // margin: 10,
     flexDirection: 'row',
-    backgroundColor: 'grey',
+    backgroundColor: 'lightgrey',
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
   },
+  midiSoirContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginLeft: (windowWidth * 0.98) / 15,
+  },
   plat: {
-    // maxHeight: ((windowHeight * 0.98) / 8) * 7 + 100,
     height: (windowHeight * 0.98) / 9,
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'grey',
     borderRadius: 20,
-    // alignItems:"center"
   },
   jourSemaine: {
     height: (windowHeight * 0.98) / 9,
@@ -151,34 +206,23 @@ const styles = StyleSheet.create({
   textJour: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    // padding: 0,
     height: (windowHeight * 0.98) / 9,
     fontSize: 15,
     fontWeight: 'bold',
-    // backgroundColor:'red',
     borderRadius: 20,
   },
   demiJour: {
     textAlign: 'center',
-    // paddingLeft:20,
     textAlignVertical: 'center',
     borderColor: 'black',
     borderWidth: 4,
-    backgroundColor:'white',
-    // padding: 0,
-    // height: (windowHeight * 0.98) / 9,
+    backgroundColor: 'white',
     fontSize: 15,
     fontWeight: 'bold',
-    // backgroundColor:'red',
-    // borderRadius: 20,
   },
   demiJourContainer: {
-    // paddingHorizontal: 40,
-    // marginLeft:40,
-    padding:20,
-    backgroundColor:'green'
-    // marginRight:40,
-        // alignContent:"stretch"
+    flex: 1,
+    backgroundColor: 'green',
   },
   sectionDescription: {
     marginTop: 8,
