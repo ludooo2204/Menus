@@ -9,41 +9,76 @@ import listePlatsProposés from '../menu';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const saison = ['été', 'automne', 'hiver', 'printemps'];
+let saisonChoisie="saison"
 const NewChoice = ({toggleModal}) => {
   const [filtreChoisi, setFiltreChoisi] = useState(null);
   const [nbrRepas, setNbrRepas] = useState(null);
   const [tempsDePreparation, setTempsDePreparation] = useState(null);
   const [extraWE, setExtraWE] = useState(null);
-  const [saisonChoisie, setSaisonChoisie] = useState("saison");
+//   const [saisonChoisie, setSaisonChoisie] = useState('saison');
 
-
-  const typePlat = [
+  const [typePlat, setTypePlat] = useState([
     'type de repas',
+	'nbrDeRepasPossible',
     saisonChoisie,
     'tempsDePreparation',
     'extraDuWeekend',
     'Viande',
     'legumes',
     'feculent',
-    'nbrDeRepasPossible',
-  ];
+    
+  ]);
+
 
   const toggleHighlightFiltre = index => {
     setFiltreChoisi(index);
   };
   const incrementSaison = () => {
-    if (saisonChoisie == "saison" || saisonChoisie == 'printemps') {
-      console.log("premier choix");
-      console.log(saisonChoisie);
-      setSaisonChoisie(saison[0]);
+	  console.log("saisonChoisie")
+	  console.log(saisonChoisie)
+    if (saisonChoisie == 'saison' || saisonChoisie == 'printemps') {
+      console.log('premier choix');
+      console.log('saisonChoisie');
+     saisonChoisie=saison[0]
+	  setTypePlat([
+		'type de repas',
+		'nbrDeRepasPossible',
+		saisonChoisie,
+		'tempsDePreparation',
+		'extraDuWeekend',
+		'Viande',
+		'legumes',
+		'feculent',
+		
+	  ])
+    } else {
+      // console.log('saison.indexOf(saisonChoisie)')
+    //   setSaisonChoisie(saison[saison.indexOf(saisonChoisie) + 1]);
+	saisonChoisie=(saison[saison.indexOf(saisonChoisie) + 1]);
+	  setTypePlat([
+		'type de repas',
+		'nbrDeRepasPossible',
+		saisonChoisie,
+		'tempsDePreparation',
+		'extraDuWeekend',
+		'Viande',
+		'legumes',
+		'feculent',
+		
+	  ])
+    }
+  };
+  const incrementNbrDeRepasPossible = () => {
+    if (nbrRepas == null) {
+      console.log('premier choix REpas possbile');
+      setNbrRepas(1);
+      typePlat[7] = 'nbrDeRepasPossible ' + nbrRepas;
     } else {
       // console.log('saison.indexOf(saisonChoisie)')
       console.log(saisonChoisie);
-      setSaisonChoisie(saison[saison.indexOf(saisonChoisie) + 1]);
+      setNbrRepas(nbrRepas + 1);
     }
   };
-
-
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
@@ -60,20 +95,32 @@ const NewChoice = ({toggleModal}) => {
                 borderColor: 'black',
               }}
               renderItem={({item, index}) => {
+                //   console.log('item');
                 return (
                   <Pressable
                     onPress={() => {
-                      switch (item) {
-                        case 'type de repas':
+						// console.log(index, item);
+                      switch (index) {
+
+                        //type de repas
+                        case 0:
                           console.log('type de repas!!');
                           break;
-                        case 'nbrDeRepasPossible':
-                          console.log('type de repas!!');
+
+                        // 'nbrDeRepasPossible':
+                        case 1:
+                          console.log('nbrDeRepasPossible!!');
+                          incrementNbrDeRepasPossible();
                           break;
-                        case saisonChoisie:
+
+						  //saison
+                        case 2						:
+                          console.log('saison!!!!');
                           incrementSaison();
                           break;
-                        case 'Viande':
+
+                        case 3:
+							console.log("temps!!")
                           break;
                       }
                     }}
@@ -83,10 +130,10 @@ const NewChoice = ({toggleModal}) => {
                           console.log('type de repas!!');
                           break;
                         case 'nbrDeRepasPossible':
-                          console.log('type de repas!!');
+                          setNbrRepas(null);
                           break;
                         case saisonChoisie:
-                          setSaisonChoisie("saison")
+                          setSaisonChoisie('saison');
                           break;
                         case 'Viande':
                           break;
