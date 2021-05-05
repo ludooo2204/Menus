@@ -3,80 +3,97 @@ import styles from './Styles';
 import React, {useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {Text, View, Dimensions, Pressable} from 'react-native';
-
+import data from '../plats.json';
 import listePlatsProposés from '../menu';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const saison = ['été', 'automne', 'hiver', 'printemps'];
-let saisonChoisie="saison"
+let saisonChoisie = 'saison';
+let nbrRepasPossible = 'nombre de repas possible';
+let nbrRepas = 0;
 const NewChoice = ({toggleModal}) => {
   const [filtreChoisi, setFiltreChoisi] = useState(null);
-  const [nbrRepas, setNbrRepas] = useState(null);
-  const [tempsDePreparation, setTempsDePreparation] = useState(null);
-  const [extraWE, setExtraWE] = useState(null);
-//   const [saisonChoisie, setSaisonChoisie] = useState('saison');
+  const [listePlat, setListePlats] = useState(listePlatsProposés);
 
   const [typePlat, setTypePlat] = useState([
     'type de repas',
-	'nbrDeRepasPossible',
+    nbrRepasPossible,
     saisonChoisie,
     'tempsDePreparation',
     'extraDuWeekend',
     'Viande',
     'legumes',
     'feculent',
-    
   ]);
-
 
   const toggleHighlightFiltre = index => {
     setFiltreChoisi(index);
   };
   const incrementSaison = () => {
-	  console.log("saisonChoisie")
-	  console.log(saisonChoisie)
+    console.log('saisonChoisie');
+    console.log(saisonChoisie);
     if (saisonChoisie == 'saison' || saisonChoisie == 'printemps') {
       console.log('premier choix');
       console.log('saisonChoisie');
-     saisonChoisie=saison[0]
-	  setTypePlat([
-		'type de repas',
-		'nbrDeRepasPossible',
-		saisonChoisie,
-		'tempsDePreparation',
-		'extraDuWeekend',
-		'Viande',
-		'legumes',
-		'feculent',
-		
-	  ])
+      saisonChoisie = saison[0];
+      setTypePlat([
+        'type de repas',
+        'nbrDeRepasPossible',
+        saisonChoisie,
+        'tempsDePreparation',
+        'extraDuWeekend',
+        'Viande',
+        'legumes',
+        'feculent',
+      ]);
     } else {
       // console.log('saison.indexOf(saisonChoisie)')
-    //   setSaisonChoisie(saison[saison.indexOf(saisonChoisie) + 1]);
-	saisonChoisie=(saison[saison.indexOf(saisonChoisie) + 1]);
-	  setTypePlat([
-		'type de repas',
-		'nbrDeRepasPossible',
-		saisonChoisie,
-		'tempsDePreparation',
-		'extraDuWeekend',
-		'Viande',
-		'legumes',
-		'feculent',
-		
-	  ])
+      //   setSaisonChoisie(saison[saison.indexOf(saisonChoisie) + 1]);
+      saisonChoisie = saison[saison.indexOf(saisonChoisie) + 1];
+      setTypePlat([
+        'type de repas',
+        'nbrDeRepasPossible',
+        saisonChoisie,
+        'tempsDePreparation',
+        'extraDuWeekend',
+        'Viande',
+        'legumes',
+        'feculent',
+      ]);
     }
   };
   const incrementNbrDeRepasPossible = () => {
-    if (nbrRepas == null) {
-      console.log('premier choix REpas possbile');
-      setNbrRepas(1);
-      typePlat[7] = 'nbrDeRepasPossible ' + nbrRepas;
+    // if (nbrRepasPossible == 'nombre de repas possible') {
+    console.log('koo');
+    console.log(nbrRepas);
+    if (nbrRepas > 2) {
+      nbrRepas = 0;
+      setTypePlat([
+        'type de repas',
+        nbrRepasPossible,
+        saisonChoisie,
+        'tempsDePreparation',
+        'extraDuWeekend',
+        'Viande',
+        'legumes',
+        'feculent',
+      ]);
     } else {
-      // console.log('saison.indexOf(saisonChoisie)')
-      console.log(saisonChoisie);
-      setNbrRepas(nbrRepas + 1);
+      nbrRepas++;
+      setTypePlat([
+        'type de repas',
+        nbrRepasPossible + ' ' + nbrRepas,
+        saisonChoisie,
+        'tempsDePreparation',
+        'extraDuWeekend',
+        'Viande',
+        'legumes',
+        'feculent',
+      ]);
+      // setListePlats(liste.Platfilter)
+platsFiltreeParNbrDePlatRestant=data.plats.filter(plat=>plat.nbrDeRepasPossible==nbrRepas)
+setListePlats(platsFiltreeParNbrDePlatRestant.map(plat=>plat.nom))
     }
   };
   return (
@@ -99,9 +116,8 @@ const NewChoice = ({toggleModal}) => {
                 return (
                   <Pressable
                     onPress={() => {
-						// console.log(index, item);
+                      // console.log(index, item);
                       switch (index) {
-
                         //type de repas
                         case 0:
                           console.log('type de repas!!');
@@ -113,14 +129,14 @@ const NewChoice = ({toggleModal}) => {
                           incrementNbrDeRepasPossible();
                           break;
 
-						  //saison
-                        case 2						:
+                        //saison
+                        case 2:
                           console.log('saison!!!!');
                           incrementSaison();
                           break;
 
                         case 3:
-							console.log("temps!!")
+                          console.log('temps!!');
                           break;
                       }
                     }}
@@ -155,7 +171,7 @@ const NewChoice = ({toggleModal}) => {
             <FlatGrid
               itemDimension={windowWidth / 4}
               spacing={10}
-              data={listePlatsProposés}
+              data={listePlat}
               style={{
                 backgroundColor: 'red',
                 marginVertical: 10,
