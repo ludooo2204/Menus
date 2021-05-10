@@ -142,15 +142,15 @@ function proposePlat(emplacementRepasDansSemaine) {
     plats[emplacementRepasDansSemaine]
   );
 
-  if (plat[emplacementRepasDansSemaine].nbrDeRepasPossible > 1) {
-    plat[emplacementRepasDansSemaine].nbrDeRepasPossible -= 1;
-    console.log(
-      'il reste encore ' +
-        plat[emplacementRepasDansSemaine].nbrDeRepasPossible +
-        ' repas possibles de ' +
-        plat[emplacementRepasDansSemaine].nom,
-    );
-  }
+  // if (plat[emplacementRepasDansSemaine].nbrDeRepasPossible > 1) {
+  //   plat[emplacementRepasDansSemaine].nbrDeRepasPossible -= 1;
+  //   console.log(
+  //     'il reste encore ' +
+  //       plat[emplacementRepasDansSemaine].nbrDeRepasPossible +
+  //       ' repas possibles de ' +
+  //       plat[emplacementRepasDansSemaine].nom,
+  //   );
+  // }
   plat[emplacementRepasDansSemaine].dejaDansSemaine = true;
 
   console.log(plat[emplacementRepasDansSemaine].nom)

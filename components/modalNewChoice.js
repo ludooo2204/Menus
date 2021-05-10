@@ -76,12 +76,13 @@ const NewChoice = ({ toggleModal }) => {
 	};
 	const incrementNbrDeRepasPossible = () => {
 		// if (nbrRepasPossible == 'nombre de repas possible') {
-		console.log('koo');
+		console.log('incrementNbrDeRepasPossible');
 		console.log(nbrRepas);
 		if (nbrRepas > 2) {
 			nbrRepas = 0;
 			// LayoutAnimation.easeInEaseOut();
 			LayoutAnimation.linear();
+			// LayoutAnimation.spring();
 			setTypePlat([
 				'type de repas',
 				nbrRepasPossible,
@@ -94,6 +95,8 @@ const NewChoice = ({ toggleModal }) => {
 			]);
 		} else {
 			nbrRepas++;
+			console.log('nbrRepas++');
+			console.log(nbrRepas);
 			LayoutAnimation.linear();
 			// LayoutAnimation.easeInEaseOut();
 			// LayoutAnimation.spring();
@@ -107,10 +110,14 @@ const NewChoice = ({ toggleModal }) => {
 				'legumes',
 				'feculent',
 			]);
-			// setListePlats(liste.Platfilter)
-			platsFiltreeParNbrDePlatRestant = data.plats.filter(plat => plat.nbrDeRepasPossible == nbrRepas)
-			setListePlats(platsFiltreeParNbrDePlatRestant.map(plat => plat.nom))
 		}
+			// setListePlats(liste.Platfilter)
+			console.log('nbr de plat',nbrRepas)
+			platsFiltreeParNbrDePlatRestant = nbrRepas==0?data.plats:data.plats.filter(plat => plat.nbrDeRepasPossible == nbrRepas)
+			console.log('platsFiltreeParNbrDePlatRestant')
+			console.log(platsFiltreeParNbrDePlatRestant)
+			setListePlats(platsFiltreeParNbrDePlatRestant.map(plat => plat.nom))
+		
 	};
 	return (
 		<View style={styles.centeredView}>
@@ -214,3 +221,4 @@ const NewChoice = ({ toggleModal }) => {
 };
 
 export default NewChoice;
+

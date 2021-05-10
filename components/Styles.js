@@ -34,7 +34,7 @@ export default styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     // height: (windowWidth ) / 8,
-    fontSize: 20,
+    fontSize: 14,
     margin: 2,
     padding: 10,
 
