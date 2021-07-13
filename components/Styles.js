@@ -73,13 +73,15 @@ export default styles = StyleSheet.create({
   },
   FlatGridContainer: {
     flex: 8,
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'lightyellow',
   },
   grille: {
     flex: 30,
-    alignItems: 'flex-start',
+
+    // alignItems: 'center',
+    // alignItems: 'flex-start',
     flexDirection: 'row',
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'blue',
   },
   sectionTitle: {
     fontSize: 24,
@@ -88,8 +90,9 @@ export default styles = StyleSheet.create({
   midiSoirContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginLeft: (windowWidth * 0.98) / 15,
+    backgroundColor:"tomato",
+    justifyContent: 'space-around',
+    // marginLeft: (windowWidth * 0.98) / 15,
   },
   plat: {
     height: (windowHeight * 0.98) / 9,

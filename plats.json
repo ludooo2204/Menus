@@ -79,6 +79,24 @@
       "midiSoir": "midi"
     },
     {
+      "nom": "carbonara",
+      "noteSur20": "",
+      "ingredients": "2 cordons bleus, grande boite ptit pois/carotte",
+      "saison": "",
+      "dansPlatRestant": "",
+      "dejaDansSemaine": "",
+      "dejaDansSemaineDerniere": "",
+      "joursDeConservation": null,
+      "tempsDePreparation": 1,
+      "extraDuWeekend": false,
+      "typeViande": "porc",
+      "legumesConseille": "",
+      "feculentConseille": "",
+      "nbrDeRepasPossible": 1,
+      "nbrDeJourDepuisDerniereFois": "",
+      "midiSoir": ""
+    },
+    {
       "nom": "hamburger",
       "noteSur20": "",
       "ingredients": "3 steacks haché,fromage,pain burger",
