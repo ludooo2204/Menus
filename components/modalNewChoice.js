@@ -1,6 +1,9 @@
 // ### todo
 // Quand je fait filtre nbr repas =1 et apres filtre tarte ca marche, j'obtiens qu'hamburger
 // par contre , quand je commence par tarte puis nbr repas = 1 ca marche plus a eclaircir !!
+// surveiller ces variables pour debugger
+// console.log('filtreExtExiste');
+// console.log(filtreExtExiste);
 
 
 import styles from './Styles';
