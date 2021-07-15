@@ -40,7 +40,9 @@
       "feculentConseille": "patates",
       "nbrDeRepasPossible": 1,
       "nbrDeJourDepuisDerniereFois": "",
-      "midiSoir": "soir"
+      "midiSoir": "soir",
+      "typePlat":"végétarien"
+
     },
     {
       "nom": "marmitte espagnole",
@@ -112,7 +114,9 @@
       "feculentConseille": "frites",
       "nbrDeRepasPossible": 1,
       "nbrDeJourDepuisDerniereFois": "",
-      "midiSoir": ""
+      "midiSoir": "",
+      "typePlat":"tarte"
+
     },
     {
       "nom": "soupe",
@@ -130,7 +134,8 @@
       "feculentConseille": "",
       "nbrDeRepasPossible": 2,
       "nbrDeJourDepuisDerniereFois": "",
-      "midiSoir": "soir"
+      "midiSoir": "soir",
+      "typePlat":"light"
     },
     {
       "nom": "croque-monsieur",
@@ -166,7 +171,8 @@
       "feculentConseille": "",
       "nbrDeRepasPossible": 2,
       "nbrDeJourDepuisDerniereFois": "",
-      "midiSoir": ""
+      "midiSoir": "",
+      "typePlat":"tarte"
     },
     {
       "nom": "fondue Savoyade",
