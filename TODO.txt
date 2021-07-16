@@ -3,11 +3,14 @@ je clique que sur le plat du lundi midi par ex.
 ca m'ouvre un popup avec la liste des choix possibles.
 je fait mon choix en cliquant dessus
 ca ferme le popur et change le repas du midi par celui que j'ai choisi.
+en swipant vers le bas ca me permet de relance les proposition de menu et si j'ai deja bloqué une repas alors TODO!!
 
 TODO 
 Il faut maintenant reactualiser les autres choix en fonction du choix effectué (si j'ai deja choisir burger par ex il ne doit pas m'en reproposer).
 pour cela j'ai "const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([false,false,false,false,false,false,false,false,false,false,false,false,false,false]);"
 qui me fige un array avec les choix deja effectué. Il reste maintenant a lancer l'algo sur les emplacement restant
 idee=> proposePlat (1,4,5,6,4,7,8) avec parametre emplacement restant ?
+        j'ai deja recuperer les [0,6,8] emplacement bloqué 
+        a suivre
 
 

@@ -10,14 +10,12 @@ import React, {useState,useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal} from 'react-native';
 
-import {listePlatsProposés} from './menu';
+import { proposeplat,proposeMenu} from './menu';
 import NewChoice from './components/modalNewChoice';
 import styles from './components/Styles';
-
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-console.log('listePlatsProposés');
-console.log(listePlatsProposés);
 
 const BarreMidiSoir = () => {
 	return (
@@ -60,16 +58,18 @@ const BarreJourSemaine = () => {
 	);
 };
 const NavBar = () => {
-	return <View style={{flex: 1}}></View>;
+
+	return       <View></View>
 };
 const Menu = () => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [listePlatChoisi, setListePlatChoisi] = useState(listePlatsProposés);
+	const [listePlatChoisi, setListePlatChoisi] = useState(proposeMenu());
 	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
 	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([false,false,false,false,false,false,false,false,false,false,false,false,false,false]);
 	useEffect(() => {
 		console.log("numPlatDsSemaineChoisinewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArr")
 		console.log(numPlatDsSemaineChoisi)
+		console.log(numPlatDsSemaineChoisi.length)
 		
 	}, [numPlatDsSemaineChoisi])
 	console.log("listePlatChoisi")
@@ -92,15 +92,70 @@ const Menu = () => {
 		// console.log(_platARemplacer,_numPlatDsSemaine)
 	};
 	const choisirPropositionPlat=(_platChoisi)=>{
-		console.log("choix!!")
-		console.log(_platChoisi)
-		console.log(numPlatDsSemaine)
+		console.log("choix!! ",_platChoisi)
+		// console.log(numPlatDsSemaine)
 		let newArr = [...listePlatChoisi];
 		newArr[numPlatDsSemaine] = _platChoisi; 
 		setListePlatChoisi(newArr)
 		closeModal();
 	}
+	const config = {
+		velocityThreshold: 0.3,
+		directionalOffsetThreshold: 80
+	  };
+	  const onSwipe=(gestureName, gestureState )=>{
+		//   console.log('gestureName, gestureState')
+		//   console.log(gestureName, gestureState)
+		//   console.log('swipeDirections')
+		//   console.log(swipeDirections)
+	  }
+	  const onSwipeDown=(gestureState)=>{
+
+		 if (!numPlatDsSemaineChoisi.some(one=>one)) {
+			 const nouvelleListeDePlats=proposeMenu()
+			 setListePlatChoisi(nouvelleListeDePlats)
+			} else {
+console.log("TODO nouvelle fonction PROPOSEMENU avec des jours de figé");
+const numPlatBloqué=[];
+console.log('numPlatDsSemaineChoisi')
+console.log(numPlatDsSemaineChoisi)
+for (let i=0; i<numPlatDsSemaineChoisi.length;i++) {
+	if (numPlatDsSemaineChoisi[i]) numPlatBloqué.push(i)
+} 
+console.log('numPlatBloqué = ',numPlatBloqué)
+				const nouvelleListeDePlats=proposeMenu()
+				
+				setListePlatChoisi(nouvelleListeDePlats)
+				
+			}
+			
+	  }
+	  const onSwipeUp=(gestureState)=>{
+		  console.log("gestureState")
+		  console.log(gestureState)
+	  }
+	  const onSwipeLeft=(gestureState)=>{
+		  console.log("gestureState")
+		  console.log(gestureState)
+	  }
+	  const onSwipeRight=(gestureState)=>{
+		  console.log("gestureState")
+		  console.log(gestureState)
+	  }
 	return (
+		 <GestureRecognizer
+	onS
+	onSwipe={(direction, state) => onSwipe(direction, state)}
+	onSwipeUp={(state) => onSwipeUp(state)}
+	onSwipeDown={(state) => onSwipeDown(state)}
+	onSwipeLeft={(state) => onSwipeLeft(state)}
+	onSwipeRight={(state) => onSwipeRight(state)}
+	config={config}
+	style={{
+	  flex: 1,
+	}}
+	>
+  
 		<View style={styles.FlatGridContainer}>
 			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 			<Modal
@@ -139,7 +194,7 @@ const Menu = () => {
 				</View>
 			</View>
 			<NavBar />
-		</View>
+		</View></GestureRecognizer>
 	);
 };
 

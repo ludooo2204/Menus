@@ -19,7 +19,6 @@ let repasDansSemaine = [
 	'mardiSoir',
 ];
 let plats = [];
-let plat = [];
 
 class Plat {
 	constructor(
@@ -39,7 +38,7 @@ class Plat {
 		nbrDeRepasPossible,
 		nbrDeJourDepuisDerniereFois,
 		midiSoir,
-    typePlat
+		typePlat,
 	) {
 		this.nom = nom;
 		this.noteSur20 = noteSur20;
@@ -74,7 +73,7 @@ function nouveauPlat() {
 	const feculent = window.prompt('quel sont les feculents recommandés en accompagnement?');
 	const legumes = window.prompt('quel sont les légumes recommandés en accompagnement?');
 	const midiSoir = window.prompt('uniquement midi - uniquement le soir ?');
-	const typePlat = ""
+	const typePlat = '';
 	// console.log(nom);
 	const plat = new Plat(
 		nom,
@@ -93,9 +92,8 @@ function nouveauPlat() {
 		nbrDeRepasPossible,
 		'',
 		midiSoir,
-    typePlat
+		typePlat,
 	);
-	// let platString = '\n' + JSON.stringify(plat);
 
 	// ajaxPost("php/post_json_plats.php", platString, function (event) {
 	// 	console.log(event);
@@ -103,11 +101,18 @@ function nouveauPlat() {
 }
 
 let listePlats = data.plats;
-let listePlatsProposés = [];
-function proposeMenu() {
+let listePlatsProposés;
+let plat = [];
+function proposeMenu(numPlatDsSemaineBloqué) {
+	listePlatsProposés = [];
 	for (let i = 0; i < 14; i++) {
-		proposePlat(i);
+		listePlatsProposés.push(proposePlat(i).nom);
 	}
+	for (let i = 0; i < 14; i++) {
+		plat[i].dejaDansSemaine = false;
+	}
+
+	return listePlatsProposés;
 }
 
 function proposePlat(emplacementRepasDansSemaine) {
@@ -125,15 +130,11 @@ function proposePlat(emplacementRepasDansSemaine) {
 	}
 	plat[emplacementRepasDansSemaine] = getRndOfArray(plats[emplacementRepasDansSemaine]);
 
-
 	plat[emplacementRepasDansSemaine].dejaDansSemaine = true;
-
-	listePlatsProposés.push(plat[emplacementRepasDansSemaine].nom);
-
+	return plat[emplacementRepasDansSemaine];
 }
-// console.log("nono")
+
 function getRndOfArray(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
-proposeMenu();
-export  {listePlatsProposés,proposePlat};
+export {proposePlat, proposeMenu};
