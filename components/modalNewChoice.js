@@ -1,41 +1,24 @@
-// ### todo
-// Quand je fait filtre nbr repas =1 et apres filtre tarte ca marche, j'obtiens qu'hamburger
-// par contre , quand je commence par tarte puis nbr repas = 1 ca marche plus a eclaircir !!
-// surveiller ces variables pour debugger
-// console.log('filtreExtExiste');
-// console.log(filtreExtExiste);
-
-
 import styles from './Styles';
-
 import React, {useEffect, useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {
-	Text,
-	View,
-	Dimensions,
-	Pressable,
-	NativeModules,
-	LayoutAnimation,
-} from 'react-native';
+import {Text, View, Dimensions, Pressable, NativeModules, LayoutAnimation} from 'react-native';
 import data from '../plats.json';
-import listePlatsProposés from '../menu';
+// import {listePlatsProposés} from '../menu';
 
 const {UIManager} = NativeModules;
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-	UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const saison = ['été', 'automne', 'hiver', 'printemps', 'Saison'];
-const categoriePlat = ['tarte', 'végétarien', 'light'];
+const categoriePlat = ['tarte', 'végétarien', 'light', 'extra'];
 let saisonChoisie = 'saison';
 let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
 let countCategoriePlat = 0;
 
-const NewChoice = ({toggleModal}) => {
+const NewChoice = ({closeModal,choisirPropositionPlat}) => {
 	const [filtreChoisi, setFiltreChoisi] = useState(null);
 	const [isFiltreActif, setFiltreActif] = useState({
 		type: false,
@@ -47,19 +30,12 @@ const NewChoice = ({toggleModal}) => {
 		legumes: false,
 		feculent: false,
 	});
-	const [listePlat, setListePlats] = useState(listePlatsProposés);
-	const [listeObjetPlats, setListeObjetPlats] = useState(data.plats);
+	const [listePlat, setListePlats] = useState(data.plats.map(plat=>plat.nom));
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
-	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState(
-		'nbrRepasPossible',
-	);
+	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState('nbrRepasPossible');
 	const [saisonChoisieState, setsaisonChoisieState] = useState('Saison');
-	const [tempsPreparationState, setTempsPreparationState] = useState(
-		'Temps de preparation',
-	);
-	const [extraWeekendState, setExtraWeekendState] = useState(
-		'Extra du week-end',
-	);
+	const [tempsPreparationState, setTempsPreparationState] = useState('Temps de preparation');
+	const [extraWeekendState, setExtraWeekendState] = useState('Extra du week-end');
 	const [viandeState, setViandeState] = useState('viande');
 	const [legumesState, setLegumesState] = useState('legumes');
 	const [feculentState, setFeculentState] = useState('feculent');
@@ -73,13 +49,19 @@ const NewChoice = ({toggleModal}) => {
 		legumesState,
 		feculentState,
 	]);
-
+console.log("typePlat")
+console.log(typePlat)
+console.log("listePlat")
+console.log(listePlat)
 	useEffect(() => {
-		console.log('useEffect');
-		// console.log('listeObjetPlats', listeObjetPlats);
-		console.log('isFiltreActif', isFiltreActif);
-		console.log('Saison Choisie', saisonChoisieState);
-	}, [listeObjetPlats, isFiltreActif]);
+		let dataFiltre = data.plats.filter(
+			plat =>
+				(!isFiltreActif.type ? true : plat.typePlat.includes(isFiltreActif.type)) &&
+				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrDeRepasPossible == isFiltreActif.nbrRepasPossible),
+		);
+		setListePlats(dataFiltre.map(plat => plat.nom));
+	}, [isFiltreActif]);
+
 	useEffect(() => {
 		console.log('render from useffect');
 		setTypePlat([
@@ -92,108 +74,44 @@ const NewChoice = ({toggleModal}) => {
 			legumesState,
 			feculentState,
 		]);
-		// return () => {
-		// 	cleanup
-		// }
-	}, [
-		typeRepasState,
-		nbrRepasPossibleState,
-		saisonChoisieState,
-		tempsPreparationState,
-		extraWeekendState,
-		viandeState,
-		legumesState,
-		feculentState,
-	]);
+	}, [typeRepasState, nbrRepasPossibleState, saisonChoisieState, tempsPreparationState, extraWeekendState, viandeState, legumesState, feculentState]);
 	const toggleHighlightFiltre = index => {
 		setFiltreChoisi(index);
 	};
 
 	const incrementSaison = () => {
-		console.log('saisonChoisie');
-		console.log(saisonChoisieState);
-		// if (saisonChoisieState == 'Saison') {
-		// if (saisonChoisieState == 'Saison' || saisonChoisieState == 'printemps') {
 		if (saisonChoisieState == 'Saison') {
-			console.log('premier choix');
-			console.log('saisonChoisie ', saison[0]);
 			setsaisonChoisieState(saison[0]);
-
-			// LayoutAnimation.spring();
 		} else {
 			console.log('inc saison!');
-			// console.log(saison[saison.indexOf(saisonChoisieState)])
 			setsaisonChoisieState(saison[saison.indexOf(saisonChoisieState) + 1]);
-			// setTypePlat([
-			// 	typeRepasState,
-			// 	nbrRepasPossibleState,
-			// 	saisonChoisieState,
-			// 	tempsPreparationState,
-			// 	extraWeekendState,
-			// 	viandeState,
-			// 	legumesState,
-			// 	feculentState,
-			// ]);
-			// setsaisonChoisieState(saison[saison.indexOf(saisonChoisieState) + 1])
-			// console.log('saison.indexOf(saisonChoisie)')
-			//   setSaisonChoisie(saison[saison.indexOf(saisonChoisie) + 1]);
 		}
 		LayoutAnimation.spring();
 	};
 
 	const filtreParTypeDeRepas = () => {
-		// console.log('filtreParTypeDeRepas');
-		// console.log(data.plats);
 		countCategoriePlat++;
 		let categoriePlatChoisi = categoriePlat[countCategoriePlat - 1];
 		if (countCategoriePlat > categoriePlat.length) {
 			countCategoriePlat = 0;
-			// LayoutAnimation.easeInEaseOut();
 			setTypeRepasState('type de repas');
 		} else {
 			setTypeRepasState(categoriePlatChoisi);
 		}
 		LayoutAnimation.linear();
-		// setListePlats(liste.Platfilter)
-		// console.log('nbr de plat', nbrRepas);
 		var filtreExtExiste = Object.keys(isFiltreActif).some(function (k) {
-			console.log('k');
-			console.log(k);
-			console.log(typeof k);
 			if (k != 'type') return isFiltreActif[k] === true;
-			else console.log('pas de filtre ext');
 		});
-		console.log('filtreExtExiste');
-		console.log(filtreExtExiste);
-		let platsFiltreeParCategorie;
-
-		
-		// let platsFiltreeParCategorie =
-		// 	countCategoriePlat == 0
-		// 		? data.plats
-		// 		: listeObjetPlats.filter(plat => plat.typePlat == categoriePlatChoisi);
-
 
 		if (countCategoriePlat == 0) {
 			setFiltreActif({...isFiltreActif, type: false});
-			platsFiltreeParCategorie = data.plats;
-		} else  {
-			setFiltreActif({...isFiltreActif, type: true});
-			platsFiltreeParCategorie = listeObjetPlats.filter(plat => plat.typePlat == categoriePlatChoisi);
+		} else {
+			setFiltreActif({...isFiltreActif, type: categoriePlatChoisi});
 		}
-		
-		console.log('platsFiltreeParCategorie');
-		console.log(platsFiltreeParCategorie)
-		setListeObjetPlats(platsFiltreeParCategorie);
-		// console.log(platsFiltreeParNbrDePlatRestant);
-		setListePlats(platsFiltreeParCategorie.map(plat => plat.nom));
 	};
 
 	const incrementNbrDeRepasPossible = () => {
-		// if (nbrRepasPossible == 'nombre de repas possible') {
 		nbrRepas++;
-		// console.log('nbrRepas++');
-		// console.log(nbrRepas);
 		if (nbrRepas > 3) {
 			nbrRepas = 0;
 			setnbrRepasPossibleState(nbrRepasPossible);
@@ -201,35 +119,17 @@ const NewChoice = ({toggleModal}) => {
 			setnbrRepasPossibleState(nbrRepasPossible + ' ' + nbrRepas);
 		}
 		LayoutAnimation.linear();
-		// setListePlats(liste.Platfilter)
-		// console.log('nbr de plat', nbrRepas);
-		// console.log('listeObjetPlats', listeObjetPlats);
-		// console.log('plats filtre', listeObjetPlats.filter(plat => plat.nbrDeRepasPossible == nbrRepas));
 		let platsFiltreeParNbrDePlatRestant;
 		var filtreExtExiste = Object.keys(isFiltreActif).some(function (k) {
-			console.log('k');
-			console.log(k);
 			if (k != 'nbrRepasPossible') return isFiltreActif[k] === true;
-			else console.log('pas de filtre ext');
 		});
-		console.log('filtreExtExiste');
-		console.log(filtreExtExiste);
-		// if (filtreExiste){}
-		// else {}
+
 		if (nbrRepas == 0) {
 			setFiltreActif({...isFiltreActif, nbrRepasPossible: false});
-			platsFiltreeParNbrDePlatRestant = data.plats;
 		} else if (nbrRepas !== 0) {
-			setFiltreActif({...isFiltreActif, nbrRepasPossible: true});
-			platsFiltreeParNbrDePlatRestant = data.plats.filter(
-				plat => plat.nbrDeRepasPossible == nbrRepas,
-			);
+			setFiltreActif({...isFiltreActif, nbrRepasPossible: nbrRepas});
 		}
-
-		setListeObjetPlats(platsFiltreeParNbrDePlatRestant);
-		setListePlats(platsFiltreeParNbrDePlatRestant.map(plat => plat.nom));
 	};
-	// console.log(JSON.stringify(isFiltreActif))
 	return (
 		<View style={styles.centeredView}>
 			<View style={styles.modalView}>
@@ -291,19 +191,14 @@ const NewChoice = ({toggleModal}) => {
 													break;
 											}
 										}}
-										style={
-											filtreChoisi == index
-												? styles.modalFiltreHighlight
-												: styles.modalFiltre
-										}>
+										style={filtreChoisi == index ? styles.modalFiltreHighlight : styles.modalFiltre}>
 										<Text style={styles.modalFiltreText}>{item}</Text>
 									</Pressable>
 								);
 							}}
 						/>
 					</View>
-					<View
-						style={{flex: 6, alignItems: 'center', backgroundColor: 'blue'}}>
+					<View style={{flex: 6, alignItems: 'center', backgroundColor: 'blue'}}>
 						<FlatGrid
 							itemDimension={windowWidth / 4}
 							spacing={10}
@@ -316,7 +211,7 @@ const NewChoice = ({toggleModal}) => {
 							renderItem={({item, index}) => {
 								return (
 									<View style={styles.modalPlat}>
-										<Pressable onPress={() => console.log(item)}>
+										<Pressable onPress={() => choisirPropositionPlat(item)}>
 											<Text style={styles.modalText}>{item}</Text>
 										</Pressable>
 									</View>
@@ -325,9 +220,7 @@ const NewChoice = ({toggleModal}) => {
 						/>
 					</View>
 				</View>
-				<Pressable
-					style={[styles.button, styles.buttonClose]}
-					onPress={toggleModal}>
+				<Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}>
 					<Text style={styles.textStyle}>Hide Modal</Text>
 				</Pressable>
 			</View>

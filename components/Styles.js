@@ -47,10 +47,10 @@ export default styles = StyleSheet.create({
 	modalFiltre: {
 		flex: 1,
 		backgroundColor: 'tomato',
-		justifyContent:"center",
+		justifyContent: 'center',
 		// justifyContent:"center",
-		alignItems:'center',
-		minWidth: windowWidth/3,
+		alignItems: 'center',
+		minWidth: windowWidth / 3,
 		borderRadius: 20,
 	},
 	modalFiltreHighlight: {

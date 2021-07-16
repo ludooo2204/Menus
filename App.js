@@ -6,19 +6,11 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {
-	StyleSheet,
-	Text,
-	View,
-	Dimensions,
-	StatusBar,
-	Pressable,
-	Modal,
-} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal} from 'react-native';
 
-import listePlatsProposés from './menu';
+import {listePlatsProposés} from './menu';
 import NewChoice from './components/modalNewChoice';
 import styles from './components/Styles';
 
@@ -71,10 +63,43 @@ const NavBar = () => {
 	return <View style={{flex: 1}}></View>;
 };
 const Menu = () => {
-	const toggleModal = () => {
-		setModalVisible(!modalVisible);
-	};
 	const [modalVisible, setModalVisible] = useState(false);
+	const [listePlatChoisi, setListePlatChoisi] = useState(listePlatsProposés);
+	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
+	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([false,false,false,false,false,false,false,false,false,false,false,false,false,false]);
+	useEffect(() => {
+		console.log("numPlatDsSemaineChoisinewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArr")
+		console.log(numPlatDsSemaineChoisi)
+		
+	}, [numPlatDsSemaineChoisi])
+	console.log("listePlatChoisi")
+	console.log(listePlatChoisi)
+
+	const toggleModal = (_platARemplacer,_numPlatDsSemaine) => {
+		console.log('TOGGLE')
+		setModalVisible(!modalVisible);
+		setNumPlatDsSemaine(_numPlatDsSemaine)
+		let newArr = [...numPlatDsSemaineChoisi];
+		newArr[_numPlatDsSemaine] = true; 
+		setNumPlatDsSemaineChoisi(newArr)
+		// proposePlat(_numPlatDsSemaine)
+
+	};
+	const closeModal = () => {
+		console.log('FERME LA')
+		setModalVisible(!modalVisible);
+		// setNumPlatDsSemaine(_numPlatDsSemaine)
+		// console.log(_platARemplacer,_numPlatDsSemaine)
+	};
+	const choisirPropositionPlat=(_platChoisi)=>{
+		console.log("choix!!")
+		console.log(_platChoisi)
+		console.log(numPlatDsSemaine)
+		let newArr = [...listePlatChoisi];
+		newArr[numPlatDsSemaine] = _platChoisi; 
+		setListePlatChoisi(newArr)
+		closeModal();
+	}
 	return (
 		<View style={styles.FlatGridContainer}>
 			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
@@ -86,7 +111,7 @@ const Menu = () => {
 					Alert.alert('Modal has been closed.');
 					setModalVisible(!modalVisible);
 				}}>
-				<NewChoice toggleModal={toggleModal} />
+				<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
 			</Modal>
 
 			<View style={{flex: 10}}>
@@ -100,13 +125,11 @@ const Menu = () => {
 							// fixed
 							// itemContainerStyle={{backgroundColor:"white",height:60}}
 							spacing={10}
-							data={listePlatsProposés}
+							data={listePlatChoisi}
 							style={{backgroundColor: 'black'}}
 							renderItem={({item, index}) => {
 								return (
-									<Pressable
-										style={styles.plat}
-										onPress={() => setModalVisible(true)}>
+									<Pressable style={styles.plat} onPress={()=>toggleModal(item,index)}>
 										<Text style={styles.textPlat}>{item}</Text>
 									</Pressable>
 								);
