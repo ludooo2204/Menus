@@ -6,14 +6,14 @@
  * @flow strict-local
  */
 
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal} from 'react-native';
-
-import { proposeplat,proposeMenu} from './menu';
+import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal, ActivityIndicator} from 'react-native';
+import {PanGestureHandler} from 'react-native-gesture-handler';
+import {proposeplat, proposeMenu} from './menu';
 import NewChoice from './components/modalNewChoice';
 import styles from './components/Styles';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+// import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -58,143 +58,151 @@ const BarreJourSemaine = () => {
 	);
 };
 const NavBar = () => {
-
-	return       <View></View>
+	return <View style={{flex: 2}}></View>;
 };
 const Menu = () => {
 	const [modalVisible, setModalVisible] = useState(false);
+	// const [modalActivity, setModalActivity] = useState(false);
 	const [listePlatChoisi, setListePlatChoisi] = useState(proposeMenu());
+	const [onRefreshOpacity, setOnRefreshOpacity] = useState(1);
 	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
-	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([false,false,false,false,false,false,false,false,false,false,false,false,false,false]);
+	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+	]);
 	useEffect(() => {
-		console.log("numPlatDsSemaineChoisinewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArr")
-		console.log(numPlatDsSemaineChoisi)
-		console.log(numPlatDsSemaineChoisi.length)
-		
-	}, [numPlatDsSemaineChoisi])
-	console.log("listePlatChoisi")
-	console.log(listePlatChoisi)
+		console.log('numPlatDsSemaineChoisinewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArr');
+		console.log(numPlatDsSemaineChoisi);
+		console.log(numPlatDsSemaineChoisi.length);
+	}, [numPlatDsSemaineChoisi]);
+	console.log('listePlatChoisi');
+	console.log(listePlatChoisi);
 
-	const toggleModal = (_platARemplacer,_numPlatDsSemaine) => {
-		console.log('TOGGLE')
+	const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {
+		console.log('TOGGLE');
 		setModalVisible(!modalVisible);
-		setNumPlatDsSemaine(_numPlatDsSemaine)
+		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
-		newArr[_numPlatDsSemaine] = true; 
-		setNumPlatDsSemaineChoisi(newArr)
+		newArr[_numPlatDsSemaine] = true;
+		setNumPlatDsSemaineChoisi(newArr);
 		// proposePlat(_numPlatDsSemaine)
-
 	};
 	const closeModal = () => {
-		console.log('FERME LA')
+		console.log('FERME LA');
 		setModalVisible(!modalVisible);
 		// setNumPlatDsSemaine(_numPlatDsSemaine)
 		// console.log(_platARemplacer,_numPlatDsSemaine)
 	};
-	const choisirPropositionPlat=(_platChoisi)=>{
-		console.log("choix!! ",_platChoisi)
+	const choisirPropositionPlat = _platChoisi => {
+		console.log('choix!! ', _platChoisi);
 		// console.log(numPlatDsSemaine)
 		let newArr = [...listePlatChoisi];
-		newArr[numPlatDsSemaine] = _platChoisi; 
-		setListePlatChoisi(newArr)
+		newArr[numPlatDsSemaine] = _platChoisi;
+		setListePlatChoisi(newArr);
 		closeModal();
-	}
-	const config = {
-		velocityThreshold: 0.3,
-		directionalOffsetThreshold: 80
-	  };
-	  const onSwipe=(gestureName, gestureState )=>{
-		//   console.log('gestureName, gestureState')
-		//   console.log(gestureName, gestureState)
-		//   console.log('swipeDirections')
-		//   console.log(swipeDirections)
-	  }
-	  const onSwipeDown=(gestureState)=>{
+	};
 
-		 if (!numPlatDsSemaineChoisi.some(one=>one)) {
-			 const nouvelleListeDePlats=proposeMenu()
-			 setListePlatChoisi(nouvelleListeDePlats)
-			} else {
-console.log("TODO nouvelle fonction PROPOSEMENU avec des jours de figé");
-const numPlatBloqué=[];
-console.log('numPlatDsSemaineChoisi')
-console.log(numPlatDsSemaineChoisi)
-for (let i=0; i<numPlatDsSemaineChoisi.length;i++) {
-	if (numPlatDsSemaineChoisi[i]) numPlatBloqué.push(i)
-} 
-console.log('numPlatBloqué = ',numPlatBloqué)
-				const nouvelleListeDePlats=proposeMenu()
-				
-				setListePlatChoisi(nouvelleListeDePlats)
-				
+	const refreshMenus = () => {
+		console.log('resfresh!!!');
+		if (!numPlatDsSemaineChoisi.some(one => one)) {
+			const nouvelleListeDePlats = proposeMenu();
+			setListePlatChoisi(nouvelleListeDePlats);
+		} else {
+			console.log('TODO nouvelle fonction PROPOSEMENU avec des jours de figé');
+			const numPlatBloqué = [];
+			console.log('numPlatDsSemaineChoisi');
+			console.log(numPlatDsSemaineChoisi);
+			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
+				if (numPlatDsSemaineChoisi[i]) numPlatBloqué.push(i);
 			}
-			
-	  }
-	  const onSwipeUp=(gestureState)=>{
-		  console.log("gestureState")
-		  console.log(gestureState)
-	  }
-	  const onSwipeLeft=(gestureState)=>{
-		  console.log("gestureState")
-		  console.log(gestureState)
-	  }
-	  const onSwipeRight=(gestureState)=>{
-		  console.log("gestureState")
-		  console.log(gestureState)
-	  }
+			console.log('numPlatBloqué = ', numPlatBloqué);
+			const nouvelleListeDePlats = proposeMenu();
+
+			setListePlatChoisi(nouvelleListeDePlats);
+		}
+	};
+	onPanGestureEvent = evt => {
+		let {nativeEvent} = evt;
+		console.log('nativeEvent');
+		console.log(nativeEvent);
+		console.log('nativeEvent.state');
+		console.log(nativeEvent.state);
+		// console.log("nativeEvent.velocityY")
+		// console.log(nativeEvent.velocityY)
+		// console.log("nativeEvent.absoluteY")
+		// console.log(nativeEvent.absoluteY)
+		// console.log("nativeEvent.translationY")
+		// console.log(nativeEvent.translationY)
+		// console.log("numberOfPointers")
+		// console.log(nativeEvent.numberOfPointers)
+		if (nativeEvent.velocityY > 0 && nativeEvent.state < 5) {
+			setOnRefreshOpacity(0.9);
+			// setModalActivity(true)
+		}
+		if (nativeEvent.state == 5) {
+			setOnRefreshOpacity(1);
+		}
+		if (nativeEvent.translationY > 10 && nativeEvent.velocityY > 0 && nativeEvent.state == 5) {
+			setOnRefreshOpacity(1);
+			// console.log(object)
+			refreshMenus();
+		}
+	};
 	return (
-		 <GestureRecognizer
-	onS
-	onSwipe={(direction, state) => onSwipe(direction, state)}
-	onSwipeUp={(state) => onSwipeUp(state)}
-	onSwipeDown={(state) => onSwipeDown(state)}
-	onSwipeLeft={(state) => onSwipeLeft(state)}
-	onSwipeRight={(state) => onSwipeRight(state)}
-	config={config}
-	style={{
-	  flex: 1,
-	}}
-	>
-  
-		<View style={styles.FlatGridContainer}>
-			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					Alert.alert('Modal has been closed.');
-					setModalVisible(!modalVisible);
-				}}>
-				<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
-			</Modal>
+		<PanGestureHandler style={{flex: 1}} onHandlerStateChange={onPanGestureEvent}>
+			<View style={[styles.FlatGridContainer, {opacity: onRefreshOpacity}]}>
+				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+						Alert.alert('Modal has been closed.');
+						setModalVisible(!modalVisible);
+					}}>
+					<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
+				</Modal>
 
-			<View style={{flex: 10}}>
-				<BarreMidiSoir />
-
-				<View style={styles.grille}>
-					<BarreJourSemaine />
-					<View style={{flex: 14}}>
-						<FlatGrid
-							itemDimension={(windowWidth * 0.98) / 3}
-							// fixed
-							// itemContainerStyle={{backgroundColor:"white",height:60}}
-							spacing={10}
-							data={listePlatChoisi}
-							style={{backgroundColor: 'black'}}
-							renderItem={({item, index}) => {
-								return (
-									<Pressable style={styles.plat} onPress={()=>toggleModal(item,index)}>
-										<Text style={styles.textPlat}>{item}</Text>
-									</Pressable>
-								);
-							}}
-						/>
+				<View style={{flex: 20}}>
+					<BarreMidiSoir />
+					<View style={styles.grille}>
+						{/* <ActivityIndicator /> */}
+						<BarreJourSemaine />
+						<View style={{flex: 14}}>
+							<FlatGrid
+								itemDimension={(windowWidth * 0.98) / 3}
+								// fixed
+								// itemContainerStyle={{backgroundColor:"white",height:60}}
+								spacing={10}
+								data={listePlatChoisi}
+								style={{backgroundColor: 'black'}}
+								renderItem={({item, index}) => {
+									return (
+										<Pressable style={styles.plat} onPress={() => toggleModal(item, index)}>
+											<Text style={styles.textPlat}>{item}</Text>
+										</Pressable>
+									);
+								}}
+							/>
+						</View>
 					</View>
 				</View>
+				<NavBar />
 			</View>
-			<NavBar />
-		</View></GestureRecognizer>
+		</PanGestureHandler>
+		// </GestureRecognizer>
 	);
 };
 

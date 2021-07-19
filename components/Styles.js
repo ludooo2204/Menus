@@ -110,7 +110,7 @@ export default styles = StyleSheet.create({
 	textPlat: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
-		height: (windowHeight * 0.98) / 9,
+		height: (windowHeight *1.06) / 9,
 		fontSize: 20,
 		borderRadius: 20,
 	},
