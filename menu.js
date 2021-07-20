@@ -106,12 +106,25 @@ let plat = [];
 function proposeMenu(numPlatDsSemaineBloqué) {
 	listePlatsProposés = [];
 	for (let i = 0; i < 14; i++) {
-		listePlatsProposés.push(proposePlat(i).nom);
+		if (numPlatDsSemaineBloqué && numPlatDsSemaineBloqué.find(ele=>ele[0]==i)) {
+			const nomPlatBloqué = numPlatDsSemaineBloqué.find(ele=>ele[0]==i)[1]
+			listePlatsProposés.push(nomPlatBloqué);
+			// for (const iterator of numPlatDsSemaineBloqué) {
+			// 	console.log('iterator');
+			// 	console.log(iterator);
+			// 	if (iterator[0] == i) {
+			// 		console.log('le repas ' + i + 'est bloqué !');
+			// 		listePlatsProposés.push(iterator[1]);
+			// 	}
+			// }
+		} else {
+			listePlatsProposés.push(proposePlat(i).nom);
+		}
 	}
 	for (let i = 0; i < 14; i++) {
 		plat[i].dejaDansSemaine = false;
 	}
-
+	
 	return listePlatsProposés;
 }
 

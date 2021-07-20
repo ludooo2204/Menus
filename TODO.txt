@@ -1,3 +1,5 @@
+resolution 412*869
+
 le programme propose un liste de 14 repas (7 midi / 7 soir)
 je clique que sur le plat du lundi midi par ex.
 ca m'ouvre un popup avec la liste des choix possibles.

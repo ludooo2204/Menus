@@ -79,6 +79,7 @@ export default styles = StyleSheet.create({
 	FlatGridContainer: {
 		flex: 8,
 		backgroundColor: 'lightyellow',
+		padding: "0.5%"
 	},
 	grille: {
 		flex: 30,
@@ -101,29 +102,27 @@ export default styles = StyleSheet.create({
 	},
 	plat: {
 		// height: (windowHeight ) / 9,
-		backgroundColor: 'lightblue',
+		backgroundColor: 'transparent',
 		borderRadius: 20,
-		width: '50%'
+		margin: "1%",
+		width: '45%'
 	},
 	jourSemaine: {
 		height: (windowHeight * 0.98) / 9,
+	},
+	textJour:{
+		fontWeight:"bold",fontSize:20,
 	},
 	textPlat: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
 		height: (windowHeight *1.06) / 9,
 		fontSize: 20,
+		fontWeight:"bold",
 		borderRadius: 20,
 		color: "black"
 	},
-	textJour: {
-		textAlign: 'center',
-		textAlignVertical: 'center',
-		height: (windowHeight * 0.98) / 9,
-		fontSize: 15,
-		fontWeight: 'bold',
-		borderRadius: 20,
-	},
+
 	demiJour: {
 		textAlign: 'center',
 		textAlignVertical: 'center',

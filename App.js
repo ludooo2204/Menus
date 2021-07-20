@@ -8,7 +8,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import {proposeplat, proposeMenu} from './menu';
 import NewChoice from './components/modalNewChoice';
@@ -21,19 +21,19 @@ const windowHeight = Dimensions.get('window').height;
 const BarreMidiSoir = () => {
 	return (
 		<View style={styles.midiSoirContainer}>
-			<View style={{flex: 1, backgroundColor: 'blue'}}></View>
+			<View style={{flex: 3, backgroundColor: 'blue'}}></View>
 			<View
 				style={{
-					flex: 14,
+					flex: 30,
 					flexDirection: 'row',
 					backgroundColor: 'brown',
-					justifyContent: 'space-around',
+					justifyContent: 'center',
 				}}>
 				<View>
-					<Text>midi</Text>
+					<Text style={{fontWeight:"bold",fontSize:20,marginRight:"35%"}}>Midi</Text>
 				</View>
 				<View>
-					<Text>midi</Text>
+					<Text style={{fontWeight:"bold",fontSize:20}}>Soir</Text>
 				</View>
 			</View>
 		</View>
@@ -43,28 +43,26 @@ const BarreJourSemaine = () => {
 	return (
 		<View
 			style={{
-				flex: 1,
+				flex: 3,
 				backgroundColor: 'green',
+				flexWrap:"wrap",
 				justifyContent: 'space-around',
 				//   margin: 10,
 			}}>
-			<Text>lun</Text>
-			<Text>mar</Text>
-			<Text>mer</Text>
-			<Text>jeu</Text>
-			<Text>ven</Text>
-			<Text>sam</Text>
-			<Text>dim</Text>
+			<Text style={styles.textJour}>lun</Text>
+			<Text style={styles.textJour}>mar</Text>
+			<Text style={styles.textJour}>mer</Text>
+			<Text style={styles.textJour}>jeu</Text>
+			<Text style={styles.textJour}>ven</Text>
+			<Text style={styles.textJour}>sam</Text>
+			<Text style={styles.textJour}>dim</Text>
 		</View>
 	);
-};
-const NavBar = () => {
-	return <View style={{flex: 2}}></View>;
 };
 const Menu = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	// const [modalActivity, setModalActivity] = useState(false);
-	const [listePlatChoisi, setListePlatChoisi] = useState(proposeMenu());
+	const [listePlatChoisi, setListePlatChoisi] = useState(null);
 	const [onRefreshOpacity, setOnRefreshOpacity] = useState(1);
 	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
 	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([
@@ -88,9 +86,16 @@ const Menu = () => {
 		console.log(numPlatDsSemaineChoisi);
 		console.log(numPlatDsSemaineChoisi.length);
 	}, [numPlatDsSemaineChoisi]);
-	console.log('listePlatChoisi');
-	console.log(listePlatChoisi);
-
+	useEffect(() => {
+		console.log("proposeMenu")
+		setListePlatChoisi(proposeMenu())
+	}, []);
+	
+	const NavBar = () => {
+		return <View style={{flex: 2}}>
+			<Button  onPress={refreshMenus} title="lknv"/>
+		</View>;
+	};
 	const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {
 		console.log('TOGGLE');
 		setModalVisible(!modalVisible);
@@ -117,21 +122,22 @@ const Menu = () => {
 
 	const refreshMenus = () => {
 		console.log('resfresh!!!');
-		if (!numPlatDsSemaineChoisi.some(one => one)) {
-			const nouvelleListeDePlats = proposeMenu();
-			setListePlatChoisi(nouvelleListeDePlats);
-		} else {
+		
+		if (!numPlatDsSemaineChoisi.some(one => one)) { //s'il n'ya pas de repas de bloqué
+			setListePlatChoisi(proposeMenu());
+		} 
+		else {
 			console.log('TODO nouvelle fonction PROPOSEMENU avec des jours de figé');
 			const numPlatBloqué = [];
 			console.log('numPlatDsSemaineChoisi');
 			console.log(numPlatDsSemaineChoisi);
 			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
-				if (numPlatDsSemaineChoisi[i]) numPlatBloqué.push(i);
+				if (numPlatDsSemaineChoisi[i]) {numPlatBloqué.push([i,listePlatChoisi[i]]);console.log("nom plat",listePlatChoisi[i] );};
 			}
-			console.log('numPlatBloqué = ', numPlatBloqué);
-			const nouvelleListeDePlats = proposeMenu();
+			console.log('numPlatBloqué = ', numPlatBloqué)
+			
 
-			setListePlatChoisi(nouvelleListeDePlats);
+			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
 	};
 	onPanGestureEvent = evt => {
@@ -164,8 +170,9 @@ const Menu = () => {
 	const _refresh = () => {
 		return new Promise(resolve => {
 			// setTimeout(() => {refreshMenus();resolve()}, 100);
-			refreshMenus();
 			resolve()
+			refreshMenus();
+			console.log("toto")
 		});
 	};
 	return (
@@ -189,10 +196,8 @@ const Menu = () => {
 					<View style={styles.grille}>
 						{/* <ActivityIndicator /> */}
 						<BarreJourSemaine />
-						{console.log("listePlatChoisi")}
-						{console.log(listePlatChoisi)}
-						<View style={{flex: 14, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start'}}>
-							{listePlatChoisi.map((item, index) => {
+						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center',justifyContent:"center"}}>
+							{listePlatChoisi && listePlatChoisi.map((item, index) => {
 								return (
 									<Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Text   style={styles.textPlat}>{item}</Text>

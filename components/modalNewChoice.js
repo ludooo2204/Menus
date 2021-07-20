@@ -135,6 +135,7 @@ console.log(listePlat)
 			<View style={styles.modalView}>
 				<View style={{flex: 1}}>
 					<View style={{flex: 1}}>
+						
 						<FlatGrid
 							itemDimension={windowWidth / 8}
 							horizontal
