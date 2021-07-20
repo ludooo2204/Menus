@@ -103,6 +103,7 @@ export default styles = StyleSheet.create({
 		// height: (windowHeight ) / 9,
 		backgroundColor: 'lightblue',
 		borderRadius: 20,
+		width: '50%'
 	},
 	jourSemaine: {
 		height: (windowHeight * 0.98) / 9,
@@ -113,6 +114,7 @@ export default styles = StyleSheet.create({
 		height: (windowHeight *1.06) / 9,
 		fontSize: 20,
 		borderRadius: 20,
+		color: "black"
 	},
 	textJour: {
 		textAlign: 'center',

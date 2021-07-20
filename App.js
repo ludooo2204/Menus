@@ -13,6 +13,7 @@ import {PanGestureHandler} from 'react-native-gesture-handler';
 import {proposeplat, proposeMenu} from './menu';
 import NewChoice from './components/modalNewChoice';
 import styles from './components/Styles';
+import PTRView from 'react-native-pull-to-refresh';
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -160,8 +161,16 @@ const Menu = () => {
 			refreshMenus();
 		}
 	};
+	const _refresh = () => {
+		return new Promise(resolve => {
+			// setTimeout(() => {refreshMenus();resolve()}, 100);
+			refreshMenus();
+			resolve()
+		});
+	};
 	return (
-		<PanGestureHandler style={{flex: 1}} onHandlerStateChange={onPanGestureEvent}>
+		// <PanGestureHandler style={{flex: 1}} onHandlerStateChange={onPanGestureEvent}>
+		<PTRView onRefresh={_refresh}>
 			<View style={[styles.FlatGridContainer, {opacity: onRefreshOpacity}]}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Modal
@@ -180,10 +189,21 @@ const Menu = () => {
 					<View style={styles.grille}>
 						{/* <ActivityIndicator /> */}
 						<BarreJourSemaine />
-						<View style={{flex: 14}}>
-							<FlatGrid
+						{console.log("listePlatChoisi")}
+						{console.log(listePlatChoisi)}
+						<View style={{flex: 14, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start'}}>
+							{listePlatChoisi.map((item, index) => {
+								return (
+									<Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
+										<Text   style={styles.textPlat}>{item}</Text>
+									</Pressable>
+								);
+							})}
+
+							{/* <FlatGrid
 								itemDimension={(windowWidth * 0.98) / 3}
 								// fixed
+								// horizontal
 								// itemContainerStyle={{backgroundColor:"white",height:60}}
 								spacing={10}
 								data={listePlatChoisi}
@@ -195,14 +215,15 @@ const Menu = () => {
 										</Pressable>
 									);
 								}}
-							/>
+							/> */}
 						</View>
 					</View>
 				</View>
 				<NavBar />
 			</View>
-		</PanGestureHandler>
-		// </GestureRecognizer>
+		</PTRView>
+
+		// </PanGestureHandler>
 	);
 };
 
