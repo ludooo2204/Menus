@@ -14,6 +14,7 @@ import {proposeplat, proposeMenu} from './menu';
 import NewChoice from './components/modalNewChoice';
 import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -93,7 +94,7 @@ const Menu = () => {
 	
 	const NavBar = () => {
 		return <View style={{flex: 2}}>
-			<Button  onPress={refreshMenus} title="lknv"/>
+		<Icon name="bars" size={30} color="#900" />
 		</View>;
 	};
 	const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {

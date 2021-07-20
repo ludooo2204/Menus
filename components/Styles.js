@@ -102,7 +102,7 @@ export default styles = StyleSheet.create({
 	},
 	plat: {
 		// height: (windowHeight ) / 9,
-		backgroundColor: 'transparent',
+		backgroundColor: 'yellow',
 		borderRadius: 20,
 		margin: "1%",
 		width: '45%'

@@ -1,4 +1,4 @@
-resolution 412*869
+resolution 393*851
 
 le programme propose un liste de 14 repas (7 midi / 7 soir)
 je clique que sur le plat du lundi midi par ex.
