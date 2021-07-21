@@ -76,53 +76,58 @@ export default styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
-	FlatGridContainer: {
-		flex: 8,
-		backgroundColor: 'lightyellow',
-		padding: "0.5%"
+	appContainer: {
+		// flex: 1,
+		height:"100%",
+		backgroundColor: '#FDFDFD',
+		// padding: "0.5%"
 	},
 	grille: {
-		flex: 30,
+		height:740,
 
 		// alignItems: 'center',
 		// alignItems: 'flex-start',
 		flexDirection: 'row',
-		backgroundColor: 'blue',
+		// backgroundColor: 'blue',
 	},
 	sectionTitle: {
 		fontSize: 24,
 		fontWeight: '600',
 	},
-	midiSoirContainer: {
-		flex: 1,
+	BarreMidiSoir: {
+		height: "4.2%",
 		flexDirection: 'row',
-		backgroundColor: 'tomato',
 		justifyContent: 'space-around',
-		// marginLeft: (windowWidth * 0.98) / 15,
+		alignItems:"center",
 	},
 	plat: {
-		// height: (windowHeight ) / 9,
-		backgroundColor: 'yellow',
+		backgroundColor: '#d1dce8',
+		elevation:18,
 		borderRadius: 20,
-		margin: "1%",
-		width: '45%'
-	},
-	jourSemaine: {
-		height: (windowHeight * 0.98) / 9,
-	},
-	textJour:{
-		fontWeight:"bold",fontSize:20,
+		marginHorizontal: "3%",
+		marginVertical: "3%",
+		width: '40%'
 	},
 	textPlat: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
-		height: (windowHeight *1.06) / 9,
-		fontSize: 20,
+		height: (windowHeight) / 10,
+		fontSize: 19,
+		// marginHorizontal:5,
 		fontWeight:"bold",
-		borderRadius: 20,
-		color: "black"
+		textShadowColor: '#fdfdfd',
+		textShadowOffset: {
+			width: 1,
+			height: 2,
+		},
+		// elevation:5,
+		textShadowRadius:4,
+		textTransform:"uppercase",
+		// borderWidth:2,
+		color: "#754f9d"
 	},
 
+	
 	demiJour: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
@@ -143,5 +148,30 @@ export default styles = StyleSheet.create({
 	},
 	highlight: {
 		fontWeight: '700',
+	},
+	navbar:{
+		height: '8%',
+		flexDirection:"row",
+		justifyContent:"space-between",
+		alignItems:"center",
+		paddingHorizontal: "5%",
+		backgroundColor:"#d1dce8"
+	},
+	barreJourSemaine: {
+		flex: 3,
+		// backgroundColor: 'green',
+		// flexWrap: 'wrap',
+		marginBottom:27,
+		// pad:5,
+		justifyContent: 'flex-start',
+		alignItems:"flex-start"
+	},
+	textJour:{
+		fontWeight:"400",
+		fontSize:22,
+		color: "#754f9d",
+		// backgroundColor:"blue",
+		textAlignVertical:"center",
+		paddingVertical:37
 	},
 });

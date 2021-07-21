@@ -8,33 +8,33 @@
 
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {StyleSheet, Text, View, Dimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
-import {PanGestureHandler} from 'react-native-gesture-handler';
+import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
+import  'react-native-gesture-handler';
+import { NavigationContainer} from '@react-navigation/native'
+import { createStackNavigator} from '@react-navigation/stack'
 import {proposeplat, proposeMenu} from './menu';
-import NewChoice from './components/modalNewChoice';
+import NewChoice from './components/NewChoice';
 import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
+const Stack=createStackNavigator()
 const BarreMidiSoir = () => {
 	return (
-		<View style={styles.midiSoirContainer}>
-			<View style={{flex: 3, backgroundColor: 'blue'}}></View>
+		<View style={styles.BarreMidiSoir}>
+			<View style={{flex: 3}}></View>
 			<View
 				style={{
 					flex: 30,
 					flexDirection: 'row',
-					backgroundColor: 'brown',
+					// backgroundColor: 'brown',
 					justifyContent: 'center',
 				}}>
 				<View>
-					<Text style={{fontWeight:"bold",fontSize:20,marginRight:"35%"}}>Midi</Text>
+					<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%',color:"#754f9d"}}>Midi</Text>
 				</View>
 				<View>
-					<Text style={{fontWeight:"bold",fontSize:20}}>Soir</Text>
+					<Text style={{fontWeight: '400', fontSize: 22,color:"#754f9d"}}>Soir</Text>
 				</View>
 			</View>
 		</View>
@@ -42,14 +42,7 @@ const BarreMidiSoir = () => {
 };
 const BarreJourSemaine = () => {
 	return (
-		<View
-			style={{
-				flex: 3,
-				backgroundColor: 'green',
-				flexWrap:"wrap",
-				justifyContent: 'space-around',
-				//   margin: 10,
-			}}>
+		<View style={styles.barreJourSemaine}>
 			<Text style={styles.textJour}>lun</Text>
 			<Text style={styles.textJour}>mar</Text>
 			<Text style={styles.textJour}>mer</Text>
@@ -60,7 +53,7 @@ const BarreJourSemaine = () => {
 		</View>
 	);
 };
-const Menu = () => {
+const Menu = ({navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	// const [modalActivity, setModalActivity] = useState(false);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
@@ -82,24 +75,41 @@ const Menu = () => {
 		false,
 		false,
 	]);
+	const windowWidth = useWindowDimensions().width;
+	const windowHeight = useWindowDimensions().height;
 	useEffect(() => {
 		console.log('numPlatDsSemaineChoisinewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArrnewArr');
 		console.log(numPlatDsSemaineChoisi);
 		console.log(numPlatDsSemaineChoisi.length);
 	}, [numPlatDsSemaineChoisi]);
 	useEffect(() => {
-		console.log("proposeMenu")
-		setListePlatChoisi(proposeMenu())
+		console.log('proposeMenu');
+		setListePlatChoisi(proposeMenu());
 	}, []);
-	
-	const NavBar = () => {
-		return <View style={{flex: 2}}>
-		<Icon name="bars" size={30} color="#900" />
-		</View>;
-	};
+
 	const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {
 		console.log('TOGGLE');
 		setModalVisible(!modalVisible);
+		setNumPlatDsSemaine(_numPlatDsSemaine);
+		let newArr = [...numPlatDsSemaineChoisi];
+		newArr[_numPlatDsSemaine] = true;
+		setNumPlatDsSemaineChoisi(newArr);
+		// proposePlat(_numPlatDsSemaine)
+	};
+
+const paramsPlat=(a)=>{
+	console.log("a",a)
+	console.log("numPlatDsSemaine",numPlatDsSemaine)
+
+}
+
+	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
+		console.log('_numPlatDsSemaine');
+		console.log(_numPlatDsSemaine);
+		console.log('_platARemplacer');
+		console.log(_platARemplacer);
+		// setModalVisible(!modalVisible);
+		navigation.navigate('filtreMenu',{paramsPlat});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
 		newArr[_numPlatDsSemaine] = true;
@@ -123,20 +133,22 @@ const Menu = () => {
 
 	const refreshMenus = () => {
 		console.log('resfresh!!!');
-		
-		if (!numPlatDsSemaineChoisi.some(one => one)) { //s'il n'ya pas de repas de bloqué
+
+		if (!numPlatDsSemaineChoisi.some(one => one)) {
+			//s'il n'ya pas de repas de bloqué
 			setListePlatChoisi(proposeMenu());
-		} 
-		else {
+		} else {
 			console.log('TODO nouvelle fonction PROPOSEMENU avec des jours de figé');
 			const numPlatBloqué = [];
 			console.log('numPlatDsSemaineChoisi');
 			console.log(numPlatDsSemaineChoisi);
 			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
-				if (numPlatDsSemaineChoisi[i]) {numPlatBloqué.push([i,listePlatChoisi[i]]);console.log("nom plat",listePlatChoisi[i] );};
+				if (numPlatDsSemaineChoisi[i]) {
+					numPlatBloqué.push([i, listePlatChoisi[i]]);
+					console.log('nom plat', listePlatChoisi[i]);
+				}
 			}
-			console.log('numPlatBloqué = ', numPlatBloqué)
-			
+			console.log('numPlatBloqué = ', numPlatBloqué);
 
 			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
@@ -171,66 +183,74 @@ const Menu = () => {
 	const _refresh = () => {
 		return new Promise(resolve => {
 			// setTimeout(() => {refreshMenus();resolve()}, 100);
-			resolve()
+			resolve();
 			refreshMenus();
-			console.log("toto")
+			console.log('toto');
 		});
 	};
-	return (
-		// <PanGestureHandler style={{flex: 1}} onHandlerStateChange={onPanGestureEvent}>
-		<PTRView onRefresh={_refresh}>
-			<View style={[styles.FlatGridContainer, {opacity: onRefreshOpacity}]}>
-				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-				<Modal
-					animationType="slide"
-					transparent={true}
-					visible={modalVisible}
-					onRequestClose={() => {
-						Alert.alert('Modal has been closed.');
-						setModalVisible(!modalVisible);
-					}}>
-					<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
-				</Modal>
+	console.log('useWindowDimensions()');
+	console.log(useWindowDimensions());
+return (
 
-				<View style={{flex: 20}}>
-					<BarreMidiSoir />
+		 <View style={styles.appContainer}>
+
+			{/* <Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => {
+					Alert.alert('Modal has been closed.');
+					setModalVisible(!modalVisible);
+				}}>
+				<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
+			</Modal> */}
+			{/* <NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} /> */}
+			<BarreMidiSoir />
+			<View style={{height: '87%'}}>
+				<PTRView onRefresh={_refresh}>
 					<View style={styles.grille}>
-						{/* <ActivityIndicator /> */}
 						<BarreJourSemaine />
-						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center',justifyContent:"center"}}>
-							{listePlatChoisi && listePlatChoisi.map((item, index) => {
-								return (
-									<Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
-										<Text   style={styles.textPlat}>{item}</Text>
-									</Pressable>
-								);
-							})}
-
-							{/* <FlatGrid
-								itemDimension={(windowWidth * 0.98) / 3}
-								// fixed
-								// horizontal
-								// itemContainerStyle={{backgroundColor:"white",height:60}}
-								spacing={10}
-								data={listePlatChoisi}
-								style={{backgroundColor: 'black'}}
-								renderItem={({item, index}) => {
+						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+							{listePlatChoisi &&
+								listePlatChoisi.map((item, index) => {
 									return (
-										<Pressable style={styles.plat} onPress={() => toggleModal(item, index)}>
+										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
+										<Pressable key={Math.random()} style={styles.plat} onPress={() => filtreMenus(item, index)}>
 											<Text style={styles.textPlat}>{item}</Text>
 										</Pressable>
 									);
-								}}
-							/> */}
+								})}
 						</View>
 					</View>
-				</View>
-				<NavBar />
+				</PTRView>
 			</View>
-		</PTRView>
-
-		// </PanGestureHandler>
+			<NavBar />
+		</View> 
 	);
 };
 
-export default Menu;
+
+const NavBar = () => {
+	return (
+		<View style={styles.navbar}>
+<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
+			<Icon name="bars" size={55} color="#754f9d" />
+			<Icon name="calendar" size={55} color="#754f9d" />
+			<Icon name="plus-circle" size={55} color="#754f9d" />
+		</View>
+	);
+};
+const App =()=>{
+	return(
+		<NavigationContainer>
+
+		<Stack.Navigator initialRouteName="main" screenOptions={{headerShown: false}}>
+			<Stack.Screen name="main" component={Menu} />
+			<Stack.Screen name="filtreMenu" component={NewChoice} />
+			<Stack.Screen name="navbar" component={NavBar} />
+		</Stack.Navigator>
+			</NavigationContainer>
+	)
+}
+
+export default App;

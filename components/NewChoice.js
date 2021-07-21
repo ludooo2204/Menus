@@ -18,7 +18,8 @@ let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
 let countCategoriePlat = 0;
 
-const NewChoice = ({closeModal,choisirPropositionPlat}) => {
+const NewChoice = ({route,navigation}) => {
+// const NewChoice = ({navigation,closeModal, choisirPropositionPlat}) => {
 	const [filtreChoisi, setFiltreChoisi] = useState(null);
 	const [isFiltreActif, setFiltreActif] = useState({
 		type: false,
@@ -30,7 +31,7 @@ const NewChoice = ({closeModal,choisirPropositionPlat}) => {
 		legumes: false,
 		feculent: false,
 	});
-	const [listePlat, setListePlats] = useState(data.plats.map(plat=>plat.nom));
+	const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
 	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState('nbrRepasPossible');
 	const [saisonChoisieState, setsaisonChoisieState] = useState('Saison');
@@ -49,10 +50,11 @@ const NewChoice = ({closeModal,choisirPropositionPlat}) => {
 		legumesState,
 		feculentState,
 	]);
-console.log("typePlat")
-console.log(typePlat)
-console.log("listePlat")
-console.log(listePlat)
+	const {paramsPlat}= route.params
+	console.log('typePlat');
+	console.log(typePlat);
+	console.log('listePlat');
+	console.log(listePlat);
 	useEffect(() => {
 		let dataFiltre = data.plats.filter(
 			plat =>
@@ -130,12 +132,16 @@ console.log(listePlat)
 			setFiltreActif({...isFiltreActif, nbrRepasPossible: nbrRepas});
 		}
 	};
+
+	const choisirPropositionPlat=(item)=>{
+		navigation.goBack();
+		paramsPlat(item)
+	}
 	return (
 		<View style={styles.centeredView}>
 			<View style={styles.modalView}>
 				<View style={{flex: 1}}>
 					<View style={{flex: 1}}>
-						
 						<FlatGrid
 							itemDimension={windowWidth / 8}
 							horizontal
@@ -221,7 +227,8 @@ console.log(listePlat)
 						/>
 					</View>
 				</View>
-				<Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}>
+				{/* <Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}> */}
+				<Pressable style={[styles.button, styles.buttonClose]} onPress={()=>navigation.goBack()}>
 					<Text style={styles.textStyle}>Hide Modal</Text>
 				</Pressable>
 			</View>
