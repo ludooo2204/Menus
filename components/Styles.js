@@ -83,7 +83,7 @@ export default styles = StyleSheet.create({
 		// padding: "0.5%"
 	},
 	grille: {
-		height:740,
+		height:715,
 
 		// alignItems: 'center',
 		// alignItems: 'flex-start',

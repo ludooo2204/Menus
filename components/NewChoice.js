@@ -18,7 +18,7 @@ let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
 let countCategoriePlat = 0;
 
-const NewChoice = ({route,navigation}) => {
+const NewChoice = ({navigation}) => {
 // const NewChoice = ({navigation,closeModal, choisirPropositionPlat}) => {
 	const [filtreChoisi, setFiltreChoisi] = useState(null);
 	const [isFiltreActif, setFiltreActif] = useState({
@@ -50,7 +50,7 @@ const NewChoice = ({route,navigation}) => {
 		legumesState,
 		feculentState,
 	]);
-	const {paramsPlat}= route.params
+	// const {paramsPlat}= route.params
 	console.log('typePlat');
 	console.log(typePlat);
 	console.log('listePlat');
@@ -134,8 +134,8 @@ const NewChoice = ({route,navigation}) => {
 	};
 
 	const choisirPropositionPlat=(item)=>{
-		navigation.goBack();
-		paramsPlat(item)
+		navigation.navigate({name:'menu',params:{platChoisiParams:item}});
+		// paramsPlat(item)
 	}
 	return (
 		<View style={styles.centeredView}>

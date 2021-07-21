@@ -53,7 +53,7 @@ const BarreJourSemaine = () => {
 		</View>
 	);
 };
-const Menu = ({navigation}) => {
+const Menu = ({route,navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	// const [modalActivity, setModalActivity] = useState(false);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
@@ -75,6 +75,16 @@ const Menu = ({navigation}) => {
 		false,
 		false,
 	]);
+	if (route.params){	const {platChoisiParams}=route.params
+	console.log("{platChoisiParams}=route.paramsPlat")
+	console.log(route)
+	console.log(platChoisiParams)
+	let newArr = [...listePlatChoisi];
+		newArr[numPlatDsSemaine] = platChoisiParams;
+		setListePlatChoisi(newArr);
+		//pour reinitialiser les parametres
+		route.params=undefined
+}
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
 	useEffect(() => {
@@ -244,8 +254,8 @@ const App =()=>{
 	return(
 		<NavigationContainer>
 
-		<Stack.Navigator initialRouteName="main" screenOptions={{headerShown: false}}>
-			<Stack.Screen name="main" component={Menu} />
+		<Stack.Navigator initialRouteName="menu" screenOptions={{headerShown: false}}>
+			<Stack.Screen name="menu" component={Menu} />
 			<Stack.Screen name="filtreMenu" component={NewChoice} />
 			<Stack.Screen name="navbar" component={NavBar} />
 		</Stack.Navigator>
