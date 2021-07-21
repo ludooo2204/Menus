@@ -16,7 +16,7 @@ export default styles = StyleSheet.create({
 		backgroundColor: '#F194FF',
 	},
 	buttonClose: {
-		backgroundColor: '#2196F3',
+		backgroundColor: '#009'
 	},
 	textStyle: {
 		color: 'white',
@@ -41,12 +41,12 @@ export default styles = StyleSheet.create({
 		fontWeight: 'bold',
 	},
 	modalPlat: {
-		backgroundColor: 'lightgrey',
+		backgroundColor: '#d1dce8',
 		borderRadius: 20,
 	},
 	modalFiltre: {
 		flex: 1,
-		backgroundColor: 'tomato',
+		backgroundColor: '#FDFDFD',
 		justifyContent: 'center',
 		// justifyContent:"center",
 		alignItems: 'center',
@@ -54,15 +54,15 @@ export default styles = StyleSheet.create({
 		borderRadius: 20,
 	},
 	modalFiltreHighlight: {
-		backgroundColor: 'lightblue',
+		backgroundColor: '#bec7d1',
 		borderRadius: 20,
 		borderWidth: 2,
 		borderColor: 'black',
 	},
 
 	modalView: {
-		margin: 20,
-		backgroundColor: 'white',
+		// margin: 20,
+		backgroundColor: '#FDFDFD',
 		flex: 1,
 		borderRadius: 20,
 		padding: 15,
@@ -106,13 +106,27 @@ export default styles = StyleSheet.create({
 		borderRadius: 20,
 		marginHorizontal: "3%",
 		marginVertical: "3%",
+		justifyContent:"center",
+		width: '40%',
+		height: ((windowHeight) / 10),
+	},
+	platLocked: {
+		justifyContent:"center",
+		height: ((windowHeight) / 10),
+		backgroundColor: '#bec7d1',
+		elevation:18,
+		borderRadius: 20,
+		// borderWidth: 2,
+		marginHorizontal: "3%",
+		marginVertical: "3%",
 		width: '40%'
 	},
 	textPlat: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
-		height: (windowHeight) / 10,
+		// height: ((windowHeight) / 10),
 		fontSize: 19,
+		// backgroundColor:"grey",
 		// marginHorizontal:5,
 		fontWeight:"bold",
 		textShadowColor: '#fdfdfd',
@@ -123,9 +137,28 @@ export default styles = StyleSheet.create({
 		// elevation:5,
 		textShadowRadius:4,
 		textTransform:"uppercase",
+		// marginRight:10,
 		// borderWidth:2,
 		color: "#754f9d"
 	},
+	// textPlatLocked:{
+	// 	textAlign: 'center',
+	// 	textAlignVertical: 'center',
+	// 	height: ((windowHeight) / 10)-15,
+	// 	fontSize: 19,
+	// 	// marginHorizontal:5,
+	// 	fontWeight:"bold",
+	// 	textShadowColor: '#fdfdfd',
+	// 	textShadowOffset: {
+	// 		width: 1,
+	// 		height: 2,
+	// 	},
+	// 	// elevation:5,
+	// 	textShadowRadius:4,
+	// 	textTransform:"uppercase",
+	// 	// borderWidth:2,
+	// 	color: "#754f9d"
+	// },
 
 	
 	demiJour: {

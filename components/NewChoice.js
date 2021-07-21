@@ -51,10 +51,6 @@ const NewChoice = ({navigation}) => {
 		feculentState,
 	]);
 	// const {paramsPlat}= route.params
-	console.log('typePlat');
-	console.log(typePlat);
-	console.log('listePlat');
-	console.log(listePlat);
 	useEffect(() => {
 		let dataFiltre = data.plats.filter(
 			plat =>
@@ -65,7 +61,6 @@ const NewChoice = ({navigation}) => {
 	}, [isFiltreActif]);
 
 	useEffect(() => {
-		console.log('render from useffect');
 		setTypePlat([
 			typeRepasState,
 			nbrRepasPossibleState,
@@ -139,7 +134,6 @@ const NewChoice = ({navigation}) => {
 	}
 	return (
 		<View style={styles.centeredView}>
-			<View style={styles.modalView}>
 				<View style={{flex: 1}}>
 					<View style={{flex: 1}}>
 						<FlatGrid
@@ -149,8 +143,9 @@ const NewChoice = ({navigation}) => {
 							spacing={15}
 							data={typePlat}
 							style={{
-								backgroundColor: 'lightyellow',
-								borderWidth: 3,
+								backgroundColor: '#bec7d1',
+								borderRadius: 20,
+								// borderWidth: 3,
 								borderColor: 'black',
 							}}
 							renderItem={({item, index}) => {
@@ -205,15 +200,16 @@ const NewChoice = ({navigation}) => {
 							}}
 						/>
 					</View>
-					<View style={{flex: 6, alignItems: 'center', backgroundColor: 'blue'}}>
+					<View style={{flex: 6, alignItems: 'center', backgroundColor: '#FDFDFD'}}>
 						<FlatGrid
-							itemDimension={windowWidth / 4}
-							spacing={10}
+							itemDimension={windowWidth / 3}
+							spacing={15}
 							data={listePlat}
 							style={{
-								backgroundColor: 'grey',
+								backgroundColor: '#FDFDFD',
 								marginVertical: 10,
-								width: windowWidth / 1.2,
+								// marginHorizontal: 10,
+								// width: windowWidth / 1.2,
 							}}
 							renderItem={({item, index}) => {
 								return (
@@ -231,7 +227,6 @@ const NewChoice = ({navigation}) => {
 				<Pressable style={[styles.button, styles.buttonClose]} onPress={()=>navigation.goBack()}>
 					<Text style={styles.textStyle}>Hide Modal</Text>
 				</Pressable>
-			</View>
 		</View>
 	);
 };
