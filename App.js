@@ -18,11 +18,20 @@ import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {LogBox} from 'react-native';
-// import PlatsBddSchema from './components/BDDSchema';
-import './components/realm';
-import Realm from 'realm';
+
+import HomeScreen from './HomeScreen';
+import RegisterUser from './RegisterUser';
+import UpdateUser from './UpdateUser';
+import ViewUser from './ViewUser';
+import ViewAllUser from './ViewAllUser';
+import DeleteUser from './DeleteUser';
+import { openDatabase } from 'react-native-sqlite-storage';
+
 LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+
+
+var db = openDatabase({ name: 'UserDatabase.db' });
 const Stack = createStackNavigator();
 const BarreMidiSoir = () => {
 	return (
@@ -80,6 +89,27 @@ const Menu = ({route, navigation}) => {
 		false,
 		false,
 	]);
+	useEffect(() => {
+		console.log("useEffect SQLITE")
+		db.transaction(function (txn) {
+		  txn.executeSql(
+			"SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
+			[],
+			function (tx, res) {
+			  console.log('res:', JSON.stringify(res));
+			  console.log('item:', res.rows.length);
+			  if (res.rows.length == 0) {
+				txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+				txn.executeSql(
+				  'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
+				  []
+				);
+			  }
+			}
+		  );
+		});
+	  }, []);
+
 	if (route.params) {
 		const {platChoisiParams} = route.params;
 		let newArr = [...listePlatChoisi];
@@ -96,47 +126,11 @@ const Menu = ({route, navigation}) => {
 
 	useEffect(() => {
 		console.log('realm from useeffect');
-		// console.log(test());
-		// let plat1, plat2;
-		// realm.write(()=>{
-		// 	plat1 = realm.create("PlatsBddSchema",{
-		// 		_id:1,
-		// 		name:"burger",
-		// 		status:"de la balle"
-		// 	})
 
-		// 	plat2 = realm.create("PlatsBddSchema",{
-		// 		_id:2,
-		// 		name:"crotte",
-		// 		status:"de la merde"
-		// 	})
-		// 	console.log(`created 2 plats ${plat1.name} et ${plat2.name}`);
-		// })
-
-		// const platFromBdd= realm.objects("PlatsBddSchema")
-		// console.log('platFromBdd',platFromBdd)
-		// realm.close()
 
 		setListePlatChoisi(proposeMenu());
 	}, []);
 
-	// async function quickStart() {
-
-	// }
-
-	// 	quickStart().catch((error)=>{
-	// 		console.log("eeerrrroooorrrr",error)
-	// 	})
-
-	// const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {
-	// 	console.log('TOGGLE');
-	// 	setModalVisible(!modalVisible);
-	// 	setNumPlatDsSemaine(_numPlatDsSemaine);
-	// 	let newArr = [...numPlatDsSemaineChoisi];
-	// 	newArr[_numPlatDsSemaine] = true;
-	// 	setNumPlatDsSemaineChoisi(newArr);
-	// 	// proposePlat(_numPlatDsSemaine)
-	// };
 
 	const paramsPlat = a => {
 		console.log('a', a);
@@ -274,8 +268,15 @@ const NavBar = () => {
 const App = () => {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="menu" screenOptions={{headerShown: false}}>
+			<Stack.Navigator initialRouteName="HomeScreen" screenOptions={{headerShown: false}}>
 				<Stack.Screen name="menu" component={Menu} />
+
+				<Stack.Screen name="HomeScreen" component={HomeScreen} />
+				<Stack.Screen name="Register" component={RegisterUser} />
+				<Stack.Screen name="Update" component={UpdateUser} />
+				<Stack.Screen name="View" component={ViewUser} />
+				<Stack.Screen name="ViewAll" component={ViewAllUser} />
+				<Stack.Screen name="Delete" component={DeleteUser} />
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
 				<Stack.Screen name="navbar" component={NavBar} />
 			</Stack.Navigator>
