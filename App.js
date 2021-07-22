@@ -17,11 +17,11 @@ import NewChoice from './components/NewChoice';
 import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { LogBox } from 'react-native';
-
-LogBox.ignoreLogs([
-  'Non-serializable values were found in the navigation state',
-]);
+import {LogBox} from 'react-native';
+// import PlatsBddSchema from './components/BDDSchema';
+import './components/realm';
+import Realm from 'realm';
+LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 const Stack = createStackNavigator();
 const BarreMidiSoir = () => {
@@ -88,11 +88,45 @@ const Menu = ({route, navigation}) => {
 		//pour reinitialiser les parametres
 		route.params = undefined;
 	}
+
+	// console.log(realm)
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
+
+
 	useEffect(() => {
+		console.log('realm from useeffect');
+		// console.log(test());
+		// let plat1, plat2;
+		// realm.write(()=>{
+		// 	plat1 = realm.create("PlatsBddSchema",{
+		// 		_id:1,
+		// 		name:"burger",
+		// 		status:"de la balle"
+		// 	})
+
+		// 	plat2 = realm.create("PlatsBddSchema",{
+		// 		_id:2,
+		// 		name:"crotte",
+		// 		status:"de la merde"
+		// 	})
+		// 	console.log(`created 2 plats ${plat1.name} et ${plat2.name}`);
+		// })
+
+		// const platFromBdd= realm.objects("PlatsBddSchema")
+		// console.log('platFromBdd',platFromBdd)
+		// realm.close()
+
 		setListePlatChoisi(proposeMenu());
 	}, []);
+
+	// async function quickStart() {
+
+	// }
+
+	// 	quickStart().catch((error)=>{
+	// 		console.log("eeerrrroooorrrr",error)
+	// 	})
 
 	// const toggleModal = (_platARemplacer, _numPlatDsSemaine) => {
 	// 	console.log('TOGGLE');
@@ -191,17 +225,6 @@ const Menu = ({route, navigation}) => {
 	};
 	return (
 		<View style={styles.appContainer}>
-			{/* <Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					Alert.alert('Modal has been closed.');
-					setModalVisible(!modalVisible);
-				}}>
-				<NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} />
-			</Modal> */}
-			{/* <NewChoice closeModal={closeModal} choisirPropositionPlat={choisirPropositionPlat} /> */}
 			<BarreMidiSoir />
 			<View style={{height: '87%'}}>
 				<PTRView onRefresh={_refresh}>
@@ -217,10 +240,15 @@ const Menu = ({route, navigation}) => {
 											style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
 											onPress={() => filtreMenus(item, index)}
 											onLongPress={() => lockPlat(index)}>
-											<Text style={styles.textPlat}>{item}      
-											{numPlatDsSemaineChoisi[index] && (
-												<Text>  <Icon name="lock"  size={15} color="#754f9d" /></Text>
-											)}</Text>
+											<Text style={styles.textPlat}>
+												{item}
+												{numPlatDsSemaineChoisi[index] && (
+													<Text>
+														{' '}
+														<Icon name="lock" size={15} color="#754f9d" />
+													</Text>
+												)}
+											</Text>
 										</Pressable>
 									);
 								})}
