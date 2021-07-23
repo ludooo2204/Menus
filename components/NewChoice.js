@@ -18,7 +18,7 @@ let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
 let countCategoriePlat = 0;
 
-const NewChoice = ({navigation}) => {
+const NewChoice = ({route,navigation}) => {
 // const NewChoice = ({navigation,closeModal, choisirPropositionPlat}) => {
 	const [filtreChoisi, setFiltreChoisi] = useState(null);
 	const [isFiltreActif, setFiltreActif] = useState({
@@ -31,7 +31,8 @@ const NewChoice = ({navigation}) => {
 		legumes: false,
 		feculent: false,
 	});
-	const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
+	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
+	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.name));
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
 	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState('nbrRepasPossible');
 	const [saisonChoisieState, setsaisonChoisieState] = useState('Saison');
@@ -50,14 +51,29 @@ const NewChoice = ({navigation}) => {
 		legumesState,
 		feculentState,
 	]);
-	// const {paramsPlat}= route.params
+	const {bdd}= route.params
+	// console.log("bdd")
+	// console.log(bdd)
+
 	useEffect(() => {
-		let dataFiltre = data.plats.filter(
+		if (bdd) setListePlats(bdd.map(item=>item.name))
+		console.log("listePlat")
+		console.log(listePlat)
+	}, [bdd])
+
+	useEffect(() => {
+		
+		console.log(" :xdvnsdnvlkdwn")
+		console.log(listePlat)
+	}, [listePlat])
+	useEffect(() => {
+		// let dataFiltre = data.plats.filter(
+		let dataFiltre = bdd.filter(
 			plat =>
 				(!isFiltreActif.type ? true : plat.typePlat.includes(isFiltreActif.type)) &&
 				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrDeRepasPossible == isFiltreActif.nbrRepasPossible),
 		);
-		setListePlats(dataFiltre.map(plat => plat.nom));
+		// setListePlats(dataFiltre.map(plat => plat.nom));
 	}, [isFiltreActif]);
 
 	useEffect(() => {
@@ -129,6 +145,7 @@ const NewChoice = ({navigation}) => {
 	};
 
 	const choisirPropositionPlat=(item)=>{
+		console.log("item ==", item)
 		navigation.navigate({name:'menu',params:{platChoisiParams:item}});
 		// paramsPlat(item)
 	}

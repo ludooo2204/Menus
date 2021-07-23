@@ -93,7 +93,8 @@ const Menu = ({route, navigation}) => {
 	]);
 
 	useEffect(() => {
-
+console.log('db')
+console.log(db)
 
 		db.transaction(function (txn) {
 		  txn.executeSql(
@@ -179,7 +180,7 @@ useEffect(() => {
 	};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
-		navigation.navigate('filtreMenu', {paramsPlat});
+		navigation.navigate('filtreMenu', {paramsPlat,bdd:bddDatas});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
 		newArr[_numPlatDsSemaine] = true;
