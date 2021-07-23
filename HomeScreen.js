@@ -7,7 +7,7 @@ import Mybutton from './components/Mybutton';
 import Mytext from './components/Mytext';
 import {openDatabase} from 'react-native-sqlite-storage';
 
-var db = openDatabase({name: 'PlatDatabase.db'});
+var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
 
 const HomeScreen = ({navigation}) => {
   useEffect(() => {
@@ -16,7 +16,6 @@ const HomeScreen = ({navigation}) => {
         "SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'",
         [],
         function (tx, res) {
-			  console.log('res:', JSON.stringify(res));
 
           console.log('item:', res.rows.length);
           if (res.rows.length == 0) {

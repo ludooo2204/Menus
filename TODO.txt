@@ -6,8 +6,10 @@ ca m'ouvre un popup avec la liste des choix possibles.
 je fait mon choix en cliquant dessus
 ca ferme le popur et change le repas du midi par celui que j'ai choisi.
 en swipant vers le bas ca me permet de relance les proposition de menu et si j'ai deja bloqué une repas alors TODO!!
+en cliquant sur le + en bas a gauche cela nous permet de rajouter des plats
 
 TODO 
-navigation SETOPTIONS
+structurer les systeme de BDD. Il faut migrer le contenu de homescreen dans app.js. Il faut faire un appel a viewall pour lancer menu.js.
+
 
 

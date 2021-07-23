@@ -11,19 +11,25 @@ import {
   SafeAreaView,
   Text,
 } from 'react-native';
-import Mytextinput from './components/Mytextinput';
-import Mybutton from './components/Mybutton';
+import Mytextinput from './Mytextinput';
+import Mybutton from './Mybutton';
 import {openDatabase} from 'react-native-sqlite-storage';
 
-var db = openDatabase({name: 'PlatDatabase.db'});
+// var db = openDatabase({name: 'PlatDatabase.db'});
+var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
 
-const RegisterUser = ({navigation}) => {
+const NewPlat = ({navigation}) => {
   let [platName, setPlatName] = useState('');
   let [platType, setPlatType] = useState('');
+  let [midiSoir, setMidiSoir] = useState('');
+  let [ingredients, setIngredients] = useState('');
+  let [saison, setSaison] = useState('');
+  let [typeViande, setTypeViande] = useState('');
   let [platNbrPossible, setPlatNbrPossible] = useState('');
 
   let register_user = () => {
-    console.log(platName, platType, platNbrPossible);
+    console.log("submit")
+    console.log(platName, platType, platNbrPossible,midiSoir,ingredients,saison,typeViande);
 
     if (!platName) {
       alert('Please fill name');
@@ -40,8 +46,8 @@ const RegisterUser = ({navigation}) => {
 
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO table_plat (plat_name, plat_type, plat_nbrPossible) VALUES (?,?,?)',
-        [platName, platType, platNbrPossible],
+        'INSERT INTO table_plat (name, type,nbrPossible,midiSoir,ingredients,typeViande,saison) VALUES (?,?,?,?,?,?,?)',
+        [platName, platType, platNbrPossible,midiSoir,ingredients,typeViande,saison],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -51,12 +57,12 @@ const RegisterUser = ({navigation}) => {
               [
                 {
                   text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
+                  onPress: () => navigation.navigate('menu'),
                 },
               ],
               {cancelable: false},
             );
-          } else alert('Registration Failed');
+          } else Alert.alert('Registration Failed');
         },
       );
     });
@@ -71,12 +77,12 @@ const RegisterUser = ({navigation}) => {
               behavior="padding"
               style={{flex: 1, justifyContent: 'space-between'}}>
               <Mytextinput
-                placeholder="Enter Name"
+                placeholder="entrer le nom du plat"
                 onChangeText={(platName) => setPlatName(platName)}
                 style={{padding: 10}}
               />
               <Mytextinput
-                placeholder="Enter type"
+                placeholder="entrer le type du plat"
                 onChangeText={(platType) => setPlatType(platType)}
                 maxLength={10}
                 keyboardType="numeric"
@@ -90,19 +96,46 @@ const RegisterUser = ({navigation}) => {
                 multiline={true}
                 style={{textAlignVertical: 'top', padding: 10}}
               />
+              <Mytextinput
+                placeholder="Plat du midi ou du soir ?"
+                onChangeText={(midiSoir) => setMidiSoir(midiSoir)}
+                maxLength={225}
+                numberOfLines={5}
+                multiline={true}
+                style={{textAlignVertical: 'top', padding: 10}}
+              />
+              <Mytextinput
+                placeholder="ingredients ?"
+                onChangeText={(ingredients) => setIngredients(ingredients)}
+                maxLength={225}
+                numberOfLines={5}
+                multiline={true}
+                style={{textAlignVertical: 'top', padding: 10}}
+              />
+              <Mytextinput
+                placeholder="Saison ?"
+                onChangeText={(saison) => setSaison(saison)}
+                maxLength={225}
+                numberOfLines={5}
+                multiline={true}
+                style={{textAlignVertical: 'top', padding: 10}}
+              />
+              <Mytextinput
+                placeholder="Type de viande ?"
+                onChangeText={(typeViande) => setTypeViande(typeViande)}
+                maxLength={225}
+                numberOfLines={5}
+                multiline={true}
+                style={{textAlignVertical: 'top', padding: 10}}
+              />
               <Mybutton title="Submit" customClick={register_user} />
             </KeyboardAvoidingView>
           </ScrollView>
         </View>
-        <Text style={{fontSize: 18, textAlign: 'center', color: 'grey'}}>
-          Example of SQLite Database in React Native
-        </Text>
-        <Text style={{fontSize: 16, textAlign: 'center', color: 'grey'}}>
-          www.aboutreact.com
-        </Text>
+     
       </View>
     </SafeAreaView>
   );
 };
 
-export default RegisterUser;
+export default NewPlat;

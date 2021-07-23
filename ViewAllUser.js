@@ -6,7 +6,8 @@ import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, SafeAreaView } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-var db = openDatabase({ name: 'PlatDatabase.db' });
+// var db = openDatabase({ name: 'PlatDatabase.db' });
+var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
 
 const ViewAllUser = () => {
   let [flatListItems, setFlatListItems] = useState([]);

@@ -15,7 +15,9 @@ import Mytextinput from './components/Mytextinput';
 import Mybutton from './components/Mybutton';
 import {openDatabase} from 'react-native-sqlite-storage';
 
-var db = openDatabase({name: 'PlatDatabase.db'});
+var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
+// var db = openDatabase({name: 'PlatDatabase.db'});
+
 
 const UpdateUser = ({navigation}) => {
   let [inputUserId, setInputUserId] = useState('');

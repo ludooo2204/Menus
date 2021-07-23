@@ -12,7 +12,7 @@ import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {proposeplat, proposeMenu} from './menu';
+import {proposeplat, proposeMenu,lireDatas} from './menu';
 import NewChoice from './components/NewChoice';
 import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {LogBox} from 'react-native';
 
 import HomeScreen from './HomeScreen';
-import RegisterUser from './RegisterUser';
+import NewPlat from './components/NewPlat';
 import UpdateUser from './UpdateUser';
 import ViewUser from './ViewUser';
 import ViewAllUser from './ViewAllUser';
@@ -30,8 +30,9 @@ import { openDatabase } from 'react-native-sqlite-storage';
 LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
+// console.log(db)
+// var db = openDatabase({ name: 'UserDatabase.db' });
 const Stack = createStackNavigator();
 const BarreMidiSoir = () => {
 	return (
@@ -69,6 +70,7 @@ const BarreJourSemaine = () => {
 };
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
+	const [bddDatas, setBddDatas] = useState(null);
 	// const [modalActivity, setModalActivity] = useState(false);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
 	const [onRefreshOpacity, setOnRefreshOpacity] = useState(1);
@@ -89,26 +91,53 @@ const Menu = ({route, navigation}) => {
 		false,
 		false,
 	]);
+
 	useEffect(() => {
-		console.log("useEffect SQLITE")
+
+
 		db.transaction(function (txn) {
 		  txn.executeSql(
-			"SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
+			"SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'",
 			[],
 			function (tx, res) {
-			  console.log('res:', JSON.stringify(res));
+	
 			  console.log('item:', res.rows.length);
 			  if (res.rows.length == 0) {
-				txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+				txn.executeSql('DROP TABLE IF EXISTS table_plat', []);
 				txn.executeSql(
-				  'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
-				  []
+				  'CREATE TABLE IF NOT EXISTS table_plat(plat_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(40), type VARCHAR(20), nbrPossible INTEGER)',
+				  [],
 				);
+			  } else {
+				tx.executeSql('SELECT * FROM table_plat', [], (tx, results) => {
+					var temp = [];
+					console.log("results")
+					console.log(results)
+					for (let i = 0; i < results.rows.length; ++i) {
+						// console.log('results.rows.item(i)')
+						// console.log(results.rows.item(i))
+					  temp.push(results.rows.item(i));
+				  }
+
+				//   console.log("temp")
+				  setBddDatas(temp)
+
+				  });
+				//   console.log("(proposeMenu())")
+				//   console.log((proposeMenu()))
 			  }
-			}
+			},
 		  );
 		});
+
+		
 	  }, []);
+
+
+useEffect(() => {
+	lireDatas(bddDatas)
+	if (bddDatas) setListePlatChoisi(proposeMenu())
+}, [bddDatas])
 
 	if (route.params) {
 		const {platChoisiParams} = route.params;
@@ -126,10 +155,22 @@ const Menu = ({route, navigation}) => {
 
 	useEffect(() => {
 		console.log('realm from useeffect');
+// console.log(proposeMenu())
 
-
-		setListePlatChoisi(proposeMenu());
+		// setListePlatChoisi(proposeMenu());
 	}, []);
+
+
+	const NavBar = () => {
+		return (
+			<View style={styles.navbar}>
+				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
+				<Icon name="bars" size={55} color="#754f9d" />
+				<Icon name="calendar" size={55} color="#754f9d" />
+				<Icon name="plus-circle" size={55} color="#754f9d" onPress={()=>navigation.navigate('newPlat')} />
+			</View>
+		);
+	};
 
 
 	const paramsPlat = a => {
@@ -217,6 +258,7 @@ const Menu = ({route, navigation}) => {
 		console.log(newArr);
 		setNumPlatDsSemaineChoisi(newArr);
 	};
+	console.log("render from app.js")
 	return (
 		<View style={styles.appContainer}>
 			<BarreMidiSoir />
@@ -255,30 +297,25 @@ const Menu = ({route, navigation}) => {
 	);
 };
 
-const NavBar = () => {
-	return (
-		<View style={styles.navbar}>
-			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-			<Icon name="bars" size={55} color="#754f9d" />
-			<Icon name="calendar" size={55} color="#754f9d" />
-			<Icon name="plus-circle" size={55} color="#754f9d" />
-		</View>
-	);
-};
+
+
+
+
+
 const App = () => {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="HomeScreen" screenOptions={{headerShown: false}}>
+			<Stack.Navigator initialRouteName="menu" screenOptions={{headerShown: false}}>
 				<Stack.Screen name="menu" component={Menu} />
 
 				<Stack.Screen name="HomeScreen" component={HomeScreen} />
-				<Stack.Screen name="Register" component={RegisterUser} />
+				{/* <Stack.Screen name="Register" component={RegisterUser} /> */}
 				<Stack.Screen name="Update" component={UpdateUser} />
 				<Stack.Screen name="View" component={ViewUser} />
 				<Stack.Screen name="ViewAll" component={ViewAllUser} />
 				<Stack.Screen name="Delete" component={DeleteUser} />
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
-				<Stack.Screen name="navbar" component={NavBar} />
+				<Stack.Screen name="newPlat" component={NewPlat} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
