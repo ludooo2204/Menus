@@ -203,6 +203,7 @@ useEffect(() => {
 	};
 
 	const refreshMenus = () => {
+		console.log("refresh")
 		if (!numPlatDsSemaineChoisi.some(one => one)) {
 			//s'il n'ya pas de repas de bloqué
 			setListePlatChoisi(proposeMenu());
@@ -210,10 +211,13 @@ useEffect(() => {
 			const numPlatBloqué = [];
 			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
 				if (numPlatDsSemaineChoisi[i]) {
+					console.log("numPlatDsSemaineoisi")
+					console.log(numPlatDsSemaineChoisi)
 					numPlatBloqué.push([i, listePlatChoisi[i]]);
 				}
 			}
-
+console.log("numPlatBloqué")
+console.log(numPlatBloqué)
 			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
 	};
