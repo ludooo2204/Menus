@@ -130,16 +130,22 @@ console.log(numPlatDsSemaineBloqué)
 			console.log('platProposé');
 			console.log(platProposé.name);
 			if (!listePlatsProposés[i]) {
-				if (platProposé.nbrPossible > 1) {
+				if (platProposé.nbrPossible =2 ) {
 					listePlatsProposés[i] = platProposé.name;
 					listePlatsProposés[i + 4] = platProposé.name;
-				} else {
+				} 
+				else if (platProposé.nbrPossible = 3 ) {
+					listePlatsProposés[i] = platProposé.name;
+					listePlatsProposés[i + 4] = platProposé.name;
+					listePlatsProposés[i + 6] = platProposé.name;
+				} 
+				
+				else {
 					listePlatsProposés[i] = platProposé.name;
 				}
 			}
 		}
 	}
-	console.log("listePlatsProposés")
 	console.log("listePlatsProposés")
 	console.log(listePlatsProposés)
 	for (let i = 0; i < 14; i++) {

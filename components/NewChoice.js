@@ -1,7 +1,7 @@
 import styles from './Styles';
 import React, {useEffect, useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {Text, View, Dimensions, Pressable, NativeModules, LayoutAnimation} from 'react-native';
+import {Text, View, Dimensions, Pressable, NativeModules, LayoutAnimation, TextInput} from 'react-native';
 import data from '../plats.json';
 // import {listePlatsProposés} from '../menu';
 
@@ -218,6 +218,7 @@ const NewChoice = ({route,navigation}) => {
 						/>
 					</View>
 					<View style={{flex: 6, alignItems: 'center', backgroundColor: '#FDFDFD'}}>
+						<TextInput style={{backgroundColor:"grey",borderRadius:10}} placeholder="rechercher un plat" />
 						<FlatGrid
 							itemDimension={windowWidth / 3}
 							spacing={15}

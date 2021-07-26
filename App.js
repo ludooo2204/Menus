@@ -258,7 +258,8 @@ console.log(numPlatBloqué)
 	const lockPlat = _numPlatDsSemaine => {
 		console.log(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
-		newArr[_numPlatDsSemaine] = true;
+		if (newArr[_numPlatDsSemaine]) newArr[_numPlatDsSemaine]=false;
+		else newArr[_numPlatDsSemaine] = true;
 		console.log('newArrLongPress');
 		console.log(newArr);
 		setNumPlatDsSemaineChoisi(newArr);
