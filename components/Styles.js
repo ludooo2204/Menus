@@ -43,6 +43,8 @@ export default styles = StyleSheet.create({
 	modalPlat: {
 		backgroundColor: '#d1dce8',
 		borderRadius: 20,
+		width:windowWidth/2.2,
+		marginHorizontal:1
 	},
 	modalFiltre: {
 		flex: 1,

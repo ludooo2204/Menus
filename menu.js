@@ -146,12 +146,16 @@ console.log(numPlatDsSemaineBloqué)
 			}
 		}
 	}
-	console.log("listePlatsProposés")
+	console.log("listePlatsProposés from menus")
 	console.log(listePlatsProposés)
+	console.log(listePlatsProposés.length)
+	if (listePlatsProposés.length>14) listePlatsProposés=listePlatsProposés.slice(0,14)
 	for (let i = 0; i < 14; i++) {
 		plat[i].dejaDansSemaine = false;
 	}
-
+	console.log("listePlatsProposés slicé")
+	console.log(listePlatsProposés)
+	console.log(listePlatsProposés.length)
 	return listePlatsProposés;
 }
 
