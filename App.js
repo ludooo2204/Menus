@@ -14,6 +14,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {proposeplat, proposeMenu,lireDatas} from './menu';
 import NewChoice from './components/NewChoice';
+import ListeCourse from './components/ListeCourse';
 import styles from './components/Styles';
 import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -31,7 +32,6 @@ LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 var db = openDatabase({name: 'PlatDatabase.db',createFromLocation:1});
-// console.log(db)
 // var db = openDatabase({ name: 'UserDatabase.db' });
 const Stack = createStackNavigator();
 const BarreMidiSoir = () => {
@@ -136,6 +136,8 @@ console.log(db)
 
 
 useEffect(() => {
+	console.log("bddDatas")
+	console.log(bddDatas)
 	lireDatas(bddDatas)
 	if (bddDatas) setListePlatChoisi(proposeMenu())
 }, [bddDatas])
@@ -169,11 +171,16 @@ useEffect(() => {
 				<Icon name="bars" size={55} color="#754f9d" />
 				<Icon name="calendar" size={55} color="#754f9d" />
 				<Icon name="plus-circle" size={55} color="#754f9d" onPress={()=>navigation.navigate('newPlat')} />
+				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
 		);
 	};
 
-
+const preparationCourse=()=>{
+	console.log(listePlatChoisi)
+	const listeDesCourses=bddDatas.map(e=>e.ingredients)
+	navigation.navigate('listeCourse', {listeDesCourses})
+}
 	const paramsPlat = a => {
 		console.log('a', a);
 		console.log('numPlatDsSemaine', numPlatDsSemaine);
@@ -322,6 +329,7 @@ const App = () => {
 				<Stack.Screen name="Delete" component={DeleteUser} />
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
 				<Stack.Screen name="newPlat" component={NewPlat} />
+				<Stack.Screen name="listeCourse" component={ListeCourse} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

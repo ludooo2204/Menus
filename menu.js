@@ -151,7 +151,6 @@ console.log(numPlatDsSemaineBloqué)
 	for (let i = 0; i < 14; i++) {
 		plat[i].dejaDansSemaine = false;
 	}
-
 	return listePlatsProposés;
 }
 
