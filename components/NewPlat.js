@@ -85,15 +85,13 @@ const NewPlat = ({navigation}) => {
                 placeholder="entrer le type du plat"
                 onChangeText={(platType) => setPlatType(platType)}
                 maxLength={10}
-                keyboardType="numeric"
                 style={{padding: 10}}
               />
               <Mytextinput
                 placeholder="Enter nombre repas possible"
                 onChangeText={(platNbrPossible) => setPlatNbrPossible(platNbrPossible)}
-                maxLength={225}
-                numberOfLines={5}
-                multiline={true}
+                keyboardType="numeric"
+
                 style={{textAlignVertical: 'top', padding: 10}}
               />
               <Mytextinput

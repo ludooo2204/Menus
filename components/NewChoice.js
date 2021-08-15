@@ -1,8 +1,10 @@
 import styles from './Styles';
 import React, {useEffect, useState} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
-import {Text, View, Dimensions, Pressable, NativeModules, LayoutAnimation, TextInput} from 'react-native';
+import {Text, View, Dimensions, Pressable, NativeModules, LayoutAnimation, TextInput, ScrollView} from 'react-native';
 import data from '../plats.json';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 // import {listePlatsProposés} from '../menu';
 
 const {UIManager} = NativeModules;
@@ -18,8 +20,8 @@ let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
 let countCategoriePlat = 0;
 
-const NewChoice = ({route,navigation}) => {
-// const NewChoice = ({navigation,closeModal, choisirPropositionPlat}) => {
+const NewChoice = ({route, navigation}) => {
+	// const NewChoice = ({navigation,closeModal, choisirPropositionPlat}) => {
 	const [filtreChoisi, setFiltreChoisi] = useState(null);
 	const [isFiltreActif, setFiltreActif] = useState({
 		type: false,
@@ -33,6 +35,8 @@ const NewChoice = ({route,navigation}) => {
 	});
 	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
 	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.name));
+	const [listePlatsFiltreeParInput, setListePlatsFiltreeParInput] = useState(null);
+	
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
 	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState('nbrRepasPossible');
 	const [saisonChoisieState, setsaisonChoisieState] = useState('Saison');
@@ -51,29 +55,39 @@ const NewChoice = ({route,navigation}) => {
 		legumesState,
 		feculentState,
 	]);
-	const {bdd}= route.params
+	const [textInputRecherche, setTextInputRecherche] = useState(null);
+	// const [textInputRecherche, setTextInputRecherche] = useState(null);
+	const {bdd} = route.params;
 	// console.log("bdd")
 	// console.log(bdd)
 
 	useEffect(() => {
-		if (bdd) setListePlats(bdd.map(item=>item.name))
-		console.log("listePlat")
-		console.log(listePlat)
-	}, [bdd])
+		if (bdd) setListePlats(bdd.map(item => item.name));
+		console.log('listePlat');
+		console.log(listePlat);
+	}, [bdd]);
 
 	useEffect(() => {
-		
-		console.log(" :xdvnsdnvlkdwn")
-		console.log(listePlat)
-	}, [listePlat])
+		// console.log(' :xdvnsdnvlkdwn');
+		console.log(listePlat);
+	}, [listePlat]);
 	useEffect(() => {
 		// let dataFiltre = data.plats.filter(
+		console.log('bdd');
+		console.log(bdd);
+		bdd.map(plat => (plat.type ? console.log(plat.type.includes(isFiltreActif.type)) : console.log('merde')));
+		console.log(isFiltreActif);
 		let dataFiltre = bdd.filter(
 			plat =>
-				(!isFiltreActif.type ? true : plat.typePlat.includes(isFiltreActif.type)) &&
-				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrDeRepasPossible == isFiltreActif.nbrRepasPossible),
+				(!isFiltreActif.type ? true : plat.type ? plat.type.includes(isFiltreActif.type) : false) &&
+				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible)
+				,
+			// (!isFiltreActif.type && plat.type? true : plat.type.includes(isFiltreActif.type)) &&
+			// (!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible),
 		);
-		// setListePlats(dataFiltre.map(plat => plat.nom));
+		console.log('dataFiltre');
+		console.log(dataFiltre);
+		setListePlats(dataFiltre.map(plat => plat.name));
 	}, [isFiltreActif]);
 
 	useEffect(() => {
@@ -144,107 +158,175 @@ const NewChoice = ({route,navigation}) => {
 		}
 	};
 
-	const choisirPropositionPlat=(item)=>{
-		console.log("item ==", item)
-		navigation.navigate({name:'menu',params:{platChoisiParams:item}});
+	const choisirPropositionPlat = item => {
+		console.log('item ==', item);
+		navigation.navigate({name: 'menu', params: {platChoisiParams: item}});
 		// paramsPlat(item)
-	}
+	};
+	const onChangeInput = value => {
+		console.log('onChangeInput');
+		setTextInputRecherche(value);
+		if (value != '') {
+			let listeFiltréesParInput = [];
+			for (const iterator of listePlat) {
+				const platMinuscule = iterator.toLowerCase();
+				const filtreMinuscule = value.toLowerCase();
+				if (platMinuscule.includes(filtreMinuscule)) listeFiltréesParInput.push(iterator);
+			}
+			console.log('listeFiltréesParInput');
+			console.log(listeFiltréesParInput);
+			console.log('value');
+			console.log(value);
+
+			setListePlatsFiltreeParInput(listeFiltréesParInput);
+		}
+	};
+	const blurTextInput = () => {
+		console.log('blur');
+		setTextInputRecherche('');
+		setListePlats(route.params.bdd.map(plat => plat.name));
+	};
+	const removeTextInput = () => {
+		setListePlatsFiltreeParInput(null)
+		console.log('removeTextInput');
+		setTextInputRecherche('');
+		setListePlats(route.params.bdd.map(plat => plat.name));
+		inputText.blur();
+	};
+	console.log("listePlatsFiltreeParInput")
+	console.log(listePlatsFiltreeParInput)
 	return (
 		<View style={styles.centeredView}>
+			<View style={{flex: 1}}>
 				<View style={{flex: 1}}>
-					<View style={{flex: 1}}>
-						<FlatGrid
-							itemDimension={windowWidth / 8}
-							horizontal
-							// fixed
-							spacing={15}
-							data={typePlat}
-							style={{
-								backgroundColor: '#bec7d1',
-								borderRadius: 20,
-								// borderWidth: 3,
-								borderColor: 'black',
-							}}
-							renderItem={({item, index}) => {
-								//   console.log('item');
-								return (
-									<Pressable
-										onPress={() => {
-											// console.log(index, item);
-											switch (index) {
-												//type de repas
-												case 0:
-													// console.log('type de repas!!');
-													filtreParTypeDeRepas();
-													break;
+					<FlatGrid
+						itemDimension={windowWidth / 8}
+						horizontal
+						// fixed
+						spacing={15}
+						data={typePlat}
+						style={{
+							backgroundColor: '#bec7d1',
+							borderRadius: 20,
+							// borderWidth: 3,
+							borderColor: 'black',
+						}}
+						renderItem={({item, index}) => {
+							//   console.log('item');
+							return (
+								<Pressable
+									onPress={() => {
+										// console.log(index, item);
+										switch (index) {
+											//type de repas
+											case 0:
+												// console.log('type de repas!!');
+												filtreParTypeDeRepas();
+												break;
 
-												// 'nbrDeRepasPossible':
-												case 1:
-													// console.log('nbrDeRepasPossible!!');
-													incrementNbrDeRepasPossible();
-													break;
+											// 'nbrDeRepasPossible':
+											case 1:
+												// console.log('nbrDeRepasPossible!!');
+												incrementNbrDeRepasPossible();
+												break;
 
-												//saison
-												case 2:
-													// console.log('saison!!!!');
-													incrementSaison();
-													break;
+											//saison
+											case 2:
+												// console.log('saison!!!!');
+												incrementSaison();
+												break;
 
-												case 3:
-													console.log('temps!!');
-													break;
-											}
-										}}
-										onLongPress={() => {
-											switch (item) {
-												case 'type de repas':
-													console.log('long type de repas!!');
-													break;
-												case 'nbrDeRepasPossible':
-													setNbrRepas(null);
-													break;
-												case saisonChoisie:
-													setSaisonChoisie('saison');
-													break;
-												case 'Viande':
-													break;
-											}
-										}}
-										style={filtreChoisi == index ? styles.modalFiltreHighlight : styles.modalFiltre}>
-										<Text style={styles.modalFiltreText}>{item}</Text>
-									</Pressable>
-								);
-							}}
+											case 3:
+												console.log('temps!!');
+												break;
+										}
+									}}
+									onLongPress={() => {
+										switch (item) {
+											case 'type de repas':
+												console.log('long type de repas!!');
+												break;
+											case 'nbrDeRepasPossible':
+												setNbrRepas(null);
+												break;
+											case saisonChoisie:
+												setSaisonChoisie('saison');
+												break;
+											case 'Viande':
+												break;
+										}
+									}}
+									style={filtreChoisi == index ? styles.modalFiltreHighlight : styles.modalFiltre}>
+									<Text style={styles.modalFiltreText}>{item}</Text>
+								</Pressable>
+							);
+						}}
+					/>
+				</View>
+				<View style={{flex: 6, alignItems: 'center', backgroundColor: '#FDFDFD'}}>
+					<View style={{flexDirection: 'row'}}>
+						<TextInput
+							ref={input => (inputText = input)}
+							style={{backgroundColor: '#ccc8c8', borderRadius: 10}}
+							onChangeText={onChangeInput}
+							// onFocus={}
+							// onBlur={blurTextInput}
+							// onBlur={()=>setListePlats(route.params.bdd.map(plat => plat.name))}
+							value={textInputRecherche}
+							placeholder="rechercher un plat"
 						/>
+						<Icon name="remove" size={55} color="#754f9d" onPress={removeTextInput} />
 					</View>
-					<View style={{flex: 6, alignItems: 'center', backgroundColor: '#FDFDFD'}}>
-						<TextInput style={{backgroundColor:"grey",borderRadius:10}} placeholder="rechercher un plat" />
-						<FlatGrid
-							itemDimension={windowWidth / 3}
-							spacing={15}
-							data={listePlat}
-							style={{
-								backgroundColor: '#FDFDFD',
-								marginVertical: 10,
-								// marginHorizontal: 10,
-								// width: windowWidth / 1.2,
-							}}
-							renderItem={({item, index}) => {
+					{listePlat.length != 0 && (
+						<ScrollView 
+						style={{flex:1}}
+						contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap',justifyContent:"center"}}
+						>
+							{listePlatsFiltreeParInput?listePlatsFiltreeParInput.map((item, index) => {
 								return (
-									<View style={styles.modalPlat}>
+									<View key={index} style={styles.modalPlat}>
 										<Pressable onPress={() => choisirPropositionPlat(item)}>
 											<Text style={styles.modalText}>{item}</Text>
 										</Pressable>
 									</View>
 								);
-							}}
-						/>
-					</View>
+							}):listePlat.map((item, index) => {
+								return (
+									<View key={index} style={styles.modalPlat}>
+										<Pressable onPress={() => choisirPropositionPlat(item)}>
+											<Text style={styles.modalText}>{item}</Text>
+										</Pressable>
+									</View>
+								);
+							})}
+						</ScrollView>
+
+						// <FlatGrid
+						// 	itemDimension={windowWidth / 3}
+						// 	spacing={15}
+						// 	// fixed
+						// 	data={listePlat}
+						// 	style={{
+						// 		backgroundColor: '#FDFDFD',
+						// 		marginVertical: 10,
+						// 	}}
+						// 	renderItem={({item, index}) => {
+						// 		return (
+						// 			<View style={styles.modalPlat}>
+						// 				<Pressable onPress={() => choisirPropositionPlat(item)}>
+						// 					<Text style={styles.modalText}>{item}</Text>
+						// 				</Pressable>
+						// 			</View>
+						// 		);
+						// 	}}
+						// />
+					)}
 				</View>
-				{/* <Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}> */}
-				<Pressable style={[styles.button, styles.buttonClose]} onPress={()=>navigation.goBack()}>
-					<Text style={styles.textStyle}>Hide Modal</Text>
-				</Pressable>
+			</View>
+			{/* <Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}> */}
+			<Pressable style={[styles.button, styles.buttonClose]} onPress={() => navigation.goBack()}>
+				<Text style={styles.textStyle}>Hide Modal</Text>
+			</Pressable>
 		</View>
 	);
 };

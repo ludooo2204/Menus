@@ -272,6 +272,7 @@ console.log(numPlatBloqué)
 		setNumPlatDsSemaineChoisi(newArr);
 	};
 	console.log("render from app.js")
+
 	return (
 		<View style={styles.appContainer}>
 			<BarreMidiSoir />
