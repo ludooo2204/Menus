@@ -14,6 +14,7 @@ const Mytextinput = (props) => {
         marginTop: 10,
         borderColor: '#007FFF',
         borderWidth: 1,
+        borderRadius:10,
       }}>
       <TextInput
         underlineColorAndroid="transparent"

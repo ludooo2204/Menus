@@ -39,8 +39,8 @@ const Menu = ({route, navigation}) => {
 	]);
 
 
-    const windowWidth = useWindowDimensions().width;
-    const windowHeight = useWindowDimensions().height;
+	const windowWidth = useWindowDimensions().width;
+	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
 
@@ -88,49 +88,49 @@ const Menu = ({route, navigation}) => {
 //composant interne//////////////////////////////////////////////////////////////////////////////////////
 
 const NavBar = () => {
-    return (
-        <View style={styles.navbar}>
-            <StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-            <Icon name="bars" size={55} color="#754f9d" />
-            <Icon name="calendar" size={55} color="#754f9d" />
-            <Icon name="plus-circle" size={55} color="#754f9d" onPress={() => navigation.navigate('newPlat')} />
-            <Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
-        </View>
-    );
+	return (
+		<View style={styles.navbar}>
+			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
+			<Icon name="bars" size={55} color="#754f9d" />
+			<Icon name="calendar" size={55} color="#754f9d" />
+			<Icon name="plus-circle" size={55} color="#754f9d" onPress={() => navigation.navigate('newPlat')} />
+			<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
+		</View>
+	);
 };
 
 const BarreMidiSoir = () => {
 return (
-    <View style={styles.BarreMidiSoir}>
-        <View style={{flex: 3}}></View>
-        <View
-            style={{
-                flex: 30,
-                flexDirection: 'row',
-                // backgroundColor: 'brown',
-                justifyContent: 'center',
-            }}>
-            <View>
-                <Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: '#754f9d'}}>Midi</Text>
-            </View>
-            <View>
-                <Text style={{fontWeight: '400', fontSize: 22, color: '#754f9d'}}>Soir</Text>
-            </View>
-        </View>
-    </View>
+	<View style={styles.BarreMidiSoir}>
+		<View style={{flex: 3}}></View>
+		<View
+			style={{
+				flex: 30,
+				flexDirection: 'row',
+				// backgroundColor: 'brown',
+				justifyContent: 'center',
+			}}>
+			<View>
+				<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: '#754f9d'}}>Midi</Text>
+			</View>
+			<View>
+				<Text style={{fontWeight: '400', fontSize: 22, color: '#754f9d'}}>Soir</Text>
+			</View>
+		</View>
+	</View>
 );
 };
 const BarreJourSemaine = () => {
 return (
-    <View style={styles.barreJourSemaine}>
-        <Text style={styles.textJour}>lun</Text>
-        <Text style={styles.textJour}>mar</Text>
-        <Text style={styles.textJour}>mer</Text>
-        <Text style={styles.textJour}>jeu</Text>
-        <Text style={styles.textJour}>ven</Text>
-        <Text style={styles.textJour}>sam</Text>
-        <Text style={styles.textJour}>dim</Text>
-    </View>
+	<View style={styles.barreJourSemaine}>
+		<Text style={styles.textJour}>lun</Text>
+		<Text style={styles.textJour}>mar</Text>
+		<Text style={styles.textJour}>mer</Text>
+		<Text style={styles.textJour}>jeu</Text>
+		<Text style={styles.textJour}>ven</Text>
+		<Text style={styles.textJour}>sam</Text>
+		<Text style={styles.textJour}>dim</Text>
+	</View>
 );
 };
 
@@ -142,6 +142,7 @@ return (
 		const listeDesCourses = bddDatas.map(e => e.ingredients);
 		navigation.navigate('listeCourse', {listeDesCourses});
 	};
+
 	const paramsPlat = a => {
 		console.log('a', a);
 		console.log('numPlatDsSemaine', numPlatDsSemaine);
@@ -158,17 +159,9 @@ return (
 	const closeModal = () => {
 		console.log('FERME LA');
 		setModalVisible(!modalVisible);
-		// setNumPlatDsSemaine(_numPlatDsSemaine)
-		// console.log(_platARemplacer,_numPlatDsSemaine)
 	};
-	const choisirPropositionPlat = _platChoisi => {
-		console.log('choix!! ', _platChoisi);
-		// console.log(numPlatDsSemaine)
-		let newArr = [...listePlatChoisi];
-		newArr[numPlatDsSemaine] = _platChoisi;
-		setListePlatChoisi(newArr);
-		closeModal();
-	};
+
+	
 
 	const refreshMenus = () => {
 		console.log('refresh');
@@ -179,30 +172,20 @@ return (
 			const numPlatBloqué = [];
 			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
 				if (numPlatDsSemaineChoisi[i]) {
-					console.log('numPlatDsSemaineoisi');
-					console.log(numPlatDsSemaineChoisi);
+					// console.log('numPlatDsSemaineoisi');
+					// console.log(numPlatDsSemaineChoisi);
 					numPlatBloqué.push([i, listePlatChoisi[i]]);
 				}
 			}
-			console.log('numPlatBloqué');
-			console.log(numPlatBloqué);
+			// console.log('numPlatBloqué');
+			// console.log(numPlatBloqué);
 			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
 	};
+
 	onPanGestureEvent = evt => {
 		let {nativeEvent} = evt;
-		console.log('nativeEvent');
-		console.log(nativeEvent);
-		console.log('nativeEvent.state');
-		console.log(nativeEvent.state);
-		// console.log("nativeEvent.velocityY")
-		// console.log(nativeEvent.velocityY)
-		// console.log("nativeEvent.absoluteY")
-		// console.log(nativeEvent.absoluteY)
-		// console.log("nativeEvent.translationY")
-		// console.log(nativeEvent.translationY)
-		// console.log("numberOfPointers")
-		// console.log(nativeEvent.numberOfPointers)
+
 		if (nativeEvent.velocityY > 0 && nativeEvent.state < 5) {
 			setOnRefreshOpacity(0.9);
 			// setModalActivity(true)
@@ -224,12 +207,12 @@ return (
 		});
 	};
 	const lockPlat = _numPlatDsSemaine => {
-		console.log(_numPlatDsSemaine);
+		// console.log(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
 		if (newArr[_numPlatDsSemaine]) newArr[_numPlatDsSemaine] = false;
 		else newArr[_numPlatDsSemaine] = true;
-		console.log('newArrLongPress');
-		console.log(newArr);
+		// console.log('newArrLongPress');
+		// console.log(newArr);
 		setNumPlatDsSemaineChoisi(newArr);
 	};
 	console.log('render from app.js');
@@ -237,7 +220,7 @@ return (
 	return (
 		<View style={styles.appContainer}>
 			<BarreMidiSoir />
-			<View style={{height: '87%'}}>
+			<View style={{height: '90%'}}>
 				<PTRView onRefresh={_refresh}>
 					<View style={styles.grille}>
 						<BarreJourSemaine />

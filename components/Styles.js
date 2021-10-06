@@ -85,7 +85,7 @@ export default styles = StyleSheet.create({
 		// padding: "0.5%"
 	},
 	grille: {
-		height:715,
+		height:windowHeight,
 
 		// alignItems: 'center',
 		// alignItems: 'flex-start',
@@ -185,7 +185,8 @@ export default styles = StyleSheet.create({
 		fontWeight: '700',
 	},
 	navbar:{
-		height: '8%',
+		
+		// height: '8%',
 		flexDirection:"row",
 		justifyContent:"space-between",
 		alignItems:"center",
