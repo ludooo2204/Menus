@@ -116,19 +116,32 @@ const Menu = ({route, navigation}) => {
 	const BarreJourSemaine = () => {
 		console.log("jour")
 		console.log(new Date().getDate())
+		const aujourdhui=new Date()
+		let dateAModifier=new Date()
+		const aujourdhuiDate=aujourdhui.getDate()
+		const aujourdhuiNumeroJourDansSemaine=aujourdhui.getDay()
 		console.log("jour de la semaine")
 		console.log(new Date().getDay())
 		console.log("nom du jour de la semaine")
 		console.log(new Date().toLocaleString('fr-FR'))
+		let jour=["mer","jeu","ven","sam","dim","lun","mar"];
+		let date=[];
+		for (let index = 0; index < jour.length; index++) {
+			dateAModifier.setDate(index+aujourdhuiDate-1)
+			index+3==aujourdhuiNumeroJourDansSemaine?date[index]=aujourdhuiDate:date[index]=dateAModifier.getDate()
+
+			
+		}
+		console.log(jour)
+		console.log(date)
 		return (
 			<View style={styles.barreJourSemaine}>
-				<Text style={styles.textJour}>lun</Text>
-				<Text style={styles.textJour}>mar</Text>
-				<Text style={styles.textJour}>mer</Text>
-				<Text style={styles.textJour}>jeu</Text>
-				<Text style={styles.textJour}>ven</Text>
-				<Text style={styles.textJour}>sam</Text>
-				<Text style={styles.textJour}>dim</Text>
+				{jour.map((e,index)=><Text style={index+3==aujourdhuiNumeroJourDansSemaine?styles.textJourAujourdhui:styles.textJour}>
+					{e}{
+					index+3==aujourdhuiNumeroJourDansSemaine?aujourdhuiDate:date[index]
+					}
+					</Text>)}
+				
 			</View>
 		);
 	};
@@ -179,34 +192,7 @@ const Menu = ({route, navigation}) => {
 		}
 	};
 
-	// onPanGestureEvent = evt => {
-	// 	console.log(evt);
-	// 	let {nativeEvent} = evt;
-	// 	console.log('nativeEvent');
-	// 	console.log(nativeEvent);
-	// 	console.log('nativeEvent.state');
-	// 	console.log(nativeEvent.state);
-	// 	console.log('nativeEvent.velocityY');
-	// 	console.log(nativeEvent.velocityY);
-	// 	console.log('nativeEvent.absoluteY');
-	// 	console.log(nativeEvent.absoluteY);
-	// 	console.log('nativeEvent.translationY');
-	// 	console.log(nativeEvent.translationY);
-	// 	console.log('numberOfPointers');
-	// 	console.log(nativeEvent.numberOfPointers);
-	// 	if (nativeEvent.velocityY > 0 && nativeEvent.state < 5) {
-	// 		setOnRefreshOpacity(0.9);
-	// 		// setModalActivity(true)
-	// 	}
-	// 	if (nativeEvent.state == 5) {
-	// 		setOnRefreshOpacity(1);
-	// 	}
-	// 	if (nativeEvent.translationY > 10 && nativeEvent.velocityY > 0 && nativeEvent.state == 5) {
-	// 		setOnRefreshOpacity(1);
-	// 		// console.log(object)
-	// 		refreshMenus();
-	// 	}
-	// };
+
 	const _refresh = () => {
 		return new Promise(resolve => {
 			// setTimeout(() => {refreshMenus();resolve()}, 100);
@@ -236,7 +222,6 @@ const Menu = ({route, navigation}) => {
 			onSwipeLeft={state => console.log(state)}
 			onSwipeRight={state => console.log(state)}
 			config={config}>
-			{/* <View style={styles.appContainer}> */}
 			<BarreMidiSoir />
 			<View style={{height: '90%'}}>
 				<PTRView onRefresh={_refresh}>

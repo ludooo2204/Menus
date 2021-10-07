@@ -16,7 +16,6 @@ const ListeCourse = ({route}) => {
 
 	return (
 		<View>
-			<Text>coucou</Text>
 			{listeCourse.map((item, index) => {
 				return <Ingredient key={index} item={item} />;
 			})}

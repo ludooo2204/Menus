@@ -210,4 +210,13 @@ export default styles = StyleSheet.create({
 		textAlignVertical:"center",
 		paddingVertical:37
 	},
+	textJourAujourdhui:{
+		fontWeight:"400",
+		fontSize:22,
+		backgroundColor: "#754f9d",
+		color:"#d1dce8",
+		textAlignVertical:"center",
+		paddingVertical:37
+	},
+	
 });
