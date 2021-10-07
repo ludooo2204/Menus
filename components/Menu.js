@@ -8,12 +8,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {FlatGrid} from 'react-native-super-grid';
 import styles from './Styles';
 import {LogBox} from 'react-native';
-
-
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
-
-
 
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -38,12 +35,10 @@ const Menu = ({route, navigation}) => {
 		false,
 	]);
 
-
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
-
 		db.transaction(function (txn) {
 			txn.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'", [], function (tx, res) {
 				console.log('item:', res.rows.length);
@@ -59,7 +54,7 @@ const Menu = ({route, navigation}) => {
 						for (let i = 0; i < results.rows.length; ++i) {
 							temp.push(results.rows.item(i));
 						}
-
+						console.log(temp);
 						setBddDatas(temp);
 					});
 				}
@@ -83,59 +78,62 @@ const Menu = ({route, navigation}) => {
 		route.params = undefined;
 	}
 
+	//composant interne//////////////////////////////////////////////////////////////////////////////////////
 
-
-//composant interne//////////////////////////////////////////////////////////////////////////////////////
-
-const NavBar = () => {
-	return (
-		<View style={styles.navbar}>
-			<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-			<Icon name="bars" size={55} color="#754f9d" />
-			<Icon name="calendar" size={55} color="#754f9d" />
-			<Icon name="plus-circle" size={55} color="#754f9d" onPress={() => navigation.navigate('newPlat')} />
-			<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
-		</View>
-	);
-};
-
-const BarreMidiSoir = () => {
-return (
-	<View style={styles.BarreMidiSoir}>
-		<View style={{flex: 3}}></View>
-		<View
-			style={{
-				flex: 30,
-				flexDirection: 'row',
-				// backgroundColor: 'brown',
-				justifyContent: 'center',
-			}}>
-			<View>
-				<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: '#754f9d'}}>Midi</Text>
+	const NavBar = () => {
+		return (
+			<View style={styles.navbar}>
+				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
+				<Icon name="bars" size={55} color="#754f9d" />
+				<Icon name="calendar" size={55} color="#754f9d" />
+				<Icon name="plus-circle" size={55} color="#754f9d" onPress={() => navigation.navigate('newPlat')} />
+				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
-			<View>
-				<Text style={{fontWeight: '400', fontSize: 22, color: '#754f9d'}}>Soir</Text>
+		);
+	};
+
+	const BarreMidiSoir = () => {
+		return (
+			<View style={styles.BarreMidiSoir}>
+				<View style={{flex: 3}}></View>
+				<View
+					style={{
+						flex: 30,
+						flexDirection: 'row',
+						// backgroundColor: 'brown',
+						justifyContent: 'center',
+					}}>
+					<View>
+						<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: '#754f9d'}}>Midi</Text>
+					</View>
+					<View>
+						<Text style={{fontWeight: '400', fontSize: 22, color: '#754f9d'}}>Soir</Text>
+					</View>
+				</View>
 			</View>
-		</View>
-	</View>
-);
-};
-const BarreJourSemaine = () => {
-return (
-	<View style={styles.barreJourSemaine}>
-		<Text style={styles.textJour}>lun</Text>
-		<Text style={styles.textJour}>mar</Text>
-		<Text style={styles.textJour}>mer</Text>
-		<Text style={styles.textJour}>jeu</Text>
-		<Text style={styles.textJour}>ven</Text>
-		<Text style={styles.textJour}>sam</Text>
-		<Text style={styles.textJour}>dim</Text>
-	</View>
-);
-};
+		);
+	};
+	const BarreJourSemaine = () => {
+		console.log("jour")
+		console.log(new Date().getDate())
+		console.log("jour de la semaine")
+		console.log(new Date().getDay())
+		console.log("nom du jour de la semaine")
+		console.log(new Date().toLocaleString('fr-FR'))
+		return (
+			<View style={styles.barreJourSemaine}>
+				<Text style={styles.textJour}>lun</Text>
+				<Text style={styles.textJour}>mar</Text>
+				<Text style={styles.textJour}>mer</Text>
+				<Text style={styles.textJour}>jeu</Text>
+				<Text style={styles.textJour}>ven</Text>
+				<Text style={styles.textJour}>sam</Text>
+				<Text style={styles.textJour}>dim</Text>
+			</View>
+		);
+	};
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-
+	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	const preparationCourse = () => {
 		console.log(listePlatChoisi);
@@ -161,8 +159,6 @@ return (
 		setModalVisible(!modalVisible);
 	};
 
-	
-
 	const refreshMenus = () => {
 		console.log('refresh');
 		if (!numPlatDsSemaineChoisi.some(one => one)) {
@@ -183,22 +179,34 @@ return (
 		}
 	};
 
-	onPanGestureEvent = evt => {
-		let {nativeEvent} = evt;
-
-		if (nativeEvent.velocityY > 0 && nativeEvent.state < 5) {
-			setOnRefreshOpacity(0.9);
-			// setModalActivity(true)
-		}
-		if (nativeEvent.state == 5) {
-			setOnRefreshOpacity(1);
-		}
-		if (nativeEvent.translationY > 10 && nativeEvent.velocityY > 0 && nativeEvent.state == 5) {
-			setOnRefreshOpacity(1);
-			// console.log(object)
-			refreshMenus();
-		}
-	};
+	// onPanGestureEvent = evt => {
+	// 	console.log(evt);
+	// 	let {nativeEvent} = evt;
+	// 	console.log('nativeEvent');
+	// 	console.log(nativeEvent);
+	// 	console.log('nativeEvent.state');
+	// 	console.log(nativeEvent.state);
+	// 	console.log('nativeEvent.velocityY');
+	// 	console.log(nativeEvent.velocityY);
+	// 	console.log('nativeEvent.absoluteY');
+	// 	console.log(nativeEvent.absoluteY);
+	// 	console.log('nativeEvent.translationY');
+	// 	console.log(nativeEvent.translationY);
+	// 	console.log('numberOfPointers');
+	// 	console.log(nativeEvent.numberOfPointers);
+	// 	if (nativeEvent.velocityY > 0 && nativeEvent.state < 5) {
+	// 		setOnRefreshOpacity(0.9);
+	// 		// setModalActivity(true)
+	// 	}
+	// 	if (nativeEvent.state == 5) {
+	// 		setOnRefreshOpacity(1);
+	// 	}
+	// 	if (nativeEvent.translationY > 10 && nativeEvent.velocityY > 0 && nativeEvent.state == 5) {
+	// 		setOnRefreshOpacity(1);
+	// 		// console.log(object)
+	// 		refreshMenus();
+	// 	}
+	// };
 	const _refresh = () => {
 		return new Promise(resolve => {
 			// setTimeout(() => {refreshMenus();resolve()}, 100);
@@ -217,8 +225,18 @@ return (
 	};
 	console.log('render from app.js');
 
+	const config = {
+		velocityThreshold: 0.3,
+		directionalOffsetThreshold: 80,
+	};
+
 	return (
-		<View style={styles.appContainer}>
+		<GestureRecognizer
+			style={styles.appContainer}
+			onSwipeLeft={state => console.log(state)}
+			onSwipeRight={state => console.log(state)}
+			config={config}>
+			{/* <View style={styles.appContainer}> */}
 			<BarreMidiSoir />
 			<View style={{height: '90%'}}>
 				<PTRView onRefresh={_refresh}>
@@ -250,7 +268,7 @@ return (
 				</PTRView>
 			</View>
 			<NavBar />
-		</View>
+		</GestureRecognizer>
 	);
 };
 
