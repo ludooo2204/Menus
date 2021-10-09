@@ -10,13 +10,20 @@ import styles from './Styles';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
+
+
+
+
+
+
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
 
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [bddDatas, setBddDatas] = useState(null);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
-	const [onRefreshOpacity, setOnRefreshOpacity] = useState(1);
+	const [deltaSemaine, setDeltaSemaine] = useState(0);
+	const [jourSemaine, setJourSemaine] = useState([]);
 	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
 	const [numPlatDsSemaineChoisi, setNumPlatDsSemaineChoisi] = useState([
 		false,
@@ -69,6 +76,30 @@ const Menu = ({route, navigation}) => {
 		if (bddDatas) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
+
+	useEffect(() => {
+		// TODO les jours bug (a partir de moins 2 semaine )
+		console.log("deltaSemaine",deltaSemaine)
+		const aujourdhui = new Date();
+		let dateAModifier = new Date();
+		const aujourdhuiDate = aujourdhui.getDate();
+		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
+		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
+		let date = [];
+
+		for (let index = 0; index < jour.length; index++) {
+			dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
+			date[index] = dateAModifier.getDate();
+		}
+		setJourSemaine([...date])
+
+	}, [deltaSemaine]);
+
+	useEffect(() => {
+	console.log("jourSemaine")
+	console.log(jourSemaine)
+	}, [jourSemaine])
+
 	if (route.params) {
 		const {platChoisiParams} = route.params;
 		let newArr = [...listePlatChoisi];
@@ -114,34 +145,29 @@ const Menu = ({route, navigation}) => {
 		);
 	};
 	const BarreJourSemaine = () => {
-		console.log("jour")
-		console.log(new Date().getDate())
-		const aujourdhui=new Date()
-		let dateAModifier=new Date()
-		const aujourdhuiDate=aujourdhui.getDate()
-		const aujourdhuiNumeroJourDansSemaine=aujourdhui.getDay()
-		console.log("jour de la semaine")
-		console.log(new Date().getDay())
-		console.log("nom du jour de la semaine")
-		console.log(new Date().toLocaleString('fr-FR'))
-		let jour=["mer","jeu","ven","sam","dim","lun","mar"];
-		let date=[];
-		for (let index = 0; index < jour.length; index++) {
-			dateAModifier.setDate(index+aujourdhuiDate-1)
-			index+3==aujourdhuiNumeroJourDansSemaine?date[index]=aujourdhuiDate:date[index]=dateAModifier.getDate()
+		const aujourdhui = new Date();
+		let dateAModifier = new Date();
+		const aujourdhuiDate = aujourdhui.getDate();
+		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
+		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
+		let date = [];
 
-			
+		for (let index = 0; index < jour.length; index++) {
+			// pas sur que ca marche...
+			dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
+			// dateAModifier.setDate(index-200);
+			// index + 3 == aujourdhuiNumeroJourDansSemaine ? (date[index] = aujourdhuiDate) : (date[index] = dateAModifier.getDate());
+			date[index] = dateAModifier.getDate();
 		}
-		console.log(jour)
-		console.log(date)
 		return (
 			<View style={styles.barreJourSemaine}>
-				{jour.map((e,index)=><Text style={index+3==aujourdhuiNumeroJourDansSemaine?styles.textJourAujourdhui:styles.textJour}>
-					{e}{
-					index+3==aujourdhuiNumeroJourDansSemaine?aujourdhuiDate:date[index]
-					}
-					</Text>)}
-				
+				{jour.map((e, index) => (
+					<Text style={index + 3 == aujourdhuiNumeroJourDansSemaine ? styles.textJourAujourdhui : styles.textJour}>
+						{e}
+						{date[index]}
+						{/* {index + 3 == aujourdhuiNumeroJourDansSemaine ? aujourdhuiDate : date[index]} */}
+					</Text>
+				))}
 			</View>
 		);
 	};
@@ -192,7 +218,6 @@ const Menu = ({route, navigation}) => {
 		}
 	};
 
-
 	const _refresh = () => {
 		return new Promise(resolve => {
 			// setTimeout(() => {refreshMenus();resolve()}, 100);
@@ -215,12 +240,20 @@ const Menu = ({route, navigation}) => {
 		velocityThreshold: 0.3,
 		directionalOffsetThreshold: 80,
 	};
+	const semainePlus=(state)=>{
+		console.log(state)
+setDeltaSemaine(deltaSemaine=>deltaSemaine+1)
+}
+const semaineMoins=(state)=>{
+	console.log(state)
+	setDeltaSemaine(deltaSemaine=>deltaSemaine-1)
+	}
 
 	return (
 		<GestureRecognizer
 			style={styles.appContainer}
-			onSwipeLeft={state => console.log(state)}
-			onSwipeRight={state => console.log(state)}
+			onSwipeLeft={state => semainePlus(state)}
+			onSwipeRight={state => semaineMoins(state)}
 			config={config}>
 			<BarreMidiSoir />
 			<View style={{height: '90%'}}>

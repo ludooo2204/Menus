@@ -208,7 +208,10 @@ export default styles = StyleSheet.create({
 		color: "#754f9d",
 		// backgroundColor:"blue",
 		textAlignVertical:"center",
-		paddingVertical:37
+		marginVertical: "30%",
+
+		// paddingVertical:37,
+		height: ((windowHeight) / 10),
 	},
 	textJourAujourdhui:{
 		fontWeight:"400",
@@ -216,7 +219,12 @@ export default styles = StyleSheet.create({
 		backgroundColor: "#754f9d",
 		color:"#d1dce8",
 		textAlignVertical:"center",
-		paddingVertical:37
+		// paddingVertical:37,
+		marginVertical: "30%",
+
+		// paddingVertical:37,
+		height: ((windowHeight) / 10),
 	},
+
 	
 });
