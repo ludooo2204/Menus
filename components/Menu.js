@@ -48,7 +48,7 @@ const Menu = ({route, navigation}) => {
 	useEffect(() => {
 		db.transaction(function (txn) {
 			txn.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'", [], function (tx, res) {
-				console.log('item:', res.rows.length);
+				// console.log('item:', res.rows.length);
 				if (res.rows.length == 0) {
 					txn.executeSql('DROP TABLE IF EXISTS table_plat', []);
 					txn.executeSql(
@@ -70,34 +70,22 @@ const Menu = ({route, navigation}) => {
 	}, []);
 
 	useEffect(() => {
-		console.log('bddDatas');
-		console.log(bddDatas);
+		// console.log('bddDatas');
+		// console.log(bddDatas);
 		lireDatas(bddDatas);
 		if (bddDatas) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
 
 	useEffect(() => {
-		// TODO les jours bug (a partir de moins 2 semaine )
 		console.log("deltaSemaine",deltaSemaine)
-		const aujourdhui = new Date();
-		let dateAModifier = new Date();
-		const aujourdhuiDate = aujourdhui.getDate();
-		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
-		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
-		let date = [];
 
-		for (let index = 0; index < jour.length; index++) {
-			dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
-			date[index] = dateAModifier.getDate();
-		}
-		setJourSemaine([...date])
 
 	}, [deltaSemaine]);
 
 	useEffect(() => {
-	console.log("jourSemaine")
-	console.log(jourSemaine)
+	// console.log("jourSemaine")
+	// console.log(jourSemaine)
 	}, [jourSemaine])
 
 	if (route.params) {
@@ -148,21 +136,49 @@ const Menu = ({route, navigation}) => {
 		const aujourdhui = new Date();
 		let dateAModifier = new Date();
 		const aujourdhuiDate = aujourdhui.getDate();
-		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
+		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay(); 
+		console.log('aujourdhuiNumeroJourDansSemaine' )
+		console.log(aujourdhuiNumeroJourDansSemaine )
+		console.log('aujourdhuiDate' )
+		console.log(aujourdhuiDate )
 		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
 		let date = [];
+console.log('aujourdhui')
+console.log(aujourdhui)
+		// for (let index = 0; index < jour.length; index++) {
+		// 	// pas sur que ca marche...
+		// 	dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
+		// 	// dateAModifier.setDate(index-200);
+		// 	// index + 3 == aujourdhuiNumeroJourDansSemaine ? (date[index] = aujourdhuiDate) : (date[index] = dateAModifier.getDate());
+		// 	date[index] = dateAModifier.getDate();
+		// }
+		function addDays(date, days) {
+			var result = new Date(date);
+			result.setDate(result.getDate() + days);
+			return result;
+		  }
+			
 
+
+
+console.log("TEST")
 		for (let index = 0; index < jour.length; index++) {
-			// pas sur que ca marche...
-			dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
-			// dateAModifier.setDate(index-200);
-			// index + 3 == aujourdhuiNumeroJourDansSemaine ? (date[index] = aujourdhuiDate) : (date[index] = dateAModifier.getDate());
-			date[index] = dateAModifier.getDate();
+			// dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
+			console.log('index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7')
+			console.log(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7)
+			console.log('index  - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7')
+			console.log(index  - aujourdhuiNumeroJourDansSemaine + 6+deltaSemaine*7)
+	
+			// /aujourdhui == addDays(aujourdhui,0)
+			const dateTemp=addDays(aujourdhui,index-4+deltaSemaine*7)
+			date[index] = dateTemp.getDate();
 		}
+		console.log('date')
+		console.log(date)
 		return (
 			<View style={styles.barreJourSemaine}>
 				{jour.map((e, index) => (
-					<Text style={index + 3 == aujourdhuiNumeroJourDansSemaine ? styles.textJourAujourdhui : styles.textJour}>
+					<Text style={date[index] == aujourdhuiDate ? styles.textJourAujourdhui : styles.textJour}>
 						{e}
 						{date[index]}
 						{/* {index + 3 == aujourdhuiNumeroJourDansSemaine ? aujourdhuiDate : date[index]} */}
@@ -175,14 +191,14 @@ const Menu = ({route, navigation}) => {
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	const preparationCourse = () => {
-		console.log(listePlatChoisi);
+		// console.log(listePlatChoisi);
 		const listeDesCourses = bddDatas.map(e => e.ingredients);
 		navigation.navigate('listeCourse', {listeDesCourses});
 	};
 
 	const paramsPlat = a => {
-		console.log('a', a);
-		console.log('numPlatDsSemaine', numPlatDsSemaine);
+		// console.log('a', a);
+		// console.log('numPlatDsSemaine', numPlatDsSemaine);
 	};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
@@ -243,6 +259,7 @@ const Menu = ({route, navigation}) => {
 	const semainePlus=(state)=>{
 		console.log(state)
 setDeltaSemaine(deltaSemaine=>deltaSemaine+1)
+
 }
 const semaineMoins=(state)=>{
 	console.log(state)

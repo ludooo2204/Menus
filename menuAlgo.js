@@ -113,22 +113,22 @@ const lireDatas = _data => {
 };
 function proposeMenu(numPlatDsSemaineBloqué) {
 	console.log('proposeMenu from menu.js');
-console.log("numPlatDsSemaineBloqué")
-console.log(numPlatDsSemaineBloqué)
+// console.log("numPlatDsSemaineBloqué")
+// console.log(numPlatDsSemaineBloqué)
 	listePlatsProposés = [];
 	for (let i = 0; i < 14; i++) {
-		console.log('i ', i);
+		// console.log('i ', i);
 		if (numPlatDsSemaineBloqué && numPlatDsSemaineBloqué.find(ele => ele[0] == i)) {
 			const nomPlatBloqué = numPlatDsSemaineBloqué.find(ele => ele[0] == i)[1];
-			console.log("nomPlatBloqué")
-			console.log(nomPlatBloqué)
+			// console.log("nomPlatBloqué")
+			// console.log(nomPlatBloqué)
 			// listePlatsProposés.push(nomPlatBloqué);
 			listePlatsProposés[i]=nomPlatBloqué;
 			// if ()
 		} else {
 			let platProposé = proposePlat(i);
-			console.log('platProposé');
-			console.log(platProposé.name);
+			// console.log('platProposé');
+			// console.log(platProposé.name);
 			if (!listePlatsProposés[i]) {
 				if (platProposé.nbrPossible =2 ) {
 					listePlatsProposés[i] = platProposé.name;
@@ -146,16 +146,16 @@ console.log(numPlatDsSemaineBloqué)
 			}
 		}
 	}
-	console.log("listePlatsProposés from menus")
-	console.log(listePlatsProposés)
-	console.log(listePlatsProposés.length)
+	// console.log("listePlatsProposés from menus")
+	// console.log(listePlatsProposés)
+	// console.log(listePlatsProposés.length)
 	if (listePlatsProposés.length>14) listePlatsProposés=listePlatsProposés.slice(0,14)
 	for (let i = 0; i < 14; i++) {
 		plat[i].dejaDansSemaine = false;
 	}
-	console.log("listePlatsProposés slicé")
-	console.log(listePlatsProposés)
-	console.log(listePlatsProposés.length)
+	// console.log("listePlatsProposés slicé")
+	// console.log(listePlatsProposés)
+	// console.log(listePlatsProposés.length)
 	return listePlatsProposés;
 }
 
