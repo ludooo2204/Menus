@@ -103,6 +103,10 @@ const Menu = ({route, navigation}) => {
 	};
 
 	const BarreMidiSoir = () => {
+		const aujourdhui=new Date()
+const month = aujourdhui.toLocaleString('FR-fr', { month: 'long' });
+console.log(month);
+		console.log(aujourdhui)
 		return (
 			<View style={styles.BarreMidiSoir}>
 				<View style={{flex: 3}}></View>
@@ -124,8 +128,8 @@ const Menu = ({route, navigation}) => {
 		);
 	};
 	const BarreJourSemaine = () => {
-		const aujourdhui = new Date('10/20/2021');
-		const aujourdhuiDate = aujourdhui.getDate();
+		const aujourdhui = new Date();
+		const aujourdhuiDate = aujourdhui.getDate()+"/"+(aujourdhui.getMonth()+1);
 		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
 
 		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
@@ -134,26 +138,31 @@ const Menu = ({route, navigation}) => {
 		function addDays(date, days) {
 			var result = new Date(date);
 			result.setDate(result.getDate() + days);
-			console.log('result.getDate()', result.getDate())
-			console.log("days", days)
 			return result;
 		}
 
 		for (let index = 0; index < jour.length; index++) {
-			const dateTemp = addDays(aujourdhui,aujourdhuiNumeroJourDansSemaine<3?index +3-aujourdhuiNumeroJourDansSemaine-7 + deltaSemaine * 7:index +3-aujourdhuiNumeroJourDansSemaine + deltaSemaine * 7);
-			date[index] = dateTemp.getDate();
+			const dateTemp = addDays(
+				aujourdhui,
+				aujourdhuiNumeroJourDansSemaine < 3
+					? index + 3 - aujourdhuiNumeroJourDansSemaine - 7 + deltaSemaine * 7
+					: index + 3 - aujourdhuiNumeroJourDansSemaine + deltaSemaine * 7,
+			);
+			date[index] = dateTemp.getDate()+"/"+(dateTemp.getMonth()+1);
 		}
 
-	
 		return (
 			<View style={styles.barreJourSemaine}>
+			
+			<View>
 				{jour.map((e, index) => (
 					<Text style={date[index] == aujourdhuiDate ? styles.textJourAujourdhui : styles.textJour}>
 						{e}
-						{date[index]}
+						{"\n"}
+						<Text style={{fontSize:15}}>{date[index]}</Text>
 					</Text>
 				))}
-			</View>
+			</View></View>
 		);
 	};
 
@@ -240,6 +249,7 @@ const Menu = ({route, navigation}) => {
 			onSwipeLeft={state => semainePlus(state)}
 			onSwipeRight={state => semaineMoins(state)}
 			config={config}>
+						{/* <BarreJourSemaine /> */}
 			<BarreMidiSoir />
 			<View style={{height: '88%'}}>
 				<PTRView onRefresh={_refresh}>
@@ -247,7 +257,7 @@ const Menu = ({route, navigation}) => {
 						<BarreJourSemaine />
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
 							{listePlatChoisi &&
-								listePlatChoisi.map((item, index) => { 
+								listePlatChoisi.map((item, index) => {
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable

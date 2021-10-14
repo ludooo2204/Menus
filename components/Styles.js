@@ -16,7 +16,7 @@ export default styles = StyleSheet.create({
 		backgroundColor: '#F194FF',
 	},
 	buttonClose: {
-		backgroundColor: '#009'
+		backgroundColor: '#009',
 	},
 	textStyle: {
 		color: 'white',
@@ -43,8 +43,8 @@ export default styles = StyleSheet.create({
 	modalPlat: {
 		backgroundColor: '#d1dce8',
 		borderRadius: 20,
-		width:windowWidth/2.2,
-		marginHorizontal:1
+		width: windowWidth / 2.2,
+		marginHorizontal: 1,
 	},
 	modalFiltre: {
 		flex: 1,
@@ -80,12 +80,12 @@ export default styles = StyleSheet.create({
 	},
 	appContainer: {
 		// flex: 1,
-		height:"100%",
+		height: '100%',
 		backgroundColor: '#FDFDFD',
 		// padding: "0.5%"
 	},
 	grille: {
-		height:windowHeight*0.93,
+		height: windowHeight * 0.93,
 
 		// alignItems: 'center',
 		// alignItems: 'flex-start',
@@ -96,32 +96,27 @@ export default styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: '600',
 	},
-	BarreMidiSoir: {
-		height: "4.2%",
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		alignItems:"center",
-	},
+
 	plat: {
 		backgroundColor: '#d1dce8',
-		elevation:18,
+		elevation: 18,
 		borderRadius: 20,
-		marginHorizontal: "3%",
-		marginVertical: "3%",
-		justifyContent:"center",
+		marginHorizontal: '3%',
+		marginVertical: '3%',
+		justifyContent: 'center',
 		width: '40%',
-		height: ((windowHeight) / 10),
+		height: windowHeight / 10,
 	},
 	platLocked: {
-		justifyContent:"center",
-		height: ((windowHeight) / 10),
+		justifyContent: 'center',
+		height: windowHeight / 10,
 		backgroundColor: '#bec7d1',
-		elevation:18,
+		elevation: 18,
 		borderRadius: 20,
 		// borderWidth: 2,
-		marginHorizontal: "3%",
-		marginVertical: "3%",
-		width: '40%'
+		marginHorizontal: '3%',
+		marginVertical: '3%',
+		width: '40%',
 	},
 	textPlat: {
 		textAlign: 'center',
@@ -130,39 +125,21 @@ export default styles = StyleSheet.create({
 		fontSize: 19,
 		// backgroundColor:"grey",
 		// marginHorizontal:5,
-		fontWeight:"bold",
+		fontWeight: 'bold',
 		textShadowColor: '#fdfdfd',
 		textShadowOffset: {
 			width: 1,
 			height: 2,
 		},
 		// elevation:5,
-		textShadowRadius:4,
-		textTransform:"uppercase",
+		textShadowRadius: 4,
+		textTransform: 'uppercase',
 		// marginRight:10,
 		// borderWidth:2,
-		color: "#754f9d"
+		color: '#754f9d',
 	},
-	// textPlatLocked:{
-	// 	textAlign: 'center',
-	// 	textAlignVertical: 'center',
-	// 	height: ((windowHeight) / 10)-15,
-	// 	fontSize: 19,
-	// 	// marginHorizontal:5,
-	// 	fontWeight:"bold",
-	// 	textShadowColor: '#fdfdfd',
-	// 	textShadowOffset: {
-	// 		width: 1,
-	// 		height: 2,
-	// 	},
-	// 	// elevation:5,
-	// 	textShadowRadius:4,
-	// 	textTransform:"uppercase",
-	// 	// borderWidth:2,
-	// 	color: "#754f9d"
-	// },
 
-	
+
 	demiJour: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
@@ -184,47 +161,51 @@ export default styles = StyleSheet.create({
 	highlight: {
 		fontWeight: '700',
 	},
-	navbar:{
-		
+	navbar: {
 		// height: '8%',
-		flexDirection:"row",
-		justifyContent:"space-between",
-		alignItems:"center",
-		paddingHorizontal: "5%",
-		backgroundColor:"#d1dce8"
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		paddingHorizontal: '5%',
+		backgroundColor: '#d1dce8',
+	},
+	BarreMidiSoir: {
+		height: '4.2%',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		backgroundColor:"#FDFDFD"
 	},
 	barreJourSemaine: {
 		flex: 3,
-		// backgroundColor: 'green',
+		// flexDirection: 'row',
 		// flexWrap: 'wrap',
-		marginBottom:27,
+		marginBottom: 27,
+
 		// pad:5,
 		justifyContent: 'flex-start',
-		alignItems:"flex-start"
+		alignItems: 'flex-start',
 	},
-	textJour:{
-		fontWeight:"400",
-		fontSize:22,
-		color: "#754f9d",
-		// backgroundColor:"blue",
-		textAlignVertical:"center",
-		marginVertical: "30%",
-
-		// paddingVertical:37,
-		height: ((windowHeight) / 10),
+	textJour: {
+		fontWeight: '400',
+		fontSize: 22,
+		color: '#754f9d',
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		marginVertical: '30%',
+		height: windowHeight / 10,
+		
 	},
-	textJourAujourdhui:{
-		fontWeight:"400",
-		fontSize:22,
-		backgroundColor: "#754f9d",
-		color:"#d1dce8",
-		textAlignVertical:"center",
-		// paddingVertical:37,
-		marginVertical: "30%",
-borderRadius:10,
-		// paddingVertical:37,
-		height: ((windowHeight) / 10),
+	textJourAujourdhui: {
+		fontWeight: '400',
+		fontSize: 22,
+		backgroundColor: '#754f9d',
+		color: '#d1dce8',
+		textAlignVertical: 'center',
+		textAlign: 'center',
+		marginVertical: '30%',
+		borderRadius: 10,
+		height: windowHeight / 10,
 	},
 
-	
 });
