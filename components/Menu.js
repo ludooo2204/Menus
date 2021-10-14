@@ -10,12 +10,6 @@ import styles from './Styles';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-
-
-
-
-
-
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
 
 const Menu = ({route, navigation}) => {
@@ -76,17 +70,14 @@ const Menu = ({route, navigation}) => {
 		if (bddDatas) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
-
 	useEffect(() => {
-		console.log("deltaSemaine",deltaSemaine)
-
-
+		console.log('deltaSemaine', deltaSemaine);
 	}, [deltaSemaine]);
 
 	useEffect(() => {
-	// console.log("jourSemaine")
-	// console.log(jourSemaine)
-	}, [jourSemaine])
+		// console.log("jourSemaine")
+		// console.log(jourSemaine)
+	}, [jourSemaine]);
 
 	if (route.params) {
 		const {platChoisiParams} = route.params;
@@ -133,55 +124,33 @@ const Menu = ({route, navigation}) => {
 		);
 	};
 	const BarreJourSemaine = () => {
-		const aujourdhui = new Date();
-		let dateAModifier = new Date();
+		const aujourdhui = new Date('10/20/2021');
 		const aujourdhuiDate = aujourdhui.getDate();
-		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay(); 
-		console.log('aujourdhuiNumeroJourDansSemaine' )
-		console.log(aujourdhuiNumeroJourDansSemaine )
-		console.log('aujourdhuiDate' )
-		console.log(aujourdhuiDate )
+		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
+
 		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
 		let date = [];
-console.log('aujourdhui')
-console.log(aujourdhui)
-		// for (let index = 0; index < jour.length; index++) {
-		// 	// pas sur que ca marche...
-		// 	dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
-		// 	// dateAModifier.setDate(index-200);
-		// 	// index + 3 == aujourdhuiNumeroJourDansSemaine ? (date[index] = aujourdhuiDate) : (date[index] = dateAModifier.getDate());
-		// 	date[index] = dateAModifier.getDate();
-		// }
+
 		function addDays(date, days) {
 			var result = new Date(date);
 			result.setDate(result.getDate() + days);
+			console.log('result.getDate()', result.getDate())
+			console.log("days", days)
 			return result;
-		  }
-			
+		}
 
-
-
-console.log("TEST")
 		for (let index = 0; index < jour.length; index++) {
-			// dateAModifier.setDate(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7);
-			console.log('index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7')
-			console.log(index + aujourdhuiDate - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7)
-			console.log('index  - aujourdhuiNumeroJourDansSemaine + 3+deltaSemaine*7')
-			console.log(index  - aujourdhuiNumeroJourDansSemaine + 6+deltaSemaine*7)
-	
-			// /aujourdhui == addDays(aujourdhui,0)
-			const dateTemp=addDays(aujourdhui,index-4+deltaSemaine*7)
+			const dateTemp = addDays(aujourdhui,aujourdhuiNumeroJourDansSemaine<3?index +3-aujourdhuiNumeroJourDansSemaine-7 + deltaSemaine * 7:index +3-aujourdhuiNumeroJourDansSemaine + deltaSemaine * 7);
 			date[index] = dateTemp.getDate();
 		}
-		console.log('date')
-		console.log(date)
+
+	
 		return (
 			<View style={styles.barreJourSemaine}>
 				{jour.map((e, index) => (
 					<Text style={date[index] == aujourdhuiDate ? styles.textJourAujourdhui : styles.textJour}>
 						{e}
 						{date[index]}
-						{/* {index + 3 == aujourdhuiNumeroJourDansSemaine ? aujourdhuiDate : date[index]} */}
 					</Text>
 				))}
 			</View>
@@ -256,15 +225,14 @@ console.log("TEST")
 		velocityThreshold: 0.3,
 		directionalOffsetThreshold: 80,
 	};
-	const semainePlus=(state)=>{
-		console.log(state)
-setDeltaSemaine(deltaSemaine=>deltaSemaine+1)
-
-}
-const semaineMoins=(state)=>{
-	console.log(state)
-	setDeltaSemaine(deltaSemaine=>deltaSemaine-1)
-	}
+	const semainePlus = state => {
+		console.log(state);
+		setDeltaSemaine(deltaSemaine => deltaSemaine + 1);
+	};
+	const semaineMoins = state => {
+		console.log(state);
+		setDeltaSemaine(deltaSemaine => deltaSemaine - 1);
+	};
 
 	return (
 		<GestureRecognizer
