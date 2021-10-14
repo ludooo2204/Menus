@@ -85,7 +85,7 @@ export default styles = StyleSheet.create({
 		// padding: "0.5%"
 	},
 	grille: {
-		height:windowHeight,
+		height:windowHeight*0.93,
 
 		// alignItems: 'center',
 		// alignItems: 'flex-start',
@@ -221,7 +221,7 @@ export default styles = StyleSheet.create({
 		textAlignVertical:"center",
 		// paddingVertical:37,
 		marginVertical: "30%",
-
+borderRadius:10,
 		// paddingVertical:37,
 		height: ((windowHeight) / 10),
 	},

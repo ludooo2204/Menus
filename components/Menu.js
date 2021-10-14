@@ -273,13 +273,13 @@ const semaineMoins=(state)=>{
 			onSwipeRight={state => semaineMoins(state)}
 			config={config}>
 			<BarreMidiSoir />
-			<View style={{height: '90%'}}>
+			<View style={{height: '88%'}}>
 				<PTRView onRefresh={_refresh}>
 					<View style={styles.grille}>
 						<BarreJourSemaine />
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
 							{listePlatChoisi &&
-								listePlatChoisi.map((item, index) => {
+								listePlatChoisi.map((item, index) => { 
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable
