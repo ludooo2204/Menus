@@ -47,7 +47,7 @@ const App = () => {
 				<Stack.Screen name="ViewAll" component={ViewAllUser} />
 				<Stack.Screen name="Delete" component={DeleteUser} />
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
-				<Stack.Screen name="newPlat" component={NewPlat} />
+				{/* <Stack.Screen name="newPlat" component={NewPlat} /> */}
 				<Stack.Screen name="listeCourse" component={ListeCourse} />
 			</Stack.Navigator>
 		</NavigationContainer>

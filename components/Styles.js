@@ -20,6 +20,10 @@ export default styles = StyleSheet.create({
 	},
 	textStyle: {
 		color: 'white',
+		backgroundColor: '#d1dce8',
+		color: '#754f9d',
+
+fontSize:20,
 		fontWeight: 'bold',
 		borderRadius: 20,
 	},
@@ -27,8 +31,33 @@ export default styles = StyleSheet.create({
 		textAlign: 'center',
 		textAlignVertical: 'center',
 		height: (windowHeight * 0.98) / 9,
-		fontSize: 15,
+		fontSize: 20,
 		fontWeight: 'bold',
+		
+	},
+	modalTest: {
+		position: 'absolute',
+		top:windowHeight  / 2,
+		left:windowWidth/5.5,
+		borderRadius:20,
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		justifyContent:"center",
+		backgroundColor:'white',
+		height: windowHeight  / 5,
+		width: windowWidth  / 1.5,
+		fontSize: 20,
+		fontWeight: 'bold',
+		
+	},
+	modalTestText: {
+		
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#754f9d',
+		
 	},
 	modalFiltreText: {
 		// textAlign: 'center',
@@ -43,8 +72,17 @@ export default styles = StyleSheet.create({
 	modalPlat: {
 		backgroundColor: '#d1dce8',
 		borderRadius: 20,
-		width: windowWidth / 2.2,
-		marginHorizontal: 1,
+		width: windowWidth / 2.3,
+		marginHorizontal: 5,
+		marginVertical: 5,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 	modalFiltre: {
 		flex: 1,

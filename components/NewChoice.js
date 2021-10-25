@@ -36,7 +36,7 @@ const NewChoice = ({route, navigation}) => {
 	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
 	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.name));
 	const [listePlatsFiltreeParInput, setListePlatsFiltreeParInput] = useState(null);
-	
+
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
 	const [nbrRepasPossibleState, setnbrRepasPossibleState] = useState('nbrRepasPossible');
 	const [saisonChoisieState, setsaisonChoisieState] = useState('Saison');
@@ -80,8 +80,7 @@ const NewChoice = ({route, navigation}) => {
 		let dataFiltre = bdd.filter(
 			plat =>
 				(!isFiltreActif.type ? true : plat.type ? plat.type.includes(isFiltreActif.type) : false) &&
-				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible)
-				,
+				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible),
 			// (!isFiltreActif.type && plat.type? true : plat.type.includes(isFiltreActif.type)) &&
 			// (!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible),
 		);
@@ -187,14 +186,14 @@ const NewChoice = ({route, navigation}) => {
 		setListePlats(route.params.bdd.map(plat => plat.name));
 	};
 	const removeTextInput = () => {
-		setListePlatsFiltreeParInput(null)
+		setListePlatsFiltreeParInput(null);
 		console.log('removeTextInput');
 		setTextInputRecherche('');
 		setListePlats(route.params.bdd.map(plat => plat.name));
 		inputText.blur();
 	};
-	console.log("listePlatsFiltreeParInput")
-	console.log(listePlatsFiltreeParInput)
+	console.log('listePlatsFiltreeParInput');
+	console.log(listePlatsFiltreeParInput);
 	return (
 		<View style={styles.centeredView}>
 			<View style={{flex: 1}}>
@@ -208,11 +207,9 @@ const NewChoice = ({route, navigation}) => {
 						style={{
 							backgroundColor: '#bec7d1',
 							borderRadius: 20,
-							// borderWidth: 3,
 							borderColor: 'black',
 						}}
 						renderItem={({item, index}) => {
-							//   console.log('item');
 							return (
 								<Pressable
 									onPress={() => {
@@ -267,59 +264,35 @@ const NewChoice = ({route, navigation}) => {
 					<View style={{flexDirection: 'row'}}>
 						<TextInput
 							ref={input => (inputText = input)}
-							style={{backgroundColor: '#ccc8c8', borderRadius: 10}}
+							style={{backgroundColor: '#ccc8c8', borderRadius: 10,fontSize:25,borderWidth: 2,}}
 							onChangeText={onChangeInput}
-							// onFocus={}
-							// onBlur={blurTextInput}
-							// onBlur={()=>setListePlats(route.params.bdd.map(plat => plat.name))}
 							value={textInputRecherche}
 							placeholder="rechercher un plat"
 						/>
 						<Icon name="remove" size={55} color="#754f9d" onPress={removeTextInput} />
 					</View>
 					{listePlat.length != 0 && (
-						<ScrollView 
-						style={{flex:1}}
-						contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap',justifyContent:"center"}}
-						>
-							{listePlatsFiltreeParInput?listePlatsFiltreeParInput.map((item, index) => {
-								return (
-									<View key={index} style={styles.modalPlat}>
-										<Pressable onPress={() => choisirPropositionPlat(item)}>
-											<Text style={styles.modalText}>{item}</Text>
-										</Pressable>
-									</View>
-								);
-							}):listePlat.map((item, index) => {
-								return (
-									<View key={index} style={styles.modalPlat}>
-										<Pressable onPress={() => choisirPropositionPlat(item)}>
-											<Text style={styles.modalText}>{item}</Text>
-										</Pressable>
-									</View>
-								);
-							})}
+						<ScrollView style={{flex: 1}} contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',borderWidth: 2,marginHorizontal:5,borderRadius:10}}>
+							{listePlatsFiltreeParInput
+								? listePlatsFiltreeParInput.map((item, index) => {
+										return (
+											<View key={index} style={styles.modalPlat}>
+												<Pressable onPress={() => choisirPropositionPlat(item)}>
+													<Text style={styles.modalText}>{item}</Text>
+												</Pressable>
+											</View>
+										);
+								  })
+								: listePlat.map((item, index) => {
+										return (
+											<View key={index} style={styles.modalPlat}>
+												<Pressable onPress={() => choisirPropositionPlat(item)}>
+													<Text style={styles.modalText}>{item}</Text>
+												</Pressable>
+											</View>
+										);
+								  })}
 						</ScrollView>
-
-						// <FlatGrid
-						// 	itemDimension={windowWidth / 3}
-						// 	spacing={15}
-						// 	// fixed
-						// 	data={listePlat}
-						// 	style={{
-						// 		backgroundColor: '#FDFDFD',
-						// 		marginVertical: 10,
-						// 	}}
-						// 	renderItem={({item, index}) => {
-						// 		return (
-						// 			<View style={styles.modalPlat}>
-						// 				<Pressable onPress={() => choisirPropositionPlat(item)}>
-						// 					<Text style={styles.modalText}>{item}</Text>
-						// 				</Pressable>
-						// 			</View>
-						// 		);
-						// 	}}
-						// />
 					)}
 				</View>
 			</View>

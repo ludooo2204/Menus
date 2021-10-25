@@ -7,13 +7,13 @@ import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {FlatGrid} from 'react-native-super-grid';
 import styles from './Styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
-
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
+	const [semaineDejaValidé, setSemaineDejaValidé] = useState(null);
 	const [bddDatas, setBddDatas] = useState(null);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
 	const [deltaSemaine, setDeltaSemaine] = useState(0);
@@ -35,6 +35,7 @@ const Menu = ({route, navigation}) => {
 		false,
 		false,
 	]);
+	const [modal1Visible, setModal1Visible] = useState(false);
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
@@ -55,14 +56,26 @@ const Menu = ({route, navigation}) => {
 						for (let i = 0; i < results.rows.length; ++i) {
 							temp.push(results.rows.item(i));
 						}
-						console.log(temp);
 						setBddDatas(temp);
 					});
 				}
 			});
 		});
 	}, []);
-
+	useEffect(() => {
+		let currentDate = new Date();
+		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		console.log('la semaine actuelle est la ', resultat);
+		AsyncStorage.getItem(`histo_menus_semaine_${resultat}`).then(e => {
+			e ? (console.log('resultat', e), setSemaineDejaValidé(true)) : (console.log('ya rien'), setSemaineDejaValidé(false));
+		});
+		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
+	}, []);
+	useEffect(() => {
+		console.log('COUCOUCOUCOU');
+	}, [semaineDejaValidé]);
 	useEffect(() => {
 		// console.log('bddDatas');
 		// console.log(bddDatas);
@@ -90,23 +103,21 @@ const Menu = ({route, navigation}) => {
 
 	//composant interne//////////////////////////////////////////////////////////////////////////////////////
 
-	const NavBar = () => {
+	const NavBar = ({validee}) => {
 		return (
 			<View style={styles.navbar}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Icon name="bars" size={55} color="#754f9d" />
 				<Icon name="calendar" size={55} color="#754f9d" />
-				<Icon name="plus-circle" size={55} color="#754f9d" onPress={() => navigation.navigate('newPlat')} />
+				<Icon name={validee ? 'edit' : 'check-square-o'} size={55} color="#754f9d" onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
 		);
 	};
 
 	const BarreMidiSoir = () => {
-		const aujourdhui=new Date()
-const month = aujourdhui.toLocaleString('FR-fr', { month: 'long' });
-console.log(month);
-		console.log(aujourdhui)
+		const aujourdhui = new Date();
+		const month = aujourdhui.toLocaleString('FR-fr', {month: 'long'});
 		return (
 			<View style={styles.BarreMidiSoir}>
 				<View style={{flex: 3}}></View>
@@ -129,7 +140,7 @@ console.log(month);
 	};
 	const BarreJourSemaine = () => {
 		const aujourdhui = new Date();
-		const aujourdhuiDate = aujourdhui.getDate()+"/"+(aujourdhui.getMonth()+1);
+		const aujourdhuiDate = aujourdhui.getDate() + '/' + (aujourdhui.getMonth() + 1);
 		const aujourdhuiNumeroJourDansSemaine = aujourdhui.getDay();
 
 		let jour = ['mer', 'jeu', 'ven', 'sam', 'dim', 'lun', 'mar'];
@@ -148,25 +159,51 @@ console.log(month);
 					? index + 3 - aujourdhuiNumeroJourDansSemaine - 7 + deltaSemaine * 7
 					: index + 3 - aujourdhuiNumeroJourDansSemaine + deltaSemaine * 7,
 			);
-			date[index] = dateTemp.getDate()+"/"+(dateTemp.getMonth()+1);
+			date[index] = dateTemp.getDate() + '/' + (dateTemp.getMonth() + 1);
 		}
 
 		return (
 			<View style={styles.barreJourSemaine}>
-			
-			<View>
-				{jour.map((e, index) => (
-					<Text style={date[index] == aujourdhuiDate ? styles.textJourAujourdhui : styles.textJour}>
-						{e}
-						{"\n"}
-						<Text style={{fontSize:15}}>{date[index]}</Text>
-					</Text>
-				))}
-			</View></View>
+				<View>
+					{jour.map((e, index) => (
+						<Text key={index} style={date[index] == aujourdhuiDate ? styles.textJourAujourdhui : styles.textJour}>
+							{e}
+							{'\n'}
+							<Text style={{fontSize: 15}}>{date[index]}</Text>
+						</Text>
+					))}
+				</View>
+			</View>
 		);
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////fonctions///////////////////////////////////////////////////////////////////////////////
+
+	
+	const storeData = async value => {
+		console.log('listePlatChoisi');
+		console.log(listePlatChoisi);
+		let currentDate = new Date();
+		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		console.log(value);
+		try {
+			await AsyncStorage.setItem(`histo_menus_semaine_${resultat}`, JSON.stringify(value));
+		} catch (e) {
+			console.log('err', e);
+		}
+	};
+	const supprimerData = ()  => {
+		let currentDate = new Date();
+		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		AsyncStorage.removeItem(`histo_menus_semaine_${resultat}`).then(e => {
+			console.log("remove",e)
+		})
+	};
+
 
 	const preparationCourse = () => {
 		// console.log(listePlatChoisi);
@@ -220,7 +257,7 @@ console.log(month);
 		});
 	};
 	const lockPlat = _numPlatDsSemaine => {
-		// console.log(_numPlatDsSemaine);
+		console.log(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
 		if (newArr[_numPlatDsSemaine]) newArr[_numPlatDsSemaine] = false;
 		else newArr[_numPlatDsSemaine] = true;
@@ -230,6 +267,18 @@ console.log(month);
 	};
 	console.log('render from app.js');
 
+	const enregistrerSemaine = () => {
+		if (!semaineDejaValidé) {
+			let semaineVerrouillée = [true, true, true, true, true, true, true, true, true, true, true, true, true, true];
+			setNumPlatDsSemaineChoisi(semaineVerrouillée);
+			setSemaineDejaValidé(true);
+		}
+		else	setModal1Visible(!modal1Visible);
+
+		//  for (let i = 0; i < 14; i++) {
+		// 	lockPlat(i)
+		//  }
+	};
 	const config = {
 		velocityThreshold: 0.3,
 		directionalOffsetThreshold: 80,
@@ -242,19 +291,63 @@ console.log(month);
 		console.log(state);
 		setDeltaSemaine(deltaSemaine => deltaSemaine - 1);
 	};
-
+	const modifierSemaine = async reponse => {
+		setModal1Visible(!modal1Visible);
+		console.log('reponse');
+		console.log(reponse);
+		if (reponse === 'oui') {
+			setSemaineDejaValidé(false)
+			supprimerData()
+		} else {
+			console.log("non")
+	}
+	};
 	return (
 		<GestureRecognizer
 			style={styles.appContainer}
 			onSwipeLeft={state => semainePlus(state)}
 			onSwipeRight={state => semaineMoins(state)}
 			config={config}>
-						{/* <BarreJourSemaine /> */}
+			{/* <BarreJourSemaine /> */}
 			<BarreMidiSoir />
 			<View style={{height: '88%'}}>
 				<PTRView onRefresh={_refresh}>
 					<View style={styles.grille}>
 						<BarreJourSemaine />
+						<Modal animationType="slide" transparent={true} visible={modal1Visible}>
+							<View style={styles.modalTest}>
+								<Text style={styles.modalTestText}>
+									La semaine a déja été validée. Voulez-vous la modifier?
+								</Text>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => modifierSemaine('oui')}>
+									<Text style={styles.textStyle}>oui</Text>
+								</Pressable>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => modifierSemaine('non')}>
+									<Text style={styles.textStyle}>non</Text>
+								</Pressable>
+							</View>
+						</Modal>
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
 							{listePlatChoisi &&
 								listePlatChoisi.map((item, index) => {
@@ -280,7 +373,7 @@ console.log(month);
 					</View>
 				</PTRView>
 			</View>
-			<NavBar />
+			<NavBar validee={semaineDejaValidé} />
 		</GestureRecognizer>
 	);
 };
