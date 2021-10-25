@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
+import NetInfo from "@react-native-community/netinfo";
 import {proposeplat, proposeMenu, lireDatas} from '../menuAlgo';
 import 'react-native-gesture-handler';
 import PTRView from 'react-native-pull-to-refresh';
@@ -11,6 +12,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
+
+console.log(NetInfo)
+
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [semaineDejaValidé, setSemaineDejaValidé] = useState(null);
@@ -61,6 +65,10 @@ const Menu = ({route, navigation}) => {
 				}
 			});
 		});
+		NetInfo.fetch().then(state => {
+			console.log("Connection type", state.type);
+			console.log("Is connected?", state.isConnected);
+		  });
 	}, []);
 	useEffect(() => {
 		let currentDate = new Date();
@@ -68,23 +76,42 @@ const Menu = ({route, navigation}) => {
 		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
 		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
 		console.log('la semaine actuelle est la ', resultat);
+		let arrayE
 		AsyncStorage.getItem(`histo_menus_semaine_${resultat}`).then(e => {
-			e ? (console.log('resultat', e), setSemaineDejaValidé(true)) : (console.log('ya rien'), setSemaineDejaValidé(false));
+			e ? (
+				arrayE=JSON.parse(e),
+				 setSemaineDejaValidé(true),
+				 setListePlatChoisi(arrayE)
+				 ) : (console.log('ya rien'), setSemaineDejaValidé(false));
 		});
 		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
 	}, []);
-	useEffect(() => {
-		console.log('COUCOUCOUCOU');
-	}, [semaineDejaValidé]);
+
 	useEffect(() => {
 		// console.log('bddDatas');
 		// console.log(bddDatas);
 		lireDatas(bddDatas);
-		if (bddDatas) setListePlatChoisi(proposeMenu());
+		if (bddDatas&&!semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
 	useEffect(() => {
 		console.log('deltaSemaine', deltaSemaine);
+		let currentDate = new Date();
+		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		console.log('la semaine actuelle est la ', resultat);
+		let arrayE
+		AsyncStorage.getItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
+			e ? (
+				arrayE=JSON.parse(e),
+				 setSemaineDejaValidé(true),
+				 setListePlatChoisi(arrayE)
+				 ) : (console.log('ya rien'), setSemaineDejaValidé(false),setListePlatChoisi(proposeMenu()));
+		});
+		console.log(`histo_menus_semaine_${resultat+deltaSemaine}`)
+		
+
 	}, [deltaSemaine]);
 
 	useEffect(() => {
@@ -189,7 +216,7 @@ const Menu = ({route, navigation}) => {
 		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
 		console.log(value);
 		try {
-			await AsyncStorage.setItem(`histo_menus_semaine_${resultat}`, JSON.stringify(value));
+			await AsyncStorage.setItem(`histo_menus_semaine_${resultat+deltaSemaine}`, JSON.stringify(value));
 		} catch (e) {
 			console.log('err', e);
 		}
@@ -199,7 +226,7 @@ const Menu = ({route, navigation}) => {
 		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
 		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
 		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
-		AsyncStorage.removeItem(`histo_menus_semaine_${resultat}`).then(e => {
+		AsyncStorage.removeItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
 			console.log("remove",e)
 		})
 	};
@@ -272,6 +299,7 @@ const Menu = ({route, navigation}) => {
 			let semaineVerrouillée = [true, true, true, true, true, true, true, true, true, true, true, true, true, true];
 			setNumPlatDsSemaineChoisi(semaineVerrouillée);
 			setSemaineDejaValidé(true);
+			storeData(listePlatChoisi)
 		}
 		else	setModal1Visible(!modal1Visible);
 
@@ -298,6 +326,8 @@ const Menu = ({route, navigation}) => {
 		if (reponse === 'oui') {
 			setSemaineDejaValidé(false)
 			supprimerData()
+			let semaineVerrouillée = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+			setNumPlatDsSemaineChoisi(semaineVerrouillée);
 		} else {
 			console.log("non")
 	}
@@ -317,7 +347,7 @@ const Menu = ({route, navigation}) => {
 						<Modal animationType="slide" transparent={true} visible={modal1Visible}>
 							<View style={styles.modalTest}>
 								<Text style={styles.modalTestText}>
-									La semaine a déja été validée. Voulez-vous la modifier?
+									 Voulez-vous la effacer les menus de cette semaine?
 								</Text>
 								<Pressable
 									style={{
