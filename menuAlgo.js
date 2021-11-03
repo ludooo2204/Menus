@@ -113,8 +113,8 @@ const lireDatas = _data => {
 };
 function proposeMenu(numPlatDsSemaineBloqué) {
 	console.log('proposeMenu from menu.js');
-// console.log("numPlatDsSemaineBloqué")
-// console.log(numPlatDsSemaineBloqué)
+	// console.log("numPlatDsSemaineBloqué")
+	// console.log(numPlatDsSemaineBloqué)
 	listePlatsProposés = [];
 	for (let i = 0; i < 14; i++) {
 		// console.log('i ', i);
@@ -123,24 +123,21 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 			// console.log("nomPlatBloqué")
 			// console.log(nomPlatBloqué)
 			// listePlatsProposés.push(nomPlatBloqué);
-			listePlatsProposés[i]=nomPlatBloqué;
+			listePlatsProposés[i] = nomPlatBloqué;
 			// if ()
 		} else {
 			let platProposé = proposePlat(i);
 			// console.log('platProposé');
 			// console.log(platProposé.name);
-			if (!listePlatsProposés[i]) {
-				if (platProposé.nbrPossible =2 ) {
+			if (!listePlatsProposés[i] && platProposé && platProposé.name) {
+				if (platProposé.nbrPossible == 2) {
 					listePlatsProposés[i] = platProposé.name;
 					listePlatsProposés[i + 4] = platProposé.name;
-				} 
-				else if (platProposé.nbrPossible = 3 ) {
+				} else if (platProposé.nbrPossible == 3) {
 					listePlatsProposés[i] = platProposé.name;
 					listePlatsProposés[i + 4] = platProposé.name;
 					listePlatsProposés[i + 6] = platProposé.name;
-				} 
-				
-				else {
+				} else {
 					listePlatsProposés[i] = platProposé.name;
 				}
 			}
@@ -149,9 +146,10 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 	// console.log("listePlatsProposés from menus")
 	// console.log(listePlatsProposés)
 	// console.log(listePlatsProposés.length)
-	if (listePlatsProposés.length>14) listePlatsProposés=listePlatsProposés.slice(0,14)
+	if (listePlatsProposés.length > 14) listePlatsProposés = listePlatsProposés.slice(0, 14);
+	
 	for (let i = 0; i < 14; i++) {
-		plat[i].dejaDansSemaine = false;
+		if (plat[i])	plat[i].dejaDansSemaine = false;
 	}
 	// console.log("listePlatsProposés slicé")
 	// console.log(listePlatsProposés)
@@ -161,21 +159,23 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 
 function proposePlat(emplacementRepasDansSemaine) {
 	//soir
-	if (emplacementRepasDansSemaine % 2 == 1) {
-		plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'midi' && !plat.dejaDansSemaine);
-	}
-	//midi
-	if (emplacementRepasDansSemaine % 2 == 0) {
-		plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'soir' && !plat.dejaDansSemaine);
-	}
-	if (plats[emplacementRepasDansSemaine].length == 0) {
-		console.log("C'est vide !!!!!!!!!!!!!!");
-		return null;
-	}
-	plat[emplacementRepasDansSemaine] = getRndOfArray(plats[emplacementRepasDansSemaine]);
+	if (listePlats) {
+		if (emplacementRepasDansSemaine % 2 == 1) {
+			plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'midi' && !plat.dejaDansSemaine);
+		}
+		//midi
+		if (emplacementRepasDansSemaine % 2 == 0) {
+			plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'soir' && !plat.dejaDansSemaine);
+		}
+		if (plats[emplacementRepasDansSemaine].length == 0) {
+			console.log("C'est vide !!!!!!!!!!!!!!");
+			return null;
+		}
+		plat[emplacementRepasDansSemaine] = getRndOfArray(plats[emplacementRepasDansSemaine]);
 
-	plat[emplacementRepasDansSemaine].dejaDansSemaine = true;
-	return plat[emplacementRepasDansSemaine];
+		plat[emplacementRepasDansSemaine].dejaDansSemaine = true;
+		return plat[emplacementRepasDansSemaine];
+	}
 }
 
 function getRndOfArray(array) {
