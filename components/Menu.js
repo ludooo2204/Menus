@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import {proposeplat, proposeMenu, lireDatas} from '../menuAlgo';
 import 'react-native-gesture-handler';
 import PTRView from 'react-native-pull-to-refresh';
@@ -13,7 +13,7 @@ import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
 
-console.log(NetInfo)
+console.log(NetInfo);
 
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -66,23 +66,19 @@ const Menu = ({route, navigation}) => {
 			});
 		});
 		NetInfo.fetch().then(state => {
-			console.log("Connection type", state.type);
-			console.log("Is connected?", state.isConnected);
-		  });
+			console.log('Connection type', state.type);
+			console.log('Is connected?', state.isConnected);
+		});
 	}, []);
 	useEffect(() => {
-		let currentDate = new Date();
-		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
-		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
-		console.log('la semaine actuelle est la ', resultat);
-		let arrayE
-		AsyncStorage.getItem(`histo_menus_semaine_${resultat}`).then(e => {
-			e ? (
-				arrayE=JSON.parse(e),
-				 setSemaineDejaValidé(true),
-				 setListePlatChoisi(arrayE)
-				 ) : (console.log('ya rien'), setSemaineDejaValidé(false));
+		// let currentDate = new Date();
+		// let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		// let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		// let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
+		let arrayE;
+		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`).then(e => {
+			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien'), setSemaineDejaValidé(false));
 		});
 		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
 	}, []);
@@ -91,33 +87,24 @@ const Menu = ({route, navigation}) => {
 		// console.log('bddDatas');
 		// console.log(bddDatas);
 		lireDatas(bddDatas);
-		if (bddDatas&&!semaineDejaValidé) setListePlatChoisi(proposeMenu());
+		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
 	useEffect(() => {
 		console.log('deltaSemaine', deltaSemaine);
-		let currentDate = new Date();
-		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
-		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
-		console.log('la semaine actuelle est la ', resultat);
-		let arrayE
-		AsyncStorage.getItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
-			e ? (
-				arrayE=JSON.parse(e),
-				 setSemaineDejaValidé(true),
-				 setListePlatChoisi(arrayE)
-				 ) : (console.log('ya rien'), setSemaineDejaValidé(false),setListePlatChoisi(proposeMenu()));
+		// let currentDate = new Date();
+		// let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		// let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
+		// let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		console.log('la semaine visualisée est la ', getDateFormatée().resultat + deltaSemaine);
+		let arrayE;
+		// AsyncStorage.getItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
+		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
+			e
+				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+				: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
 		});
-		console.log(`histo_menus_semaine_${resultat+deltaSemaine}`)
-		
-
 	}, [deltaSemaine]);
-
-	useEffect(() => {
-		// console.log("jourSemaine")
-		// console.log(jourSemaine)
-	}, [jourSemaine]);
 
 	if (route.params) {
 		const {platChoisiParams} = route.params;
@@ -136,7 +123,7 @@ const Menu = ({route, navigation}) => {
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Icon name="bars" size={55} color="#754f9d" />
 				<Icon name="calendar" size={55} color="#754f9d" />
-				<Icon name={validee ? 'edit' : 'check-square-o'} size={55} color="#754f9d" onPress={enregistrerSemaine} />
+				<Icon name={validee ? 'check-square-o' : 'square-o'} size={55} color="#754f9d" onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
 		);
@@ -206,31 +193,31 @@ const Menu = ({route, navigation}) => {
 
 	/////////////////fonctions///////////////////////////////////////////////////////////////////////////////
 
-	
-	const storeData = async value => {
-		console.log('listePlatChoisi');
-		console.log(listePlatChoisi);
+	const getDateFormatée = () => {
 		let currentDate = new Date();
 		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
+		let annee = currentDate.getFullYear();
 		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
+		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7) - 1;
+		return {currentDate, premierJanv, annee, nbrDeJour, resultat};
+	};
+	const storeOnlineData = async value => {};
+	const storeData = async value => {
+		console.log('value');
 		console.log(value);
+		console.log('key storage');
+		console.log(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`);
 		try {
-			await AsyncStorage.setItem(`histo_menus_semaine_${resultat+deltaSemaine}`, JSON.stringify(value));
+			await AsyncStorage.setItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`, JSON.stringify(value));
 		} catch (e) {
 			console.log('err', e);
 		}
 	};
-	const supprimerData = ()  => {
-		let currentDate = new Date();
-		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
-		let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
-		AsyncStorage.removeItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
-			console.log("remove",e)
-		})
+	const supprimerData = () => {
+		AsyncStorage.removeItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`).then(e => {
+			console.log('remove', e);
+		});
 	};
-
 
 	const preparationCourse = () => {
 		// console.log(listePlatChoisi);
@@ -238,10 +225,7 @@ const Menu = ({route, navigation}) => {
 		navigation.navigate('listeCourse', {listeDesCourses});
 	};
 
-	const paramsPlat = a => {
-		// console.log('a', a);
-		// console.log('numPlatDsSemaine', numPlatDsSemaine);
-	};
+	const paramsPlat = a => {};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
 		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
@@ -249,7 +233,6 @@ const Menu = ({route, navigation}) => {
 		let newArr = [...numPlatDsSemaineChoisi];
 		newArr[_numPlatDsSemaine] = true;
 		setNumPlatDsSemaineChoisi(newArr);
-		// proposePlat(_numPlatDsSemaine)
 	};
 	const closeModal = () => {
 		console.log('FERME LA');
@@ -265,20 +248,15 @@ const Menu = ({route, navigation}) => {
 			const numPlatBloqué = [];
 			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
 				if (numPlatDsSemaineChoisi[i]) {
-					// console.log('numPlatDsSemaineoisi');
-					// console.log(numPlatDsSemaineChoisi);
 					numPlatBloqué.push([i, listePlatChoisi[i]]);
 				}
 			}
-			// console.log('numPlatBloqué');
-			// console.log(numPlatBloqué);
 			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
 	};
 
 	const _refresh = () => {
 		return new Promise(resolve => {
-			// setTimeout(() => {refreshMenus();resolve()}, 100);
 			resolve();
 			refreshMenus();
 		});
@@ -288,24 +266,15 @@ const Menu = ({route, navigation}) => {
 		let newArr = [...numPlatDsSemaineChoisi];
 		if (newArr[_numPlatDsSemaine]) newArr[_numPlatDsSemaine] = false;
 		else newArr[_numPlatDsSemaine] = true;
-		// console.log('newArrLongPress');
-		// console.log(newArr);
 		setNumPlatDsSemaineChoisi(newArr);
 	};
-	console.log('render from app.js');
 
 	const enregistrerSemaine = () => {
 		if (!semaineDejaValidé) {
-			let semaineVerrouillée = [true, true, true, true, true, true, true, true, true, true, true, true, true, true];
-			setNumPlatDsSemaineChoisi(semaineVerrouillée);
 			setSemaineDejaValidé(true);
-			storeData(listePlatChoisi)
-		}
-		else	setModal1Visible(!modal1Visible);
-
-		//  for (let i = 0; i < 14; i++) {
-		// 	lockPlat(i)
-		//  }
+			storeData(listePlatChoisi);
+			storeOnlineData(listePlatChoisi);
+		} else setModal1Visible(!modal1Visible);
 	};
 	const config = {
 		velocityThreshold: 0.3,
@@ -324,13 +293,13 @@ const Menu = ({route, navigation}) => {
 		console.log('reponse');
 		console.log(reponse);
 		if (reponse === 'oui') {
-			setSemaineDejaValidé(false)
-			supprimerData()
+			setSemaineDejaValidé(false);
+			supprimerData();
 			let semaineVerrouillée = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 			setNumPlatDsSemaineChoisi(semaineVerrouillée);
 		} else {
-			console.log("non")
-	}
+			console.log('non');
+		}
 	};
 	return (
 		<GestureRecognizer
@@ -346,9 +315,7 @@ const Menu = ({route, navigation}) => {
 						<BarreJourSemaine />
 						<Modal animationType="slide" transparent={true} visible={modal1Visible}>
 							<View style={styles.modalTest}>
-								<Text style={styles.modalTestText}>
-									 Voulez-vous la effacer les menus de cette semaine?
-								</Text>
+								<Text style={styles.modalTestText}>Voulez-vous la modifier les menus de cette semaine et supprimer sa validation?</Text>
 								<Pressable
 									style={{
 										backgroundColor: '#d1dce8',
