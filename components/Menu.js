@@ -11,6 +11,8 @@ import styles from './Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import axios from 'axios';
+
 var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
 
 console.log(NetInfo);
@@ -40,6 +42,7 @@ const Menu = ({route, navigation}) => {
 		false,
 	]);
 	const [modal1Visible, setModal1Visible] = useState(false);
+	const [modalConnectionVisible, setModalConnectionVisible] = useState(false);
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
@@ -65,44 +68,109 @@ const Menu = ({route, navigation}) => {
 				}
 			});
 		});
-		NetInfo.fetch().then(state => {
-			console.log('Connection type', state.type);
-			console.log('Is connected?', state.isConnected);
-		});
 	}, []);
 	useEffect(() => {
-		// let currentDate = new Date();
-		// let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
-		// let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		// let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
 		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
 		let arrayE;
-		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`).then(e => {
+		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
 			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien'), setSemaineDejaValidé(false));
 		});
 		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
 	}, []);
 
 	useEffect(() => {
-		// console.log('bddDatas');
-		// console.log(bddDatas);
 		lireDatas(bddDatas);
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
 	useEffect(() => {
-		console.log('deltaSemaine', deltaSemaine);
-		// let currentDate = new Date();
-		// let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
-		// let nbrDeJour = Math.floor((currentDate - premierJanv) / (24 * 60 * 60 * 1000));
-		// let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7);
-		console.log('la semaine visualisée est la ', getDateFormatée().resultat + deltaSemaine);
 		let arrayE;
 		// AsyncStorage.getItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
 			e
 				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
 				: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
+		});
+		NetInfo.fetch().then(state => {
+			console.log('Connection type', state.type);
+			console.log('Is connected?', state.isConnected);
+			if (state.isConnected) {
+				axios
+					.post(
+						'http://lomano.go.yo.fr/api/menus/getMenuParSemaine.php',
+						`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`,
+					)
+					.then(rep => {
+						const data = rep.data;
+						console.log('data');
+						// console.log(data)
+						// sous forme d'array [{id:1,menu:["pizza",...],nom:"histo_menus_semaine_44-2021"}]
+						// const keyUnique = [...new Set(data.map(e => e.nom))];
+						let menuOnline;
+						if (data.length > 1) {
+							menuOnline = data.sort((a, b) => b.id - a.id)[0];
+						} else menuOnline = data[0];
+						// for (const iterator of keyUnique) {
+						// 	const datasByKeyUnique = data.filter(e => e.nom == iterator);
+						// 	if (datasByKeyUnique.length>1) {
+						// 		const menuAvecIdLePlusGrand= datasByKeyUnique.sort((a,b)=>b.id-a.id)[0]
+						// 		listeMenu.push(menuAvecIdLePlusGrand)
+						// 	}
+						// 	else 	listeMenu.push(datasByKeyUnique)
+						// }
+
+
+
+
+
+
+
+
+
+
+
+
+						///////IL Y A UN PROBLEME AVEC L'EGALITé EN DESSOUS. A CAUSE DU DELAI DU LISTEPLATCHOISI VOIR AVEC UN USEEFFECT ADAPTEE
+						console.log(menuOnline);
+						if (menuOnline && listePlatChoisi != null) {
+							if (menuOnline.menu == JSON.stringify(listePlatChoisi)) {
+								console.log('le menu local est le meme que celui en ligne');
+								console.log('menuOnline');
+								console.log(menuOnline.menu);
+								console.log('listePlatChoisi');
+								console.log(listePlatChoisi);
+								console.log(menuOnline.menu == listePlatChoisi);
+							} else {
+								console.log("le menu local n'est pas le meme !!");
+								console.log('menuOnline');
+								console.log(JSON.parse(menuOnline.menu));
+								console.log(typeof JSON.parse(menuOnline.menu));
+								console.log('listePlatChoisi');
+								console.log(listePlatChoisi);
+								console.log(typeof listePlatChoisi);
+								console.log(menuOnline.menu== JSON.stringify(listePlatChoisi));
+							}
+						} else {
+							console.log("le menu online n'existe pas !");
+						}
+					});
+
+
+
+
+
+
+
+
+
+
+					
+			} else {
+				// TODO
+				// create modal
+				console.log('PAS CONNECTEEEEEE!');
+				setModalConnectionVisible(true);
+			}
 		});
 	}, [deltaSemaine]);
 
@@ -201,20 +269,45 @@ const Menu = ({route, navigation}) => {
 		let resultat = Math.ceil((currentDate.getDay() + 1 + nbrDeJour) / 7) - 1;
 		return {currentDate, premierJanv, annee, nbrDeJour, resultat};
 	};
-	const storeOnlineData = async value => {};
-	const storeData = async value => {
-		console.log('value');
-		console.log(value);
-		console.log('key storage');
-		console.log(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`);
+	const storeOnlineData = () => {
+		console.log(listePlatChoisi);
+		const nomKey = `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`;
+		const menuToSave = {key: nomKey, menu: JSON.stringify(listePlatChoisi)};
+		console.log('menuToSave');
+		console.log(menuToSave);
 		try {
-			await AsyncStorage.setItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`, JSON.stringify(value));
+			fetch('http://lomano.go.yo.fr/api/menus/postMenuParSemaine.php', {
+				method: 'post',
+				headers: {
+					Accept: 'application/json, text/plain, */*',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(menuToSave),
+			})
+				.then(res => {
+					res.json();
+
+					// .then((res) => {
+					// 	console.log(res);
+				})
+				.catch(err => console.log(err));
+		} catch (e) {
+			console.log('err', e);
+		}
+	};
+	const storeData = async value => {
+		console.log(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`);
+		try {
+			await AsyncStorage.setItem(
+				`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`,
+				JSON.stringify(value),
+			);
 		} catch (e) {
 			console.log('err', e);
 		}
 	};
 	const supprimerData = () => {
-		AsyncStorage.removeItem(`histo_menus_semaine_${getDateFormatée().resultat}-${getDateFormatée().annee}`).then(e => {
+		AsyncStorage.removeItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
 			console.log('remove', e);
 		});
 	};
@@ -342,6 +435,27 @@ const Menu = ({route, navigation}) => {
 									}}
 									onPress={() => modifierSemaine('non')}>
 									<Text style={styles.textStyle}>non</Text>
+								</Pressable>
+							</View>
+						</Modal>
+						<Modal animationType="slide" transparent={true} visible={modalConnectionVisible}>
+							<View style={styles.modalTest}>
+								<Text style={styles.modalTestText}>
+									Attention : vous ne semblez pas connecté à internet. vos modifications ne seront pas prise en compte en ligne
+								</Text>
+
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => setModalConnectionVisible(false)}>
+									<Text style={styles.textStyle}>ok</Text>
 								</Pressable>
 							</View>
 						</Modal>
