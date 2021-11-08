@@ -110,14 +110,7 @@ const Menu = ({route, navigation}) => {
 						if (data.length > 1) {
 							menuOnline = data.sort((a, b) => b.id - a.id)[0];
 						} else menuOnline = data[0];
-						// for (const iterator of keyUnique) {
-						// 	const datasByKeyUnique = data.filter(e => e.nom == iterator);
-						// 	if (datasByKeyUnique.length>1) {
-						// 		const menuAvecIdLePlusGrand= datasByKeyUnique.sort((a,b)=>b.id-a.id)[0]
-						// 		listeMenu.push(menuAvecIdLePlusGrand)
-						// 	}
-						// 	else 	listeMenu.push(datasByKeyUnique)
-						// }
+			
 
 
 
