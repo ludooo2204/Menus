@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
-import {openDatabase} from 'react-native-sqlite-storage';
+// import {openDatabase} from 'react-native-sqlite-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {proposeplat, proposeMenu, lireDatas} from '../menuAlgo';
 import 'react-native-gesture-handler';
@@ -13,8 +13,13 @@ import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import axios from 'axios';
 
-var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
+import data from '../plats.json';
 
+
+
+// var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
+// console.log('db')
+// console.log(db)
 console.log(NetInfo);
 
 const Menu = ({route, navigation}) => {
@@ -22,6 +27,7 @@ const Menu = ({route, navigation}) => {
 	const [semaineDejaValidé, setSemaineDejaValidé] = useState(null);
 	const [bddDatas, setBddDatas] = useState(null);
 	const [listePlatChoisi, setListePlatChoisi] = useState(null);
+	const [listePlatChoisiOnline, setListePlatChoisiOnline] = useState(null);
 	const [deltaSemaine, setDeltaSemaine] = useState(0);
 	const [jourSemaine, setJourSemaine] = useState([]);
 	const [numPlatDsSemaine, setNumPlatDsSemaine] = useState(null);
@@ -42,50 +48,86 @@ const Menu = ({route, navigation}) => {
 		false,
 	]);
 	const [modal1Visible, setModal1Visible] = useState(false);
+	const [modalSynchroMenuVisible, setModalSynchroMenuVisible] = useState(false);
 	const [modalConnectionVisible, setModalConnectionVisible] = useState(false);
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
-		db.transaction(function (txn) {
-			txn.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'", [], function (tx, res) {
-				// console.log('item:', res.rows.length);
-				if (res.rows.length == 0) {
-					txn.executeSql('DROP TABLE IF EXISTS table_plat', []);
-					txn.executeSql(
-						'CREATE TABLE IF NOT EXISTS table_plat(plat_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(40), type VARCHAR(20), nbrPossible INTEGER)',
-						[],
-					);
-				} else {
-					tx.executeSql('SELECT * FROM table_plat', [], (tx, results) => {
-						var temp = [];
-						for (let i = 0; i < results.rows.length; ++i) {
-							temp.push(results.rows.item(i));
-						}
-						setBddDatas(temp);
-					});
-				}
-			});
-		});
+		// db.transaction(function (txn) {
+		// 	txn.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'", [], function (tx, res) {
+		// 		console.log('item:', res.rows.length);
+		// 		if (res.rows.length == 0) {
+		// 			txn.executeSql('DROP TABLE IF EXISTS table_plat', []);
+		// 			txn.executeSql(
+		// 				'CREATE TABLE IF NOT EXISTS table_plat(plat_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(40), type VARCHAR(20), nbrPossible INTEGER)',
+		// 				[],
+		// 			);
+		// 		} else {
+		// 			tx.executeSql('SELECT * FROM table_plat', [], (tx, results) => {
+		// 				console.log('results')
+		// 				console.log(results)
+		// 				var temp = [];
+		// 				for (let i = 0; i < results.rows.length; ++i) {
+		// 					temp.push(results.rows.item(i));
+		// 				}
+		// 				setBddDatas(temp);
+		// 			});
+		// 		}
+		// 	});
+		// });
 	}, []);
+	useEffect(() => {
+		console.log('___________________listePlatChoisi____________')
+		// console.log(listePlatChoisi)
+		if (data)	{
+			// console.log("data")
+			// console.log("data")
+			// console.log("data")
+			// console.log("data")
+			// console.log(data)
+			setBddDatas(data)
+		}
+		else console.log("pas de data")
+		
+	}, [listePlatChoisi])
 	useEffect(() => {
 		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
 		let arrayE;
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
-			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien'), setSemaineDejaValidé(false));
+			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien dans le key '+`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`), setSemaineDejaValidé(false));
 		});
+	
 		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
 	}, []);
 
 	useEffect(() => {
+		console.log("coucou")
 		lireDatas(bddDatas);
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
+	// useEffect(() => {
+	// 	if (listePlatChoisiOnline && listePlatChoisi != null) {
+	// 		console.log('listePlatChoisiOnline.menu');
+	// 		console.log(listePlatChoisiOnline.menu);
+	// 		console.log('JSON.stringify(listePlatChoisi)');
+	// 		console.log(JSON.stringify(listePlatChoisi));
+
+	// 		if (listePlatChoisiOnline.menu == JSON.stringify(listePlatChoisi)) {
+	// 			console.log('le menu local est le meme que celui en ligne');
+	// 		} else {
+	// 			console.log("le menu local n'est pas le meme !!");
+	// 			setModalSynchroMenuVisible(true);
+	// 		}
+	// 	} else {
+	// 		console.log("le menu online n'existe pas !");
+	// 	}
+	// }, [listePlatChoisiOnline]);
+
 	useEffect(() => {
 		let arrayE;
-		// AsyncStorage.getItem(`histo_menus_semaine_${resultat+deltaSemaine}`).then(e => {
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
 			e
 				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
@@ -102,62 +144,13 @@ const Menu = ({route, navigation}) => {
 					)
 					.then(rep => {
 						const data = rep.data;
-						console.log('data');
-						// console.log(data)
-						// sous forme d'array [{id:1,menu:["pizza",...],nom:"histo_menus_semaine_44-2021"}]
-						// const keyUnique = [...new Set(data.map(e => e.nom))];
 						let menuOnline;
 						if (data.length > 1) {
 							menuOnline = data.sort((a, b) => b.id - a.id)[0];
 						} else menuOnline = data[0];
-			
 
-
-
-
-
-
-
-
-
-
-
-
-						///////IL Y A UN PROBLEME AVEC L'EGALITé EN DESSOUS. A CAUSE DU DELAI DU LISTEPLATCHOISI VOIR AVEC UN USEEFFECT ADAPTEE
-						console.log(menuOnline);
-						if (menuOnline && listePlatChoisi != null) {
-							if (menuOnline.menu == JSON.stringify(listePlatChoisi)) {
-								console.log('le menu local est le meme que celui en ligne');
-								console.log('menuOnline');
-								console.log(menuOnline.menu);
-								console.log('listePlatChoisi');
-								console.log(listePlatChoisi);
-								console.log(menuOnline.menu == listePlatChoisi);
-							} else {
-								console.log("le menu local n'est pas le meme !!");
-								console.log('menuOnline');
-								console.log(JSON.parse(menuOnline.menu));
-								console.log(typeof JSON.parse(menuOnline.menu));
-								console.log('listePlatChoisi');
-								console.log(listePlatChoisi);
-								console.log(typeof listePlatChoisi);
-								console.log(menuOnline.menu== JSON.stringify(listePlatChoisi));
-							}
-						} else {
-							console.log("le menu online n'existe pas !");
-						}
+						setListePlatChoisiOnline(menuOnline);
 					});
-
-
-
-
-
-
-
-
-
-
-					
 			} else {
 				// TODO
 				// create modal
@@ -168,6 +161,8 @@ const Menu = ({route, navigation}) => {
 	}, [deltaSemaine]);
 
 	if (route.params) {
+		console.log("route.params")
+		console.log(route.params)
 		const {platChoisiParams} = route.params;
 		let newArr = [...listePlatChoisi];
 		newArr[numPlatDsSemaine] = platChoisiParams;
@@ -254,6 +249,8 @@ const Menu = ({route, navigation}) => {
 
 	/////////////////fonctions///////////////////////////////////////////////////////////////////////////////
 
+
+
 	const getDateFormatée = () => {
 		let currentDate = new Date();
 		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
@@ -314,7 +311,9 @@ const Menu = ({route, navigation}) => {
 	const paramsPlat = a => {};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
-		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
+		console.log("coucou josé");
+
+		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas.plats});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
 		newArr[_numPlatDsSemaine] = true;
@@ -387,6 +386,16 @@ const Menu = ({route, navigation}) => {
 			console.log('non');
 		}
 	};
+
+	const exporterMenu = () => {
+		storeOnlineData(listePlatChoisi);
+		setModalSynchroMenuVisible(false);
+	};
+	const importerMenu = () => {
+		storeData(listePlatChoisiOnline);
+		setModalSynchroMenuVisible(false);
+	};
+
 	return (
 		<GestureRecognizer
 			style={styles.appContainer}
@@ -428,6 +437,40 @@ const Menu = ({route, navigation}) => {
 									}}
 									onPress={() => modifierSemaine('non')}>
 									<Text style={styles.textStyle}>non</Text>
+								</Pressable>
+							</View>
+						</Modal>
+						<Modal animationType="slide" transparent={true} visible={modalSynchroMenuVisible}>
+							<View style={styles.modalTest}>
+								<Text style={styles.modalTestText}>
+									Attention : les menus ne sont pas les mêmes que ceux en ligne. Voulez-vous importer vos menus ou les exporter ?
+								</Text>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => importerMenu()}>
+									<Text style={styles.textStyle}>importer</Text>
+								</Pressable>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => exporterMenu()}>
+									<Text style={styles.textStyle}>exporter</Text>
 								</Pressable>
 							</View>
 						</Modal>

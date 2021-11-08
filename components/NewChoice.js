@@ -34,7 +34,8 @@ const NewChoice = ({route, navigation}) => {
 		feculent: false,
 	});
 	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
-	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.name));
+	// const [listePlat, setListePlats] = useState(route.params.bdd);
+	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.nom));
 	const [listePlatsFiltreeParInput, setListePlatsFiltreeParInput] = useState(null);
 
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
@@ -58,35 +59,25 @@ const NewChoice = ({route, navigation}) => {
 	const [textInputRecherche, setTextInputRecherche] = useState(null);
 	// const [textInputRecherche, setTextInputRecherche] = useState(null);
 	const {bdd} = route.params;
-	// console.log("bdd")
-	// console.log(bdd)
 
 	useEffect(() => {
-		if (bdd) setListePlats(bdd.map(item => item.name));
-		console.log('listePlat');
-		console.log(listePlat);
+		if (bdd)  setListePlats(bdd.map(item => item.nom));
+console.log("bdd")
+console.log(bdd)
 	}, [bdd]);
 
+
+
+
 	useEffect(() => {
-		// console.log(' :xdvnsdnvlkdwn');
-		console.log(listePlat);
-	}, [listePlat]);
-	useEffect(() => {
-		// let dataFiltre = data.plats.filter(
-		console.log('bdd');
-		console.log(bdd);
-		bdd.map(plat => (plat.type ? console.log(plat.type.includes(isFiltreActif.type)) : console.log('merde')));
+		console.log('isFiltreActif');
 		console.log(isFiltreActif);
 		let dataFiltre = bdd.filter(
 			plat =>
-				(!isFiltreActif.type ? true : plat.type ? plat.type.includes(isFiltreActif.type) : false) &&
-				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible),
-			// (!isFiltreActif.type && plat.type? true : plat.type.includes(isFiltreActif.type)) &&
-			// (!isFiltreActif.nbrRepasPossible ? true : plat.nbrPossible == isFiltreActif.nbrRepasPossible),
+				(!isFiltreActif.type ? true : plat.typePlat ? plat.typePlat.includes(isFiltreActif.type) : false) &&
+				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrDeRepasPossible == isFiltreActif.nbrRepasPossible),
 		);
-		console.log('dataFiltre');
-		console.log(dataFiltre);
-		setListePlats(dataFiltre.map(plat => plat.name));
+		setListePlats(dataFiltre.map(plat => plat.nom));
 	}, [isFiltreActif]);
 
 	useEffect(() => {
@@ -116,7 +107,10 @@ const NewChoice = ({route, navigation}) => {
 	};
 
 	const filtreParTypeDeRepas = () => {
+		console.log("filtre par type de repas")
 		countCategoriePlat++;
+		console.log("filtre actif")
+		console.log(isFiltreActif)
 		let categoriePlatChoisi = categoriePlat[countCategoriePlat - 1];
 		if (countCategoriePlat > categoriePlat.length) {
 			countCategoriePlat = 0;
@@ -159,6 +153,7 @@ const NewChoice = ({route, navigation}) => {
 
 	const choisirPropositionPlat = item => {
 		console.log('item ==', item);
+
 		navigation.navigate({name: 'menu', params: {platChoisiParams: item}});
 		// paramsPlat(item)
 	};
@@ -173,6 +168,7 @@ const NewChoice = ({route, navigation}) => {
 				if (platMinuscule.includes(filtreMinuscule)) listeFiltréesParInput.push(iterator);
 			}
 			console.log('listeFiltréesParInput');
+			console.log('listeFiltréesParInput');
 			console.log(listeFiltréesParInput);
 			console.log('value');
 			console.log(value);
@@ -183,17 +179,16 @@ const NewChoice = ({route, navigation}) => {
 	const blurTextInput = () => {
 		console.log('blur');
 		setTextInputRecherche('');
-		setListePlats(route.params.bdd.map(plat => plat.name));
+		setListePlats(route.params.bdd.map(plat => plat.nom));
 	};
 	const removeTextInput = () => {
 		setListePlatsFiltreeParInput(null);
 		console.log('removeTextInput');
 		setTextInputRecherche('');
-		setListePlats(route.params.bdd.map(plat => plat.name));
+		setListePlats(route.params.bdd.map(plat => plat.nom));
 		inputText.blur();
 	};
-	console.log('listePlatsFiltreeParInput');
-	console.log(listePlatsFiltreeParInput);
+
 	return (
 		<View style={styles.centeredView}>
 			<View style={{flex: 1}}>
@@ -213,7 +208,7 @@ const NewChoice = ({route, navigation}) => {
 							return (
 								<Pressable
 									onPress={() => {
-										// console.log(index, item);
+										console.log(index, item);
 										switch (index) {
 											//type de repas
 											case 0:
