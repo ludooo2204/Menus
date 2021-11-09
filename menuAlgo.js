@@ -1,40 +1,9 @@
-import data from './plats.json';
-console.log("appel bdd");
-fetch("http://localhost/API_menu/getPlats.php")
-	.then((reponse) => reponse.json())
-	.then((data) => {
-		console.log("data");
-		console.log(data);
-		const platUnique = new Set(data.map((plat) => plat.nom_plat));
-		let platsAvecIngredient = [];
-		for (const iterator of platUnique) {
-			let ingredients = [];
-			for (const iterator2 of data) {
-				if (iterator2.nom_plat == iterator) ingredients.push(iterator2.nom_ingredient);
-			}
-			// console.log(iterator);
-			const platAvecIngredient = data.filter((e) => e.nom_plat == iterator)[0];
-			platsAvecIngredient.push({
-				nom_plat: platAvecIngredient.nom_plat,
-				féculentsConseillés: platAvecIngredient.féculentsConseillés,
-				légumesConseillés: platAvecIngredient.légumesConseillés,
-				midiSoir: platAvecIngredient.midiSoir,
-				nbrDeRepasPossible: platAvecIngredient.nbrDeRepasPossible,
-				ingredients,
-				saison: platAvecIngredient.saison,
-				tempsDePreparation: platAvecIngredient.tempsDePreparation,
-				typePlat: platAvecIngredient.typePlat,
-				typeViande: platAvecIngredient.typeViande,
-			});
-			// console.log(platsAvecIngredient);
-		}
-		// setBddPlats(platsAvecIngredient);
-	})
-	.catch((fail) => console.log("fail", fail));
-// console.log('data')
+// import data from './plats.json';
+
+// console.log('data from ./plats.json')
 // console.log(data)
-// let listePlats;
-console.log('MENU.JS');
+// // let listePlats;
+// console.log('MENU.JS');
 
 let repasDansSemaine = [
 	'mercrediMidi',
@@ -134,14 +103,15 @@ function nouveauPlat() {
 	// });
 }
 
-let listePlats = data.plats;
+let listePlats;
+// let listePlats = data.plats;
 let listePlatsProposés;
 let plat = [];
 const lireDatas = _data => {
-	// console.log('_data from menus');
-	// console.log(_data);
-	// console.log(listePlats);
-	// listePlats = _data;
+	console.log('_data from menus');
+	console.log(_data);
+	console.log(listePlats);
+	listePlats = _data;
 };
 function proposeMenu(numPlatDsSemaineBloqué) {
 	console.log('proposeMenu from menu.js');
@@ -159,22 +129,22 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 			// if ()
 		} else {
 			let platProposé = proposePlat(i);
-			// console.log('platProposé');
-			// console.log(platProposé);
+			console.log('platProposé');
+			console.log(platProposé);
 			// console.log(platProposé.nom);
-			// console.log('listePlatsProposés');
-			// console.log(listePlatsProposés);
-			if (!listePlatsProposés[i] && platProposé && platProposé.nom) {
+			console.log('listePlatsProposés');
+			console.log(listePlatsProposés);
+			if (!listePlatsProposés[i] && platProposé && platProposé.nom_plat) {
 			
 				if (platProposé.nbrPossible == 2) {
-					listePlatsProposés[i] = platProposé.nom;
-					listePlatsProposés[i + 4] = platProposé.nom;
+					listePlatsProposés[i] = platProposé.nom_plat;
+					listePlatsProposés[i + 4] = platProposé.nom_plat;
 				} else if (platProposé.nbrPossible == 3) {
-					listePlatsProposés[i] = platProposé.nom;
-					listePlatsProposés[i + 4] = platProposé.nom;
-					listePlatsProposés[i + 6] = platProposé.nom;
+					listePlatsProposés[i] = platProposé.nom_plat;
+					listePlatsProposés[i + 4] = platProposé.nom_plat;
+					listePlatsProposés[i + 6] = platProposé.nom_plat;
 				} else {
-					listePlatsProposés[i] = platProposé.nom;
+					listePlatsProposés[i] = platProposé.nom_plat;
 				}
 			}
 		}
@@ -187,9 +157,9 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 	for (let i = 0; i < 14; i++) {
 		if (plat[i]) plat[i].dejaDansSemaine = false;
 	}
-	// console.log("listePlatsProposés slicé")
-	// console.log(listePlatsProposés)
-	// console.log(listePlatsProposés.length)
+	console.log("listePlatsProposés slicé")
+	console.log(listePlatsProposés)
+	console.log(listePlatsProposés.length)
 	return listePlatsProposés;
 }
 
@@ -197,12 +167,18 @@ function proposePlat(emplacementRepasDansSemaine) {
 	// console.log("proposePlat",emplacementRepasDansSemaine)
 	//soir
 	if (listePlats) {
+		// console.log(listePlats)
 		if (emplacementRepasDansSemaine % 2 == 1) {
+
 			plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'midi' && !plat.dejaDansSemaine);
+			// console.log("plats[emplacementRepasDansSemaine]")
+			// console.log(plats[emplacementRepasDansSemaine])
 		}
 		//midi
 		if (emplacementRepasDansSemaine % 2 == 0) {
 			plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'soir' && !plat.dejaDansSemaine);
+			// console.log("plats[emplacementRepasDansSemaine]")
+			// console.log(plats[emplacementRepasDansSemaine])
 		}
 		if (plats[emplacementRepasDansSemaine].length == 0) {
 			console.log("C'est vide !!!!!!!!!!!!!!");
@@ -211,6 +187,9 @@ function proposePlat(emplacementRepasDansSemaine) {
 		plat[emplacementRepasDansSemaine] = getRndOfArray(plats[emplacementRepasDansSemaine]);
 
 		plat[emplacementRepasDansSemaine].dejaDansSemaine = true;
+		// console.log("plat[emplacementRepasDansSemaine]");
+		// console.log("plat[emplacementRepasDansSemaine]");
+		// console.log("plat[emplacementRepasDansSemaine]");
 		// console.log(plat[emplacementRepasDansSemaine]);
 		return plat[emplacementRepasDansSemaine];
 	}

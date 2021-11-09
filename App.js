@@ -40,12 +40,12 @@ const App = () => {
 			<Stack.Navigator initialRouteName="menu" screenOptions={{headerShown: false}}>
 				<Stack.Screen name="menu" component={Menu} />
 
-				<Stack.Screen name="HomeScreen" component={HomeScreen} />
+				{/* <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
 				{/* <Stack.Screen name="Register" component={RegisterUser} /> */}
-				<Stack.Screen name="Update" component={UpdateUser} />
-				<Stack.Screen name="View" component={ViewUser} />
-				<Stack.Screen name="ViewAll" component={ViewAllUser} />
-				<Stack.Screen name="Delete" component={DeleteUser} />
+				{/* <Stack.Screen name="Update" component={UpdateUser} /> */}
+				{/* <Stack.Screen name="View" component={ViewUser} /> */}
+				{/* <Stack.Screen name="ViewAll" component={ViewAllUser} /> */}
+				{/* <Stack.Screen name="Delete" component={DeleteUser} /> */}
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
 				{/* <Stack.Screen name="newPlat" component={NewPlat} /> */}
 				<Stack.Screen name="listeCourse" component={ListeCourse} />

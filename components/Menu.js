@@ -13,7 +13,7 @@ import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import axios from 'axios';
 
-import data from '../plats.json';
+// import data from '../plats.json';
 
 
 
@@ -55,41 +55,29 @@ const Menu = ({route, navigation}) => {
 	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
-		// db.transaction(function (txn) {
-		// 	txn.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='table_plat'", [], function (tx, res) {
-		// 		console.log('item:', res.rows.length);
-		// 		if (res.rows.length == 0) {
-		// 			txn.executeSql('DROP TABLE IF EXISTS table_plat', []);
-		// 			txn.executeSql(
-		// 				'CREATE TABLE IF NOT EXISTS table_plat(plat_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(40), type VARCHAR(20), nbrPossible INTEGER)',
-		// 				[],
-		// 			);
-		// 		} else {
-		// 			tx.executeSql('SELECT * FROM table_plat', [], (tx, results) => {
-		// 				console.log('results')
-		// 				console.log(results)
-		// 				var temp = [];
-		// 				for (let i = 0; i < results.rows.length; ++i) {
-		// 					temp.push(results.rows.item(i));
-		// 				}
-		// 				setBddDatas(temp);
-		// 			});
-		// 		}
-		// 	});
-		// });
+		console.log("appel bdd");
+		// fetch("http://localhost/API_menu/getPlats.php")
+		fetch("http://lomano.go.yo.fr/api/menus/getPlats.php")
+			.then((reponse) => reponse.json())
+			.then((data) => {
+				console.log("data from getPlats.php");
+				console.log(data);
+				setBddDatas(data)
+			})
+			.catch((fail) => console.log("fail", fail));
 	}, []);
 	useEffect(() => {
 		console.log('___________________listePlatChoisi____________')
-		// console.log(listePlatChoisi)
-		if (data)	{
-			// console.log("data")
-			// console.log("data")
-			// console.log("data")
-			// console.log("data")
-			// console.log(data)
-			setBddDatas(data)
-		}
-		else console.log("pas de data")
+		console.log(listePlatChoisi)
+		// if (data)	{
+		// 	console.log("data")
+		// 	console.log("data")
+		// 	console.log("data")
+		// 	console.log("data")
+		// 	console.log(data)
+		// 	setBddDatas(data)
+		// }
+		// else console.log("pas de data")
 		
 	}, [listePlatChoisi])
 	useEffect(() => {
@@ -99,12 +87,13 @@ const Menu = ({route, navigation}) => {
 			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien dans le key '+`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`), setSemaineDejaValidé(false));
 		});
 	
-		// 					'CREATE TABLE IF NOT EXISTS histo_menus(semaine_id INTEGER PRIMARY KEY AUTOINCREMENT, numSemaine INTEGER ,annee INTEGER, plats TEXT)',
 	}, []);
 
 	useEffect(() => {
 		console.log("coucou")
 		lireDatas(bddDatas);
+		console.log("proposeMenu()")
+		console.log(proposeMenu())
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
