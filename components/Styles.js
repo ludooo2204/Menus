@@ -10,17 +10,20 @@ export default styles = StyleSheet.create({
 	button: {
 		borderRadius: 20,
 		padding: 10,
+		margin: 2,
+		paddingHorizontal:10,
+		marginBottom:5,
 		elevation: 2,
 	},
 	buttonOpen: {
 		backgroundColor: '#F194FF',
 	},
 	buttonClose: {
-		backgroundColor: '#009',
+		backgroundColor: '#d1dce8',
 	},
 	textStyle: {
 		color: 'white',
-		backgroundColor: '#d1dce8',
+		// backgroundColor: '#d1dce8',
 		color: '#754f9d',
 
 fontSize:20,
@@ -72,8 +75,8 @@ fontSize:20,
 	modalPlat: {
 		backgroundColor: '#d1dce8',
 		borderRadius: 20,
-		width: windowWidth / 2.3,
-		marginHorizontal: 5,
+		width: windowWidth / 2.5,
+		marginHorizontal: 7,
 		marginVertical: 5,
 		shadowColor: '#000',
 		shadowOffset: {

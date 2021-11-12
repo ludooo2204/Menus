@@ -14,7 +14,7 @@ UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationE
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const saison = ['été', 'automne', 'hiver', 'printemps', 'Saison'];
-const categoriePlat = ['tarte', 'végétarien', 'light', 'extra'];
+const categoriePlat = ['tarte', 'vegetarien', 'light', 'extra'];
 let saisonChoisie = 'saison';
 let nbrRepasPossible = 'nombre de repas possible';
 let nbrRepas = 0;
@@ -35,7 +35,8 @@ const NewChoice = ({route, navigation}) => {
 	});
 	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
 	// const [listePlat, setListePlats] = useState(route.params.bdd);
-	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.nom));
+	console.log(route.params)
+	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.nom_plat));
 	const [listePlatsFiltreeParInput, setListePlatsFiltreeParInput] = useState(null);
 
 	const [typeRepasState, setTypeRepasState] = useState('type de repas');
@@ -61,23 +62,28 @@ const NewChoice = ({route, navigation}) => {
 	const {bdd} = route.params;
 
 	useEffect(() => {
-		if (bdd)  setListePlats(bdd.map(item => item.nom));
+		if (bdd)  setListePlats(bdd.map(item => item.nom_plat));
 console.log("bdd")
 console.log(bdd)
 	}, [bdd]);
 
 
-
+useEffect(() => {
+	console.log(listePlat)
+	console.log(listePlatsFiltreeParInput)
+}, [listePlat])
 
 	useEffect(() => {
 		console.log('isFiltreActif');
 		console.log(isFiltreActif);
+		// console.log(bdd)
 		let dataFiltre = bdd.filter(
 			plat =>
 				(!isFiltreActif.type ? true : plat.typePlat ? plat.typePlat.includes(isFiltreActif.type) : false) &&
 				(!isFiltreActif.nbrRepasPossible ? true : plat.nbrDeRepasPossible == isFiltreActif.nbrRepasPossible),
 		);
-		setListePlats(dataFiltre.map(plat => plat.nom));
+		console.log(dataFiltre)
+		setListePlats(dataFiltre.map(plat => plat.nom_plat));
 	}, [isFiltreActif]);
 
 	useEffect(() => {
@@ -179,13 +185,13 @@ console.log(bdd)
 	const blurTextInput = () => {
 		console.log('blur');
 		setTextInputRecherche('');
-		setListePlats(route.params.bdd.map(plat => plat.nom));
+		setListePlats(route.params.bdd.map(plat => plat.nom_plat));
 	};
 	const removeTextInput = () => {
 		setListePlatsFiltreeParInput(null);
 		console.log('removeTextInput');
 		setTextInputRecherche('');
-		setListePlats(route.params.bdd.map(plat => plat.nom));
+		setListePlats(route.params.bdd.map(plat => plat.nom_plat));
 		inputText.blur();
 	};
 
@@ -283,6 +289,7 @@ console.log(bdd)
 											<View key={index} style={styles.modalPlat}>
 												<Pressable onPress={() => choisirPropositionPlat(item)}>
 													<Text style={styles.modalText}>{item}</Text>
+													{console.log("item",item)}
 												</Pressable>
 											</View>
 										);
@@ -293,7 +300,7 @@ console.log(bdd)
 			</View>
 			{/* <Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}> */}
 			<Pressable style={[styles.button, styles.buttonClose]} onPress={() => navigation.goBack()}>
-				<Text style={styles.textStyle}>Hide Modal</Text>
+				<Text style={styles.textStyle}>Quitter</Text>
 			</Pressable>
 		</View>
 	);

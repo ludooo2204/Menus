@@ -108,15 +108,15 @@ let listePlats;
 let listePlatsProposés;
 let plat = [];
 const lireDatas = _data => {
-	console.log('_data from menus');
-	console.log(_data);
-	console.log(listePlats);
+	// console.log('_data from menus');
+	// console.log(_data);
+	// console.log(listePlats);
 	listePlats = _data;
 };
 function proposeMenu(numPlatDsSemaineBloqué) {
-	console.log('proposeMenu from menu.js');
-	console.log('numPlatDsSemaineBloqué');
-	console.log(numPlatDsSemaineBloqué);
+	// console.log('proposeMenu from menu.js');
+	// console.log('numPlatDsSemaineBloqué');
+	// console.log(numPlatDsSemaineBloqué);
 	listePlatsProposés = [];
 	for (let i = 0; i < 14; i++) {
 		// console.log('i ', i);
@@ -129,11 +129,11 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 			// if ()
 		} else {
 			let platProposé = proposePlat(i);
-			console.log('platProposé');
-			console.log(platProposé);
-			// console.log(platProposé.nom);
-			console.log('listePlatsProposés');
-			console.log(listePlatsProposés);
+			// console.log('platProposé');
+			// console.log(platProposé);
+			// // console.log(platProposé.nom);
+			// console.log('listePlatsProposés');
+			// console.log(listePlatsProposés);
 			if (!listePlatsProposés[i] && platProposé && platProposé.nom_plat) {
 			
 				if (platProposé.nbrPossible == 2) {
@@ -157,9 +157,9 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 	for (let i = 0; i < 14; i++) {
 		if (plat[i]) plat[i].dejaDansSemaine = false;
 	}
-	console.log("listePlatsProposés slicé")
-	console.log(listePlatsProposés)
-	console.log(listePlatsProposés.length)
+	// console.log("listePlatsProposés slicé")
+	// console.log(listePlatsProposés)
+	// console.log(listePlatsProposés.length)
 	return listePlatsProposés;
 }
 
