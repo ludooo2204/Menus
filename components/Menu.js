@@ -300,8 +300,7 @@ const Menu = ({route, navigation}) => {
 	const paramsPlat = a => {};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
- 		console.log("coucou josé");
- 		console.log(bddDatas);
+ 		// console.log(bddDatas);
 
 		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
