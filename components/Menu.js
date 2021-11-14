@@ -15,8 +15,6 @@ import axios from 'axios';
 
 // import data from '../plats.json';
 
-
-
 // var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
 // console.log('db')
 // console.log(db)
@@ -55,20 +53,23 @@ const Menu = ({route, navigation}) => {
 	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
-		console.log("appel bdd");
+		console.log('appel bdd');
 		// fetch("http://localhost/API_menu/getPlats.php")
-		fetch("http://lomano.go.yo.fr/api/menus/getPlats.php")
-			.then((reponse) => reponse.json())
-			.then((data) => {
-				console.log("data from getPlats.php");
+		fetch('http://lomano.go.yo.fr/api/menus/getPlats.php')
+			.then(reponse => reponse.json())
+			.then(data => {
+				console.log('data from getPlats.php');
 				console.log(data);
-				setBddDatas(data)
+for (const iterator of data) {
+	console.log(iterator.nom_plat)
+}
+				setBddDatas(data);
 			})
-			.catch((fail) => console.log("fail", fail));
+			.catch(fail => console.log('fail', fail));
 	}, []);
 	useEffect(() => {
-		console.log('___________________listePlatChoisi____________')
-		console.log(listePlatChoisi)
+		console.log('___________________listePlatChoisi____________');
+		console.log(listePlatChoisi);
 		// if (data)	{
 		// 	console.log("data")
 		// 	console.log("data")
@@ -78,22 +79,23 @@ const Menu = ({route, navigation}) => {
 		// 	setBddDatas(data)
 		// }
 		// else console.log("pas de data")
-		
-	}, [listePlatChoisi])
+	}, [listePlatChoisi]);
 	useEffect(() => {
 		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
 		let arrayE;
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
-			e ? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE)) : (console.log('ya rien dans le key '+`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`), setSemaineDejaValidé(false));
+			e
+				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+				: (console.log('ya rien dans le key ' + `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`),
+				  setSemaineDejaValidé(false));
 		});
-	
 	}, []);
 
 	useEffect(() => {
-		console.log("coucou")
+		console.log('coucou');
 		lireDatas(bddDatas);
-		console.log("proposeMenu()")
-		console.log(proposeMenu())
+		console.log('proposeMenu()');
+		console.log(proposeMenu());
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
@@ -150,8 +152,8 @@ const Menu = ({route, navigation}) => {
 	}, [deltaSemaine]);
 
 	if (route.params) {
-		console.log("route.params")
-		console.log(route.params)
+		console.log('route.params');
+		console.log(route.params);
 		const {platChoisiParams} = route.params;
 		let newArr = [...listePlatChoisi];
 		newArr[numPlatDsSemaine] = platChoisiParams;
@@ -238,8 +240,6 @@ const Menu = ({route, navigation}) => {
 
 	/////////////////fonctions///////////////////////////////////////////////////////////////////////////////
 
-
-
 	const getDateFormatée = () => {
 		let currentDate = new Date();
 		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
@@ -292,16 +292,24 @@ const Menu = ({route, navigation}) => {
 	};
 
 	const preparationCourse = () => {
-		// console.log(listePlatChoisi);
-		const listeDesCourses = bddDatas.map(e => e.ingredients);
-		navigation.navigate('listeCourse', {listeDesCourses});
+		console.log(listePlatChoisi);
+		let listePlatChoisiavecData=[]
+		for (const    iterator of listePlatChoisi) {
+			// console.log(iterator)
+			const data=bddDatas.filter(e=>e.nom_plat==iterator)
+			listePlatChoisiavecData.push(data[0])
+		}
+		// const listeDesCourses = bddDatas.map(e => e.ingredients);
+		// console.log(listeDesCourses)
+		// navigation.navigate('listeCourse', {listeDesCourses});
+		navigation.navigate('listeCourse', {listePlatChoisiavecData});
 	};
 
 	const paramsPlat = a => {};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
- 		console.log("coucou josé");
- 		console.log(bddDatas);
+		console.log('coucou josé');
+		console.log(bddDatas);
 
 		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
@@ -316,17 +324,19 @@ const Menu = ({route, navigation}) => {
 
 	const refreshMenus = () => {
 		console.log('refresh');
-		if (!numPlatDsSemaineChoisi.some(one => one)) {
-			//s'il n'ya pas de repas de bloqué
-			setListePlatChoisi(proposeMenu());
-		} else {
-			const numPlatBloqué = [];
-			for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
-				if (numPlatDsSemaineChoisi[i]) {
-					numPlatBloqué.push([i, listePlatChoisi[i]]);
+		if (!semaineDejaValidé) {
+			if (!numPlatDsSemaineChoisi.some(one => one)) {
+				//s'il n'ya pas de repas de bloqué
+				setListePlatChoisi(proposeMenu());
+			} else {
+				const numPlatBloqué = [];
+				for (let i = 0; i < numPlatDsSemaineChoisi.length; i++) {
+					if (numPlatDsSemaineChoisi[i]) {
+						numPlatBloqué.push([i, listePlatChoisi[i]]);
+					}
 				}
+				setListePlatChoisi(proposeMenu(numPlatBloqué));
 			}
-			setListePlatChoisi(proposeMenu(numPlatBloqué));
 		}
 	};
 

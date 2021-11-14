@@ -128,9 +128,12 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 			listePlatsProposés[i] = nomPlatBloqué;
 			// if ()
 		} else {
-			let platProposé = proposePlat(i);
-			// console.log('platProposé');
-			// console.log(platProposé);
+			let platProposé
+			if (i==9) 
+{if (listePlats) platProposé= listePlats.filter(e=>e.nom_plat=="sandwich")[0]}			
+			else platProposé = proposePlat(i);
+			console.log('platProposé');
+			console.log(platProposé);
 			// // console.log(platProposé.nom);
 			// console.log('listePlatsProposés');
 			// console.log(listePlatsProposés);

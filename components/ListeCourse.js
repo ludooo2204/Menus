@@ -2,9 +2,12 @@ import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 
 const ListeCourse = ({route}) => {
-	const [listeCourse, setListeCourse] = useState(route.params.listeDesCourses);
+	const [listeCourse, setListeCourse] = useState(route.params.listePlatChoisiavecData);
 	console.log('liste course from navigation');
-	console.log(listeCourse);
+	console.log("liste course")
+	console.log("liste course")
+	console.log("liste course")
+	console.log(listeCourse)
 
 	const Ingredient = ({item}) => {
 		return (
@@ -16,8 +19,8 @@ const ListeCourse = ({route}) => {
 
 	return (
 		<View>
-			{listeCourse.map((item, index) => {
-				return <Ingredient key={index} item={item} />;
+			{listeCourse && listeCourse.map((item, index) => {
+				return <Ingredient key={index} item={item.ingredients} />;
 			})}
 		</View>
 	);

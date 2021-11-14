@@ -35,7 +35,7 @@ const NewChoice = ({route, navigation}) => {
 	});
 	// const [listePlat, setListePlats] = useState(data.plats.map(plat => plat.nom));
 	// const [listePlat, setListePlats] = useState(route.params.bdd);
-	console.log(route.params)
+	// console.log(route.params)
 	const [listePlat, setListePlats] = useState(route.params.bdd.map(plat => plat.nom_plat));
 	const [listePlatsFiltreeParInput, setListePlatsFiltreeParInput] = useState(null);
 
@@ -69,8 +69,8 @@ console.log(bdd)
 
 
 useEffect(() => {
-	console.log(listePlat)
-	console.log(listePlatsFiltreeParInput)
+	// console.log(listePlat)
+	// console.log(listePlatsFiltreeParInput)
 }, [listePlat])
 
 	useEffect(() => {
