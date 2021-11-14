@@ -115,8 +115,6 @@ useEffect(() => {
 	const filtreParTypeDeRepas = () => {
 		console.log("filtre par type de repas")
 		countCategoriePlat++;
-		console.log("filtre actif")
-		console.log(isFiltreActif)
 		let categoriePlatChoisi = categoriePlat[countCategoriePlat - 1];
 		if (countCategoriePlat > categoriePlat.length) {
 			countCategoriePlat = 0;
