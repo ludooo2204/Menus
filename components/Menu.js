@@ -1,5 +1,9 @@
+// voir pour les syncho
+
+
+
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Button} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Linking, Button} from 'react-native';
 // import {openDatabase} from 'react-native-sqlite-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {proposeplat, proposeMenu, lireDatas} from '../menuAlgo';
@@ -13,11 +17,6 @@ import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import axios from 'axios';
 
-// import data from '../plats.json';
-
-// var db = openDatabase({name: 'PlatDatabase.db', createFromLocation: 1});
-// console.log('db')
-// console.log(db)
 console.log(NetInfo);
 
 const Menu = ({route, navigation}) => {
@@ -48,6 +47,8 @@ const Menu = ({route, navigation}) => {
 	const [modal1Visible, setModal1Visible] = useState(false);
 	const [modalSynchroMenuVisible, setModalSynchroMenuVisible] = useState(false);
 	const [modalConnectionVisible, setModalConnectionVisible] = useState(false);
+	const [modalPlatVisible, setModalPlatVisible] = useState(false);
+	const [visualisationPlat, setVisualisationPlat] = useState(null);
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
@@ -58,72 +59,51 @@ const Menu = ({route, navigation}) => {
 		fetch('http://lomano.go.yo.fr/api/menus/getPlats.php')
 			.then(reponse => reponse.json())
 			.then(data => {
-				console.log('data from getPlats.php');
-				console.log(data);
-for (const iterator of data) {
-	console.log(iterator.nom_plat)
-}
+				// console.log('data from getPlats.php');
+				// console.log(data);
+
 				setBddDatas(data);
 			})
 			.catch(fail => console.log('fail', fail));
 	}, []);
-	useEffect(() => {
-		console.log('___________________listePlatChoisi____________');
-		console.log(listePlatChoisi);
-		// if (data)	{
-		// 	console.log("data")
-		// 	console.log("data")
-		// 	console.log("data")
-		// 	console.log("data")
-		// 	console.log(data)
-		// 	setBddDatas(data)
-		// }
-		// else console.log("pas de data")
-	}, [listePlatChoisi]);
+
+
+
+
 	useEffect(() => {
 		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
 		let arrayE;
-		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
+		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {console.log("e",e);
 			e
-				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+				? (console.log("toto",JSON.parse(e))(arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
 				: (console.log('ya rien dans le key ' + `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`),
 				  setSemaineDejaValidé(false));
 		});
 	}, []);
 
 	useEffect(() => {
-		console.log('coucou');
+		// console.log('coucou');
+		// console.log('bddDatas')
+		// console.log(bddDatas)
 		lireDatas(bddDatas);
-		console.log('proposeMenu()');
-		console.log(proposeMenu());
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
-	// useEffect(() => {
-	// 	if (listePlatChoisiOnline && listePlatChoisi != null) {
-	// 		console.log('listePlatChoisiOnline.menu');
-	// 		console.log(listePlatChoisiOnline.menu);
-	// 		console.log('JSON.stringify(listePlatChoisi)');
-	// 		console.log(JSON.stringify(listePlatChoisi));
 
-	// 		if (listePlatChoisiOnline.menu == JSON.stringify(listePlatChoisi)) {
-	// 			console.log('le menu local est le meme que celui en ligne');
-	// 		} else {
-	// 			console.log("le menu local n'est pas le meme !!");
-	// 			setModalSynchroMenuVisible(true);
-	// 		}
-	// 	} else {
-	// 		console.log("le menu online n'existe pas !");
-	// 	}
-	// }, [listePlatChoisiOnline]);
 
 	useEffect(() => {
+console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
+		//Check si ya un enregistrement en local de la semaine
 		let arrayE;
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
+			console.log("check", e)
 			e
-				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
-				: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
+			? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+			: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
 		});
+
+
+		//Check si ya un enregistrement online de la semaine (si connecte) 
 		NetInfo.fetch().then(state => {
 			console.log('Connection type', state.type);
 			console.log('Is connected?', state.isConnected);
@@ -150,6 +130,30 @@ for (const iterator of data) {
 			}
 		});
 	}, [deltaSemaine]);
+
+
+	useEffect(() => {
+		console.log(listePlatChoisiOnline)
+		console.log(listePlatChoisi)
+		if (listePlatChoisiOnline && listePlatChoisi != null) {
+			 console.log("#################################")
+			console.log('listePlatChoisiOnline.menu');
+			console.log(listePlatChoisiOnline.menu);
+			console.log('JSON.stringify(listePlatChoisi)');
+			console.log(JSON.stringify(listePlatChoisi));
+
+			if (listePlatChoisiOnline.menu == JSON.stringify(listePlatChoisi)) {
+				console.log('le menu local est le meme que celui en ligne');
+			} else {
+				console.log("le menu local n'est pas le meme !!");
+				setModalSynchroMenuVisible(true);
+			}
+		} else {
+			console.log("le menu online n'existe pas !");
+		}
+	}, [listePlatChoisiOnline]);
+
+
 
 	if (route.params) {
 		console.log('route.params');
@@ -275,6 +279,8 @@ for (const iterator of data) {
 		}
 	};
 	const storeData = async value => {
+		console.log("value")
+		console.log(value)
 		console.log(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`);
 		try {
 			await AsyncStorage.setItem(
@@ -293,11 +299,11 @@ for (const iterator of data) {
 
 	const preparationCourse = () => {
 		console.log(listePlatChoisi);
-		let listePlatChoisiavecData=[]
-		for (const    iterator of listePlatChoisi) {
+		let listePlatChoisiavecData = [];
+		for (const iterator of listePlatChoisi) {
 			// console.log(iterator)
-			const data=bddDatas.filter(e=>e.nom_plat==iterator)
-			listePlatChoisiavecData.push(data[0])
+			const data = bddDatas.filter(e => e.nom_plat == iterator);
+			listePlatChoisiavecData.push(data[0]);
 		}
 		// const listeDesCourses = bddDatas.map(e => e.ingredients);
 		// console.log(listeDesCourses)
@@ -388,12 +394,29 @@ for (const iterator of data) {
 	};
 
 	const exporterMenu = () => {
+			console.log("listePlatChoisiOnline.menu")
+			console.log(listePlatChoisiOnline.menu)
+			console.log("listePlatChoisi")
+			console.log(listePlatChoisi)
 		storeOnlineData(listePlatChoisi);
 		setModalSynchroMenuVisible(false);
 	};
 	const importerMenu = () => {
-		storeData(listePlatChoisiOnline);
+		// console.log("listePlatChoisiOnline.menu")
+		// console.log("1")
+		// console.log(typeof listePlatChoisiOnline.menu)
+		// console.log(listePlatChoisiOnline.menu)
+		// console.log("listePlatChoisi")
+		// console.log(listePlatChoisi)
+		let array
+		if (typeof listePlatChoisiOnline.menu=="string") array=JSON.parse(listePlatChoisiOnline.menu)
+		storeData(array);
 		setModalSynchroMenuVisible(false);
+	};
+	const visualiserPlat = _plat => {
+		console.log(_plat);
+		setVisualisationPlat(bddDatas.filter(e => e.nom_plat == _plat)[0]);
+		setModalPlatVisible(true);
 	};
 
 	return (
@@ -495,15 +518,67 @@ for (const iterator of data) {
 								</Pressable>
 							</View>
 						</Modal>
+						<Modal animationType="slide" transparent={true} visible={modalPlatVisible}>
+							<View style={styles.modalVisualisation}>
+								<Text>ingredients</Text>
+								<Text style={styles.modalVisualisationText}>{visualisationPlat ? visualisationPlat.ingredients : "pas d'ingredients?"}</Text>
+								<Text>{'\n'}</Text>
+								<View>
+									<Text>Recette :</Text>
+									{visualisationPlat && visualisationPlat.url ? (
+										<Pressable onPress={visualisationPlat ? () => Linking.openURL(visualisationPlat.url) : null}>
+											<Text style={styles.modalVisualisationTextLien}>{visualisationPlat.url}</Text>
+										</Pressable>
+									) : (
+										<Text style={styles.modalVisualisationText}> Pas de recette en ligne</Text>
+									)}
+								</View>
+								<Text>{'\n'}</Text>
+								<Text>{'\n'}</Text>
+
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => setModalPlatVisible(false)}>
+									<Text style={styles.textStyle}>ok</Text>
+								</Pressable>
+							</View>
+						</Modal>
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-							{listePlatChoisi &&
+						
+							{listePlatChoisi && typeof listePlatChoisi !="string"&&
+
+
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+							//!ya un blem!!!!!!!!!!!!!!!!!
+// console.log(typeof listePlatChoisi)
 								listePlatChoisi.map((item, index) => {
+									console.log(item, index)
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable
 											key={Math.random()}
 											style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
-											onPress={() => filtreMenus(item, index)}
+											onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
 											onLongPress={() => lockPlat(index)}>
 											<Text style={styles.textPlat}>
 												{item}
@@ -515,7 +590,8 @@ for (const iterator of data) {
 											</Text>
 										</Pressable>
 									);
-								})}
+								})
+								}
 						</View>
 					</View>
 				</PTRView>

@@ -62,13 +62,47 @@ fontSize:20,
 		color: '#754f9d',
 		
 	},
+	modalVisualisation: {
+		position: 'absolute',
+		top:windowHeight  / 4,
+		left:windowWidth/5.5,
+		borderRadius:20,
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		justifyContent:"center",
+		backgroundColor:'white',
+		height: windowHeight  / 2,
+		width: windowWidth  / 1.5,
+		fontSize: 20,
+		fontWeight: 'bold',
+		
+	},
+	modalVisualisationText: {
+		
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#754f9d',
+		
+	},
+	modalVisualisationTextLien: {
+		
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: 'blue',
+		textDecorationLine:"underline"
+		
+	},
 	modalFiltreText: {
 		// textAlign: 'center',
 		// textAlignVertical: 'center',
 		// height: (windowWidth ) / 8,
 		fontSize: 25,
 		// margin: 2,
-		padding: 10,
+		paddingHorizontal: 5,
 
 		fontWeight: 'bold',
 	},
@@ -99,7 +133,10 @@ fontSize:20,
 	modalFiltreHighlight: {
 		backgroundColor: '#bec7d1',
 		borderRadius: 20,
-		borderWidth: 2,
+		justifyContent: 'center',
+		// justifyContent:"center",
+		alignItems: 'center',
+		borderWidth: 5,
 		borderColor: 'black',
 	},
 

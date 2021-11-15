@@ -212,7 +212,7 @@ useEffect(() => {
 							return (
 								<Pressable
 									onPress={() => {
-										console.log(index, item);
+										// console.log(index, item);
 										switch (index) {
 											//type de repas
 											case 0:
@@ -236,6 +236,7 @@ useEffect(() => {
 												console.log('temps!!');
 												break;
 										}
+										// toggleHighlightFiltre(index)
 									}}
 									onLongPress={() => {
 										switch (item) {
@@ -252,8 +253,11 @@ useEffect(() => {
 												break;
 										}
 									}}
+								
+									//TODO ca marche ca ??
 									style={filtreChoisi == index ? styles.modalFiltreHighlight : styles.modalFiltre}>
 									<Text style={styles.modalFiltreText}>{item}</Text>
+							
 								</Pressable>
 							);
 						}}
@@ -263,7 +267,7 @@ useEffect(() => {
 					<View style={{flexDirection: 'row'}}>
 						<TextInput
 							ref={input => (inputText = input)}
-							style={{backgroundColor: '#ccc8c8', borderRadius: 10,fontSize:25,borderWidth: 2,}}
+							style={{ borderRadius: 10,padding:5,fontSize:25,borderWidth: 2,margin:5}}
 							onChangeText={onChangeInput}
 							value={textInputRecherche}
 							placeholder="rechercher un plat"
