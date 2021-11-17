@@ -204,9 +204,10 @@ useEffect(() => {
 						spacing={15}
 						data={typePlat}
 						style={{
-							backgroundColor: '#bec7d1',
-							borderRadius: 20,
-							borderColor: 'black',
+							backgroundColor: '#d1dce8',
+							// borderRadius: 20,
+							// borderWidth:2,
+							// borderColor: 'black',
 						}}
 						renderItem={({item, index}) => {
 							return (
@@ -275,7 +276,7 @@ useEffect(() => {
 						<Icon name="remove" size={55} color="#754f9d" onPress={removeTextInput} />
 					</View>
 					{listePlat.length != 0 && (
-						<ScrollView style={{flex: 1}} contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',borderWidth: 2,marginHorizontal:5,borderRadius:10}}>
+						<ScrollView style={{flex: 1}} contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',marginHorizontal:5,borderRadius:10}}>
 							{listePlatsFiltreeParInput
 								? listePlatsFiltreeParInput.map((item, index) => {
 										return (
@@ -289,7 +290,7 @@ useEffect(() => {
 								: listePlat.map((item, index) => {
 										return (
 											<View key={index} style={styles.modalPlat}>
-												<Pressable onPress={() => choisirPropositionPlat(item)}>
+												<Pressable  onPress={() => choisirPropositionPlat(item)}>
 													<Text style={styles.modalText}>{item}</Text>
 													{console.log("item",item)}
 												</Pressable>

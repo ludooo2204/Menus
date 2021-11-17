@@ -1,9 +1,20 @@
 // voir pour les syncho
 
-
-
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions, StatusBar, Pressable, Modal, ActivityIndicator, Linking, Button} from 'react-native';
+import {
+	Easing,
+	Animated,
+	Text,
+	View,
+	useWindowDimensions,
+	StatusBar,
+	Pressable,
+	Modal,
+	ActivityIndicator,
+	Linking,
+	Button,
+	Alert,
+} from 'react-native';
 // import {openDatabase} from 'react-native-sqlite-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {proposeplat, proposeMenu, lireDatas} from '../menuAlgo';
@@ -16,6 +27,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import axios from 'axios';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 console.log(NetInfo);
 
@@ -44,38 +56,57 @@ const Menu = ({route, navigation}) => {
 		false,
 		false,
 	]);
+	const [utilisateur, setUtilisateur] = useState(null);
 	const [modal1Visible, setModal1Visible] = useState(false);
 	const [modalSynchroMenuVisible, setModalSynchroMenuVisible] = useState(false);
 	const [modalConnectionVisible, setModalConnectionVisible] = useState(false);
 	const [modalPlatVisible, setModalPlatVisible] = useState(false);
+	const [modalUserVisible, setModalUserVisible] = useState(false);
 	const [visualisationPlat, setVisualisationPlat] = useState(null);
+	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState("");
+	const [value, setValue] = useState(0); // pour forcer un refresh TEST!!!
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
-		console.log('appel bdd');
-		// fetch("http://localhost/API_menu/getPlats.php")
-		fetch('http://lomano.go.yo.fr/api/menus/getPlats.php')
-			.then(reponse => reponse.json())
-			.then(data => {
-				// console.log('data from getPlats.php');
-				// console.log(data);
-
-				setBddDatas(data);
-			})
-			.catch(fail => console.log('fail', fail));
+		getUser();
 	}, []);
 
+	useEffect(() => {
+		console.log('appel bdd');
+		// fetch("http://localhost/API_menu/getPlats.php")
+		NetInfo.fetch().then(state => {
+			if (state.isConnected) {
+				fetch('http://lomano.go.yo.fr/api/menus/getPlats.php')
+					.then(reponse => reponse.json())
+					.then(data => {
+						// console.log('data from getPlats.php');
+						// console.log(data);
 
+						storePlats(data);
+						setBddDatas(data);
+					})
+					.catch(fail => {
+						console.log('fail', fail);
+						Alert.alert('probleme avec le serveur. les nouveaux plats en ligne ne seront pas importés');
+						importerPlatLocal();
+					});
+			} else {
+				setModalConnectionVisible(true);
 
+				importerPlatLocal();
+			}
+		});
+	}, []);
 
 	useEffect(() => {
 		console.log('la semaine actuelle est la ', getDateFormatée().resultat);
 		let arrayE;
-		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {console.log("e",e);
+		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
+			console.log('e', e);
 			e
-				? (console.log("toto",JSON.parse(e))(arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
 				: (console.log('ya rien dans le key ' + `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`),
 				  setSemaineDejaValidé(false));
 		});
@@ -89,21 +120,18 @@ const Menu = ({route, navigation}) => {
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
 
-
-
 	useEffect(() => {
-console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
+		console.log('OOOOOOOOOOOOOOOOOOOOOOOOO');
 		//Check si ya un enregistrement en local de la semaine
 		let arrayE;
 		AsyncStorage.getItem(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`).then(e => {
-			console.log("check", e)
+			console.log('check', e);
 			e
-			? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
-			: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
+				? ((arrayE = JSON.parse(e)), setSemaineDejaValidé(true), setListePlatChoisi(arrayE))
+				: (console.log('ya rien'), setSemaineDejaValidé(false), setListePlatChoisi(proposeMenu()));
 		});
 
-
-		//Check si ya un enregistrement online de la semaine (si connecte) 
+		//Check si ya un enregistrement online de la semaine (si connecte)
 		NetInfo.fetch().then(state => {
 			console.log('Connection type', state.type);
 			console.log('Is connected?', state.isConnected);
@@ -114,6 +142,10 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 						`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`,
 					)
 					.then(rep => {
+						console.log("rep")
+						console.log("rep")
+						console.log("rep")
+						console.log(rep.data)
 						const data = rep.data;
 						let menuOnline;
 						if (data.length > 1) {
@@ -126,17 +158,23 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 				// TODO
 				// create modal
 				console.log('PAS CONNECTEEEEEE!');
-				setModalConnectionVisible(true);
 			}
 		});
-	}, [deltaSemaine]);
-
+	}, [deltaSemaine, value]);
 
 	useEffect(() => {
-		console.log(listePlatChoisiOnline)
-		console.log(listePlatChoisi)
+		console.log("listePlatChoisiOnline");
+		console.log("listePlatChoisiOnline");
+		console.log("listePlatChoisiOnline");
+		console.log("listePlatChoisiOnline");
+		console.log(listePlatChoisiOnline);
+		console.log(listePlatChoisi);
 		if (listePlatChoisiOnline && listePlatChoisi != null) {
-			 console.log("#################################")
+			console.log('#################################');
+			console.log(typeof listePlatChoisiOnline.date);
+			console.log(new Date(listePlatChoisiOnline.date).toLocaleString('FR-fr'));
+
+			setTextEnregistrementPlat(new Date(listePlatChoisiOnline.date).toLocaleString('FR-fr')+ ' par '+listePlatChoisiOnline.user)
 			console.log('listePlatChoisiOnline.menu');
 			console.log(listePlatChoisiOnline.menu);
 			console.log('JSON.stringify(listePlatChoisi)');
@@ -152,8 +190,6 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 			console.log("le menu online n'existe pas !");
 		}
 	}, [listePlatChoisiOnline]);
-
-
 
 	if (route.params) {
 		console.log('route.params');
@@ -173,7 +209,7 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 			<View style={styles.navbar}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Icon name="bars" size={55} color="#754f9d" />
-				<Icon name="calendar" size={55} color="#754f9d" />
+				<Icon name="user" size={55} color="#754f9d" onPress={()=>setModalUserVisible(true)}/>
 				<Icon name={validee ? 'check-square-o' : 'square-o'} size={55} color="#754f9d" onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
@@ -244,6 +280,23 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 
 	/////////////////fonctions///////////////////////////////////////////////////////////////////////////////
 
+	const getUser = () => {
+		AsyncStorage.getItem('user')
+			.then(e => {
+				console.log('user = ', e);
+				if (e==null) setModalUserVisible(true)
+				else setUtilisateur(e)
+			})
+			.catch(() => {
+				Alert.alert('erreur avec les users');
+			});
+	};
+	const setUser = user => {
+		console.log('user');
+		console.log(user);
+		AsyncStorage.setItem('user', JSON.stringify(user)).then(()=>{console.log("Enregistrement user fait !")})
+	};
+
 	const getDateFormatée = () => {
 		let currentDate = new Date();
 		let premierJanv = new Date(currentDate.getFullYear(), 0, 1);
@@ -254,8 +307,10 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 	};
 	const storeOnlineData = () => {
 		console.log(listePlatChoisi);
+		console.log("utilisateur");
+		console.log(utilisateur);
 		const nomKey = `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`;
-		const menuToSave = {key: nomKey, menu: JSON.stringify(listePlatChoisi)};
+		const menuToSave = {key: nomKey, menu: JSON.stringify(listePlatChoisi),user:utilisateur,date:new Date()};
 		console.log('menuToSave');
 		console.log(menuToSave);
 		try {
@@ -278,9 +333,21 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 			console.log('err', e);
 		}
 	};
+	const storePlats = async value => {
+		try {
+			await AsyncStorage.setItem('plats', JSON.stringify(value));
+		} catch (e) {
+			console.log('err', e);
+		}
+	};
+	const importerPlatLocal = () => {
+		AsyncStorage.getItem('plats').then(e => {
+			setBddDatas(JSON.parse(e));
+		});
+	};
 	const storeData = async value => {
-		console.log("value")
-		console.log(value)
+		console.log('value');
+		console.log(value);
 		console.log(`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`);
 		try {
 			await AsyncStorage.setItem(
@@ -314,9 +381,12 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 	const paramsPlat = a => {};
 
 	const filtreMenus = (_platARemplacer, _numPlatDsSemaine) => {
-		console.log('coucou josé');
+		console.log('BDD');
+		console.log('BDD');
+		console.log('BDD');
+		console.log('BDDdatas');
 		console.log(bddDatas);
-
+		console.log(typeof bddDatas);
 		navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
@@ -394,30 +464,36 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 	};
 
 	const exporterMenu = () => {
-			console.log("listePlatChoisiOnline.menu")
-			console.log(listePlatChoisiOnline.menu)
-			console.log("listePlatChoisi")
-			console.log(listePlatChoisi)
+		console.log('listePlatChoisiOnline.menu');
+		console.log(listePlatChoisiOnline.menu);
+		console.log('listePlatChoisi');
+		console.log(listePlatChoisi);
 		storeOnlineData(listePlatChoisi);
 		setModalSynchroMenuVisible(false);
 	};
 	const importerMenu = () => {
-		// console.log("listePlatChoisiOnline.menu")
-		// console.log("1")
-		// console.log(typeof listePlatChoisiOnline.menu)
-		// console.log(listePlatChoisiOnline.menu)
-		// console.log("listePlatChoisi")
-		// console.log(listePlatChoisi)
-		let array
-		if (typeof listePlatChoisiOnline.menu=="string") array=JSON.parse(listePlatChoisiOnline.menu)
+		let array;
+		if (typeof listePlatChoisiOnline.menu == 'string') array = JSON.parse(listePlatChoisiOnline.menu);
 		storeData(array);
 		setModalSynchroMenuVisible(false);
+		setValue(value => value + 1);
 	};
 	const visualiserPlat = _plat => {
 		console.log(_plat);
 		setVisualisationPlat(bddDatas.filter(e => e.nom_plat == _plat)[0]);
 		setModalPlatVisible(true);
 	};
+
+	const opacityAnim = React.useRef(new Animated.Value(0)).current;
+	React.useEffect(() => {
+		// On anime notre valeur jusqu'à la hauteur de la fenetre
+		Animated.timing(opacityAnim, {
+			toValue: 1,
+			duration: 900, // Durant 10 secondes
+			useNativeDriver: true, // Cela sera abordé plus tard
+			easing: Easing.bounce,
+		}).start();
+	}, [opacityAnim]);
 
 	return (
 		<GestureRecognizer
@@ -466,7 +542,7 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 						<Modal animationType="slide" transparent={true} visible={modalSynchroMenuVisible}>
 							<View style={styles.modalTest}>
 								<Text style={styles.modalTestText}>
-									Attention : les menus ne sont pas les mêmes que ceux en ligne. Voulez-vous importer vos menus ou les exporter ?
+									{`Attention : les menus ne sont pas les mêmes que ceux en ligne. le dernier enregistrement a été fait ${textEnregistrementPlat}.  Voulez-vous importer vos menus ou les exporter ?`}
 								</Text>
 								<Pressable
 									style={{
@@ -495,6 +571,20 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 									onPress={() => exporterMenu()}>
 									<Text style={styles.textStyle}>exporter</Text>
 								</Pressable>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+
+										borderRadius: 10,
+										height: 30,
+									}}
+									onPress={() => setModalSynchroMenuVisible(false)}>
+									<Text style={styles.textStyle}>Annuler</Text>
+								</Pressable>
 							</View>
 						</Modal>
 						<Modal animationType="slide" transparent={true} visible={modalConnectionVisible}>
@@ -510,11 +600,55 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 										justifyContent: 'center',
 										marginHorizontal: 10,
 										marginVertical: 5,
+										marginTop: 15,
 										borderRadius: 10,
-										height: 30,
+
+										height: 50,
 									}}
 									onPress={() => setModalConnectionVisible(false)}>
 									<Text style={styles.textStyle}>ok</Text>
+								</Pressable>
+							</View>
+						</Modal>
+						<Modal animationType="slide" transparent={true} visible={modalUserVisible}>
+							<View style={styles.modalTest}>
+								<Text style={styles.modalTestText}>Bonjour, qui es-tu?</Text>
+
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										marginTop: 15,
+										borderRadius: 10,
+
+										height: 50,
+									}}
+									onPress={() => {
+										setUser('anne');
+										setModalUserVisible(false);
+									}}>
+									<Text style={styles.textStyle}>Anne</Text>
+								</Pressable>
+								<Pressable
+									style={{
+										backgroundColor: '#d1dce8',
+										alignItems: 'center',
+										justifyContent: 'center',
+										marginHorizontal: 10,
+										marginVertical: 5,
+										marginTop: 15,
+										borderRadius: 10,
+
+										height: 50,
+									}}
+									onPress={() => {
+										setUser('ludo');
+										setModalUserVisible(false);
+									}}>
+									<Text style={styles.textStyle}>Ludo</Text>
 								</Pressable>
 							</View>
 						</Modal>
@@ -552,27 +686,10 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 							</View>
 						</Modal>
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-						
-							{listePlatChoisi && typeof listePlatChoisi !="string"&&
-
-
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-							//!ya un blem!!!!!!!!!!!!!!!!!
-// console.log(typeof listePlatChoisi)
+							{listePlatChoisi &&
+								typeof listePlatChoisi != 'string' &&
 								listePlatChoisi.map((item, index) => {
-									console.log(item, index)
+									// console.log(item, index);
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable
@@ -590,8 +707,7 @@ console.log("OOOOOOOOOOOOOOOOOOOOOOOOO")
 											</Text>
 										</Pressable>
 									);
-								})
-								}
+								})}
 						</View>
 					</View>
 				</PTRView>
