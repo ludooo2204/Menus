@@ -128,21 +128,24 @@ function proposeMenu(numPlatDsSemaineBloqué) {
 			listePlatsProposés[i] = nomPlatBloqué;
 			// if ()
 		} else {
-			let platProposé
-			if (i==9) 
-{if (listePlats) platProposé= listePlats.filter(e=>e.nom_plat=="sandwich")[0]}			
-			else platProposé = proposePlat(i);
+			let platProposé;
+			if (i == 9) {
+				if (listePlats) platProposé = listePlats.filter(e => e.nom_plat == 'sandwich')[0];
+			} else platProposé = proposePlat(i);
 			// console.log('platProposé');
 			// console.log(platProposé);
-			// // console.log(platProposé.nom);
+			// console.log(platProposé.nom);
 			// console.log('listePlatsProposés');
 			// console.log(listePlatsProposés);
 			if (!listePlatsProposés[i] && platProposé && platProposé.nom_plat) {
-			
-				if (platProposé.nbrPossible == 2) {
+				if (platProposé.nbrDeRepasPossible == 2) {
+					console.log("2 repas possibles avec")
+					console.log(platProposé.nom_plat)
 					listePlatsProposés[i] = platProposé.nom_plat;
 					listePlatsProposés[i + 4] = platProposé.nom_plat;
-				} else if (platProposé.nbrPossible == 3) {
+				} else if (platProposé.nbrDeRepasPossible == 3) {
+					console.log("3 repas possibles avec")
+					console.log(platProposé.nom_plat)
 					listePlatsProposés[i] = platProposé.nom_plat;
 					listePlatsProposés[i + 4] = platProposé.nom_plat;
 					listePlatsProposés[i + 6] = platProposé.nom_plat;
@@ -172,7 +175,6 @@ function proposePlat(emplacementRepasDansSemaine) {
 	if (listePlats) {
 		// console.log(listePlats)
 		if (emplacementRepasDansSemaine % 2 == 1) {
-
 			plats[emplacementRepasDansSemaine] = listePlats.filter(plat => plat.midiSoir !== 'midi' && !plat.dejaDansSemaine);
 			// console.log("plats[emplacementRepasDansSemaine]")
 			// console.log(plats[emplacementRepasDansSemaine])

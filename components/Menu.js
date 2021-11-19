@@ -63,7 +63,8 @@ const Menu = ({route, navigation}) => {
 	const [modalPlatVisible, setModalPlatVisible] = useState(false);
 	const [modalUserVisible, setModalUserVisible] = useState(false);
 	const [visualisationPlat, setVisualisationPlat] = useState(null);
-	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState("");
+	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
+	const [listeDoublon, setListeDoublon] = useState([]);
 	const [value, setValue] = useState(0); // pour forcer un refresh TEST!!!
 
 	const windowWidth = useWindowDimensions().width;
@@ -119,6 +120,34 @@ const Menu = ({route, navigation}) => {
 		lireDatas(bddDatas);
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
+	useEffect(() => {
+		if (listePlatChoisi && listePlatChoisi.length > 0) {
+			let doublon = [];
+			let triplon = [];
+			for (let i = 0; i < listePlatChoisi.length; i++) {
+				const element = listePlatChoisi[i];
+				triplon.push({plat: element, index: i});
+			}
+
+			// console.log(triplon);
+			const listeUnique = [...new Set(triplon.map(plat => plat.plat))];
+			// console.log(listeUnique);
+			let bilanDoublon = [];
+			for (const iterator of listeUnique) {
+				let bilanDoublonTemp = [];
+				for (const iterator2 of triplon) {
+					if (iterator2.plat == iterator) bilanDoublonTemp.push(iterator2.index);
+				}
+				bilanDoublonTemp.sort(function (a, b) {
+					return a - b;
+				});
+				bilanDoublon.push({plat: iterator, indexs: bilanDoublonTemp});
+			}
+			// console.log('bilanDoublon');
+			// console.log(bilanDoublon);
+			setListeDoublon(bilanDoublon);
+		}
+	}, [listePlatChoisi]);
 
 	useEffect(() => {
 		console.log('OOOOOOOOOOOOOOOOOOOOOOOOO');
@@ -142,10 +171,10 @@ const Menu = ({route, navigation}) => {
 						`histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`,
 					)
 					.then(rep => {
-						console.log("rep")
-						console.log("rep")
-						console.log("rep")
-						console.log(rep.data)
+						console.log('rep');
+						console.log('rep');
+						console.log('rep');
+						console.log(rep.data);
 						const data = rep.data;
 						let menuOnline;
 						if (data.length > 1) {
@@ -163,10 +192,10 @@ const Menu = ({route, navigation}) => {
 	}, [deltaSemaine, value]);
 
 	useEffect(() => {
-		console.log("listePlatChoisiOnline");
-		console.log("listePlatChoisiOnline");
-		console.log("listePlatChoisiOnline");
-		console.log("listePlatChoisiOnline");
+		console.log('listePlatChoisiOnline');
+		console.log('listePlatChoisiOnline');
+		console.log('listePlatChoisiOnline');
+		console.log('listePlatChoisiOnline');
 		console.log(listePlatChoisiOnline);
 		console.log(listePlatChoisi);
 		if (listePlatChoisiOnline && listePlatChoisi != null) {
@@ -174,7 +203,7 @@ const Menu = ({route, navigation}) => {
 			console.log(typeof listePlatChoisiOnline.date);
 			console.log(new Date(listePlatChoisiOnline.date).toLocaleString('FR-fr'));
 
-			setTextEnregistrementPlat(new Date(listePlatChoisiOnline.date).toLocaleString('FR-fr')+ ' par '+listePlatChoisiOnline.user)
+			setTextEnregistrementPlat(new Date(listePlatChoisiOnline.date).toLocaleString('FR-fr') + ' par ' + listePlatChoisiOnline.user);
 			console.log('listePlatChoisiOnline.menu');
 			console.log(listePlatChoisiOnline.menu);
 			console.log('JSON.stringify(listePlatChoisi)');
@@ -209,7 +238,7 @@ const Menu = ({route, navigation}) => {
 			<View style={styles.navbar}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Icon name="bars" size={55} color="#754f9d" />
-				<Icon name="user" size={55} color="#754f9d" onPress={()=>setModalUserVisible(true)}/>
+				<Icon name="user" size={55} color="#754f9d" onPress={() => setModalUserVisible(true)} />
 				<Icon name={validee ? 'check-square-o' : 'square-o'} size={55} color="#754f9d" onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={55} color="#754f9d" onPress={preparationCourse} />
 			</View>
@@ -284,8 +313,8 @@ const Menu = ({route, navigation}) => {
 		AsyncStorage.getItem('user')
 			.then(e => {
 				console.log('user = ', e);
-				if (e==null) setModalUserVisible(true)
-				else setUtilisateur(e)
+				if (e == null) setModalUserVisible(true);
+				else setUtilisateur(e);
 			})
 			.catch(() => {
 				Alert.alert('erreur avec les users');
@@ -294,7 +323,9 @@ const Menu = ({route, navigation}) => {
 	const setUser = user => {
 		console.log('user');
 		console.log(user);
-		AsyncStorage.setItem('user', JSON.stringify(user)).then(()=>{console.log("Enregistrement user fait !")})
+		AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
+			console.log('Enregistrement user fait !');
+		});
 	};
 
 	const getDateFormatée = () => {
@@ -307,10 +338,10 @@ const Menu = ({route, navigation}) => {
 	};
 	const storeOnlineData = () => {
 		console.log(listePlatChoisi);
-		console.log("utilisateur");
+		console.log('utilisateur');
 		console.log(utilisateur);
 		const nomKey = `histo_menus_semaine_${getDateFormatée().resultat + deltaSemaine}-${getDateFormatée().annee}`;
-		const menuToSave = {key: nomKey, menu: JSON.stringify(listePlatChoisi),user:utilisateur,date:new Date()};
+		const menuToSave = {key: nomKey, menu: JSON.stringify(listePlatChoisi), user: utilisateur, date: new Date()};
 		console.log('menuToSave');
 		console.log(menuToSave);
 		try {
@@ -365,7 +396,7 @@ const Menu = ({route, navigation}) => {
 	};
 
 	const preparationCourse = () => {
-		console.log(listePlatChoisi);
+		// console.log(listePlatChoisi);
 		let listePlatChoisiavecData = [];
 		for (const iterator of listePlatChoisi) {
 			// console.log(iterator)
@@ -375,6 +406,11 @@ const Menu = ({route, navigation}) => {
 		// const listeDesCourses = bddDatas.map(e => e.ingredients);
 		// console.log(listeDesCourses)
 		// navigation.navigate('listeCourse', {listeDesCourses});
+		console.log('listePlatChoisiavecData');
+		console.log('listePlatChoisiavecData');
+		console.log('listePlatChoisiavecData');
+		console.log('listePlatChoisiavecData');
+		console.log(listePlatChoisiavecData);
 		navigation.navigate('listeCourse', {listePlatChoisiavecData});
 	};
 
@@ -686,10 +722,17 @@ const Menu = ({route, navigation}) => {
 							</View>
 						</Modal>
 						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+							{/* {console.log('listePlatChoisi')}
+							{console.log(listePlatChoisi)} */}
+
 							{listePlatChoisi &&
+								listeDoublon &&
 								typeof listePlatChoisi != 'string' &&
 								listePlatChoisi.map((item, index) => {
-									// console.log(item, index);
+									// console.log('item', item);
+									// console.log('index', index);
+									// console.log('listeDoublon[index]', listeDoublon.filter(e=>e.plat==item));
+									const doublonItem = listeDoublon.filter(e => e.plat == item)[0];
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable
@@ -699,6 +742,12 @@ const Menu = ({route, navigation}) => {
 											onLongPress={() => lockPlat(index)}>
 											<Text style={styles.textPlat}>
 												{item}
+												
+												<Text style={{fontSize: 10, color: 'black'}}>
+													{doublonItem && doublonItem.indexs.length > 1
+														? '\n'+(doublonItem.indexs.indexOf(index) + 1) + '/' + doublonItem.indexs.length
+														: null}
+												</Text>
 												{numPlatDsSemaineChoisi[index] && (
 													<Text>
 														<Icon name="lock" size={15} color="#754f9d" />
