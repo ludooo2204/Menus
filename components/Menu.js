@@ -29,6 +29,7 @@ import {LogBox} from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import axios from 'axios';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import LinearGradient from 'react-native-linear-gradient';
 
 console.log(NetInfo);
 const themes=[
@@ -37,16 +38,73 @@ const themes=[
 		primaryColor:'#754f9d',//main 
 		secondaryColor:'#d1dce8',//background
 		thirdColor:'#bec7d1', //lock
-		quadColor:'#FDFDFD',//modal & back
+		quadColor:'#754f9d26',//modal & back
 		cinqColor:'black' // 1/2 ..
 	},
 	{
 		theme:1,
-		primaryColor:'#DCED31',//main 
-		secondaryColor:'#363537',//background
-		thirdColor:'#020C13', //lock
-		quadColor:'#FDFDFD',//modal & back
-		cinqColor:'93A3BC' // 1/2 ..
+		primaryColor:'#1D194D',//main 
+		secondaryColor:'#F2EFEA' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#FAE6C7',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:2,
+		primaryColor:'#0f0052',//main 
+		secondaryColor:'#f5f7fa' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#cadffc',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:3,
+		primaryColor:'#0253cc',//main 
+		secondaryColor:'#F2EFEA' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#FAE6C7',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:4,
+		primaryColor:'#585a5e',//main 
+		secondaryColor:'#F2EFEA' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#ebeced',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:5,
+		primaryColor:'#D17B0F',//main 
+		secondaryColor:'#c0fae5' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#fbfce1',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:6,
+		primaryColor:'#f29218',//main 
+		secondaryColor:'#defff3' ,//background DCED31
+		// secondaryColor:'#d6fff0' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#fbfce1',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:7,
+		primaryColor:'#d6fff0',//main 
+		secondaryColor:'#99866e' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#736e67',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
+	},
+	{
+		theme:8,
+		primaryColor:'#faf7f2',//main 
+		secondaryColor:'#8d8c8f' ,//background DCED31
+		thirdColor:'#D9CFBF', //lock
+		quadColor:'#002124',//modal & back
+		cinqColor:'#000A14' // 1/2 ..
 	},
 ]
 const Menu = ({route, navigation}) => {
@@ -83,7 +141,7 @@ const Menu = ({route, navigation}) => {
 	const [visualisationPlat, setVisualisationPlat] = useState(null);
 	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
 	const [listeDoublon, setListeDoublon] = useState([]);
-	const [theme, setTheme] = useState(0);
+	const [theme, setTheme] = useState(2);
 	const [value, setValue] = useState(0); // pour forcer un refresh TEST!!!
 
 	const windowWidth = useWindowDimensions().width;
@@ -256,8 +314,8 @@ const Menu = ({route, navigation}) => {
 		return (
 			<View style={styles.navbar}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-				<Icon name="bars" size={55} color={themes[theme].primaryColor} />
-			
+				<Icon name="bars" size={55} color={themes[theme].primaryColor} onPress={()=>setTheme(theme=>theme<themes.length-1?theme+1:0)} />
+			<Text style={{fontSize:16}}>{theme}</Text>
 				<Icon name="user" size={55} color={themes[theme].primaryColor} onPress={() => setModalUserVisible(true)} />
 				<Icon name={validee ? 'check-square-o' : 'square-o'} size={55} color={themes[theme].primaryColor} onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={55} color={themes[theme].primaryColor} onPress={preparationCourse} />
@@ -266,10 +324,13 @@ const Menu = ({route, navigation}) => {
 	};
 
 	const BarreMidiSoir = () => {
-		const aujourdhui = new Date();
-		const month = aujourdhui.toLocaleString('FR-fr', {month: 'long'});
 		return (
-			<View style={styles.BarreMidiSoir}>
+			<LinearGradient  colors={['#3d3c3a','#736e67']}  
+			// <LinearGradient  colors={['#ffd196','#fffce8']}  
+			// <LinearGradient  colors={['#ededf5','#dadae6']}  
+			// <LinearGradient  colors={[ '#acc5fc','#acc5fc']}
+			 style={styles.BarreMidiSoir}
+			 >
 				<View style={{flex: 3}}></View>
 				<View
 					style={{
@@ -279,13 +340,17 @@ const Menu = ({route, navigation}) => {
 						justifyContent: 'center',
 					}}>
 					<View>
-						<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: themes[theme].primaryColor}}>Midi</Text>
+						<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%'
+						, color: themes[theme].primaryColor
+						}}>Midi</Text>
 					</View>
 					<View>
-						<Text style={{fontWeight: '400', fontSize: 22, color: themes[theme].primaryColor}}>Soir</Text>
+						<Text style={{fontWeight: '400', fontSize: 22, 
+						color: themes[theme].primaryColor
+						}}>Soir</Text>
 					</View>
 				</View>
-			</View>
+			</LinearGradient>
 		);
 	};
 	const BarreJourSemaine = () => {
@@ -569,11 +634,11 @@ const Menu = ({route, navigation}) => {
 			backgroundColor: '#F194FF',
 		},
 		buttonClose: {
-			backgroundColor: '#d1dce8',
+			backgroundColor: themes[theme].secondaryColor,
 		},
 		textStyle: {
 			// color: 'white',
-			// backgroundColor: '#d1dce8',
+			// backgroundColor: themes[theme].secondaryColor,
 			color: themes[theme].primaryColor,
 	
 	fontSize:20,
@@ -665,7 +730,7 @@ const Menu = ({route, navigation}) => {
 			fontWeight: 'bold',
 		},
 		modalPlat: {
-			backgroundColor: '#d1dce8',
+			backgroundColor: themes[theme].secondaryColor,
 			borderRadius: 20,
 			width: windowWidth / 2.5,
 			marginHorizontal: 7,
@@ -681,7 +746,7 @@ const Menu = ({route, navigation}) => {
 		},
 		modalFiltre: {
 			flex: 1,
-			backgroundColor: '#FDFDFD',
+			backgroundColor: themes[theme].quadColor,
 			justifyContent: 'center',
 			// justifyContent:"center",
 			alignItems: 'center',
@@ -689,7 +754,7 @@ const Menu = ({route, navigation}) => {
 			borderRadius: 20,
 		},
 		modalFiltreHighlight: {
-			backgroundColor: '#bec7d1',
+			backgroundColor: themes[theme].thirdColor,
 			borderRadius: 20,
 			justifyContent: 'center',
 			// justifyContent:"center",
@@ -700,7 +765,7 @@ const Menu = ({route, navigation}) => {
 	
 		modalView: {
 			// margin: 20,
-			backgroundColor: '#FDFDFD',
+			backgroundColor: themes[theme].quadColor,
 			flex: 1,
 			borderRadius: 20,
 			padding: 15,
@@ -717,7 +782,7 @@ const Menu = ({route, navigation}) => {
 		appContainer: {
 			// flex: 1,
 			height: '100%',
-			backgroundColor: '#FDFDFD',
+			// backgroundColor: themes[theme].quadColor,
 			// padding: "0.5%"
 		},
 		grille: {
@@ -734,19 +799,20 @@ const Menu = ({route, navigation}) => {
 		},
 	
 		plat: {
-			backgroundColor: '#d1dce8',
+			backgroundColor: themes[theme].secondaryColor,
 			elevation: 18,
 			borderRadius: 20,
 			marginHorizontal: '3%',
 			marginVertical: '3%',
 			justifyContent: 'center',
 			width: '40%',
+			// borderWidth:1,
 			height: windowHeight / 10,
 		},
 		platLocked: {
 			justifyContent: 'center',
 			height: windowHeight / 10,
-			backgroundColor: '#bec7d1',
+			backgroundColor: themes[theme].thirdColor,
 			elevation: 18,
 			borderRadius: 20,
 			// borderWidth: 2,
@@ -762,13 +828,13 @@ const Menu = ({route, navigation}) => {
 			// backgroundColor:"grey",
 			// marginHorizontal:5,
 			fontWeight: 'bold',
-			textShadowColor: '#fdfdfd',
+			textShadowColor: themes[theme].quadColor,
 			textShadowOffset: {
 				width: 1,
 				height: 2,
 			},
 			// elevation:5,
-			textShadowRadius: 4,
+			textShadowRadius: 2,
 			textTransform: 'uppercase',
 			// marginRight:10,
 			// borderWidth:2,
@@ -803,7 +869,7 @@ const Menu = ({route, navigation}) => {
 			justifyContent: 'space-between',
 			alignItems: 'center',
 			paddingHorizontal: '5%',
-			backgroundColor: '#d1dce8',
+			backgroundColor: themes[theme].secondaryColor,
 			position: 'absolute',
 			padding: 5,
 			bottom:0,
@@ -815,7 +881,7 @@ const Menu = ({route, navigation}) => {
 			flexDirection: 'row',
 			justifyContent: 'space-around',
 			alignItems: 'center',
-			backgroundColor:"#FDFDFD"
+			// backgroundColor:themes[theme].quadColor
 		},
 		barreJourSemaine: {
 			flex: 3,
@@ -841,7 +907,7 @@ const Menu = ({route, navigation}) => {
 			fontWeight: '400',
 			fontSize: 22,
 			backgroundColor: themes[theme].primaryColor,
-			color: '#d1dce8',
+			color: themes[theme].secondaryColor,
 			textAlignVertical: 'center',
 			textAlign: 'center',
 			marginVertical: '30%',
@@ -851,6 +917,11 @@ const Menu = ({route, navigation}) => {
 	
 	});
 	return (
+		<LinearGradient  colors={['#736e67','#e0dbb4','#fffce8']} >
+		{/* <LinearGradient  colors={['#fffce8','#f5f1d5','#e0dbb4']} > */}
+		{/* <LinearGradient  colors={['#acc5fc', '#789df0', '#517bd6']} > */}
+	 {/* <LinearGradient  colors={['#e4e4f0','#bebecc','#a8aab5']} > */}
+	{/* <LinearGradient  colors={['#d3d3e0','#bebecc','#9899a3']} > */}
 		<GestureRecognizer
 			style={styles.appContainer}
 			onSwipeLeft={state => semainePlus(state)}
@@ -867,7 +938,7 @@ const Menu = ({route, navigation}) => {
 								<Text style={styles.modalTestText}>Voulez-vous la modifier les menus de cette semaine et supprimer sa validation?</Text>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -880,7 +951,7 @@ const Menu = ({route, navigation}) => {
 								</Pressable>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -901,7 +972,7 @@ const Menu = ({route, navigation}) => {
 								</Text>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -914,7 +985,7 @@ const Menu = ({route, navigation}) => {
 								</Pressable>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -928,7 +999,7 @@ const Menu = ({route, navigation}) => {
 								</Pressable>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -950,7 +1021,7 @@ const Menu = ({route, navigation}) => {
 
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -971,7 +1042,7 @@ const Menu = ({route, navigation}) => {
 
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -989,7 +1060,7 @@ const Menu = ({route, navigation}) => {
 								</Pressable>
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -1027,7 +1098,7 @@ const Menu = ({route, navigation}) => {
 
 								<Pressable
 									style={{
-										backgroundColor: '#d1dce8',
+										backgroundColor: themes[theme].secondaryColor,
 										alignItems: 'center',
 										justifyContent: 'center',
 										marginHorizontal: 10,
@@ -1083,6 +1154,7 @@ const Menu = ({route, navigation}) => {
 			</View>
 			<NavBar validee={semaineDejaValidé} />
 		</GestureRecognizer>
+		</LinearGradient>
 	);
 
 
