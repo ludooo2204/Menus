@@ -733,6 +733,7 @@ const Menu = ({route, navigation}) => {
 									// console.log('index', index);
 									// console.log('listeDoublon[index]', listeDoublon.filter(e=>e.plat==item));
 									const doublonItem = listeDoublon.filter(e => e.plat == item)[0];
+									
 									return (
 										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
 										<Pressable
