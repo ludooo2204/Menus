@@ -2,6 +2,9 @@ import {transform} from '@babel/core';
 import React, {useState, useEffect} from 'react';
 import {View, ScrollView, Modal, StatusBar, Text, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {themes} from './themes';
+import LinearGradient from 'react-native-linear-gradient';
+
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -129,8 +132,8 @@ const ListeCourse = ({route}) => {
 							
 							</Text>)}
 					</Pressable>
-					<Icon name="shopping-cart" size={40} style={{padding: 10}} color="#754f9d" onPress={acheter} />
-					<Icon name="trash" size={40} style={{padding: 10}} color="#754f9d" />
+					<Icon name="shopping-cart" size={40} style={{padding: 10}} color="#0f0052" onPress={acheter} />
+					<Icon name="trash" size={40} style={{padding: 10}} color="#0f0052" />
 				</Animated.View>
 			</View>
 		);
@@ -178,6 +181,8 @@ const ListeCourse = ({route}) => {
 	};
 
 	return (
+		<LinearGradient  colors={['#3d3c3a','#736e67']}  >
+
 		<ScrollView>
 			{listeIngredientAAfficher &&
 				listeIngredientAAfficher.map((item, index) => {
@@ -195,6 +200,7 @@ const ListeCourse = ({route}) => {
 					);
 				})}
 		</ScrollView>
+		</LinearGradient>
 	);
 };
 
@@ -206,14 +212,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		margin: 1,
-		marginTop: 4,
+		marginTop: 6,
 		paddingHorizontal: 5,
 		// borderWidth: 2,
 		// borderColor: 'black',
 		// borderRadius: 40,
 		// alignItems: 'center',
 		// justifyContent:'center'
-		backgroundColor: '#d1dce8',
+		backgroundColor: '#f5f7fa',
 		elevation: 18,
 		borderRadius: 10,
 		// marginHorizontal: '3%',
