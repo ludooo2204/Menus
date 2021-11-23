@@ -14,7 +14,7 @@ import {
 	Linking,
 	Button,
 	Alert,
-	StyleSheet
+	StyleSheet,
 } from 'react-native';
 // import {openDatabase} from 'react-native-sqlite-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -32,81 +32,81 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import LinearGradient from 'react-native-linear-gradient';
 
 console.log(NetInfo);
-const themes=[
+const themes = [
 	{
-		theme:0,
-		primaryColor:'#754f9d',//main 
-		secondaryColor:'#d1dce8',//background
-		thirdColor:'#bec7d1', //lock
-		quadColor:'#754f9d26',//modal & back
-		cinqColor:'black' // 1/2 ..
+		theme: 0,
+		primaryColor: '#754f9d', //main
+		secondaryColor: '#d1dce8', //background
+		thirdColor: '#bec7d1', //lock
+		quadColor: '#754f9d26', //modal & back
+		cinqColor: 'black', // 1/2 ..
 	},
 	{
-		theme:1,
-		primaryColor:'#1D194D',//main 
-		secondaryColor:'#F2EFEA' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#FAE6C7',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 1,
+		primaryColor: '#1D194D', //main
+		secondaryColor: '#F2EFEA', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#FAE6C7', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:2,
-		primaryColor:'#0f0052',//main 
-		secondaryColor:'#f5f7fa' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#cadffc',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 2,
+		primaryColor: '#0f0052', //main
+		secondaryColor: '#f5f7fa', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#cadffc', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:3,
-		primaryColor:'#0253cc',//main 
-		secondaryColor:'#F2EFEA' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#FAE6C7',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 3,
+		primaryColor: '#0253cc', //main
+		secondaryColor: '#F2EFEA', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#FAE6C7', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:4,
-		primaryColor:'#585a5e',//main 
-		secondaryColor:'#F2EFEA' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#ebeced',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 4,
+		primaryColor: '#585a5e', //main
+		secondaryColor: '#F2EFEA', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#ebeced', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:5,
-		primaryColor:'#D17B0F',//main 
-		secondaryColor:'#c0fae5' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#fbfce1',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 5,
+		primaryColor: '#D17B0F', //main
+		secondaryColor: '#c0fae5', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#fbfce1', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:6,
-		primaryColor:'#f29218',//main 
-		secondaryColor:'#defff3' ,//background DCED31
+		theme: 6,
+		primaryColor: '#f29218', //main
+		secondaryColor: '#defff3', //background DCED31
 		// secondaryColor:'#d6fff0' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#fbfce1',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#fbfce1', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:7,
-		primaryColor:'#d6fff0',//main 
-		secondaryColor:'#99866e' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#736e67',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 7,
+		primaryColor: '#d6fff0', //main
+		secondaryColor: '#99866e', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#736e67', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
 	{
-		theme:8,
-		primaryColor:'#faf7f2',//main 
-		secondaryColor:'#8d8c8f' ,//background DCED31
-		thirdColor:'#D9CFBF', //lock
-		quadColor:'#002124',//modal & back
-		cinqColor:'#000A14' // 1/2 ..
+		theme: 8,
+		primaryColor: '#faf7f2', //main
+		secondaryColor: '#8d8c8f', //background DCED31
+		thirdColor: '#D9CFBF', //lock
+		quadColor: '#002124', //modal & back
+		cinqColor: '#000A14', // 1/2 ..
 	},
-]
+];
 const Menu = ({route, navigation}) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [semaineDejaValidé, setSemaineDejaValidé] = useState(null);
@@ -141,7 +141,7 @@ const Menu = ({route, navigation}) => {
 	const [visualisationPlat, setVisualisationPlat] = useState(null);
 	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
 	const [listeDoublon, setListeDoublon] = useState([]);
-	const [theme, setTheme] = useState(2);
+	const [theme, setTheme] = useState(4);
 	const [value, setValue] = useState(0); // pour forcer un refresh TEST!!!
 
 	const windowWidth = useWindowDimensions().width;
@@ -314,23 +314,23 @@ const Menu = ({route, navigation}) => {
 		return (
 			<View style={styles.navbar}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
-				<Icon name="bars" size={55} color={themes[theme].primaryColor} onPress={()=>setTheme(theme=>theme<themes.length-1?theme+1:0)} />
-			<Text style={{fontSize:16}}>{theme}</Text>
-				<Icon name="user" size={55} color={themes[theme].primaryColor} onPress={() => setModalUserVisible(true)} />
-				<Icon name={validee ? 'check-square-o' : 'square-o'} size={55} color={themes[theme].primaryColor} onPress={enregistrerSemaine} />
-				<Icon name="shopping-cart" size={55} color={themes[theme].primaryColor} onPress={preparationCourse} />
+				<Icon
+					name="bars"
+					size={35}
+					color={themes[theme].primaryColor}
+					onPress={() => setTheme(theme => (theme < themes.length - 1 ? theme + 1 : 0))}
+				/>
+				<Text style={{fontSize: 16}}>{theme}</Text>
+				<Icon name="user" size={35} color={themes[theme].primaryColor} onPress={() => setModalUserVisible(true)} />
+				<Icon name={validee ? 'check-square-o' : 'square-o'} size={35} color={themes[theme].primaryColor} onPress={enregistrerSemaine} />
+				<Icon name="shopping-cart" size={35} color={themes[theme].primaryColor} onPress={preparationCourse} />
 			</View>
 		);
 	};
 
 	const BarreMidiSoir = () => {
 		return (
-			<LinearGradient  colors={['#3d3c3a','#736e67']}  
-			// <LinearGradient  colors={['#ffd196','#fffce8']}  
-			// <LinearGradient  colors={['#ededf5','#dadae6']}  
-			// <LinearGradient  colors={[ '#acc5fc','#acc5fc']}
-			 style={styles.BarreMidiSoir}
-			 >
+			<View style={styles.BarreMidiSoir}>
 				<View style={{flex: 3}}></View>
 				<View
 					style={{
@@ -340,17 +340,13 @@ const Menu = ({route, navigation}) => {
 						justifyContent: 'center',
 					}}>
 					<View>
-						<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%'
-						, color: themes[theme].primaryColor
-						}}>Midi</Text>
+						<Text style={{fontWeight: '400', fontSize: 22, marginRight: '35%', color: themes[theme].primaryColor}}>Midi</Text>
 					</View>
 					<View>
-						<Text style={{fontWeight: '400', fontSize: 22, 
-						color: themes[theme].primaryColor
-						}}>Soir</Text>
+						<Text style={{fontWeight: '400', fontSize: 22, color: themes[theme].primaryColor}}>Soir</Text>
 					</View>
 				</View>
-			</LinearGradient>
+			</View>
 		);
 	};
 	const BarreJourSemaine = () => {
@@ -626,8 +622,8 @@ const Menu = ({route, navigation}) => {
 			borderRadius: 20,
 			padding: 10,
 			margin: 2,
-			paddingHorizontal:10,
-			marginBottom:5,
+			paddingHorizontal: 10,
+			marginBottom: 5,
 			elevation: 2,
 		},
 		buttonOpen: {
@@ -640,8 +636,8 @@ const Menu = ({route, navigation}) => {
 			// color: 'white',
 			// backgroundColor: themes[theme].secondaryColor,
 			color: themes[theme].primaryColor,
-	
-	fontSize:20,
+
+			fontSize: 20,
 			fontWeight: 'bold',
 			borderRadius: 20,
 		},
@@ -651,7 +647,7 @@ const Menu = ({route, navigation}) => {
 			height: (windowHeight * 0.98) / 9,
 			// fontSize: 20,
 			// fontWeight: 'bold',
-				
+
 			textAlign: 'center',
 			textAlignVertical: 'center',
 			fontSize: 20,
@@ -660,62 +656,54 @@ const Menu = ({route, navigation}) => {
 		},
 		modalTest: {
 			position: 'absolute',
-			top:windowHeight  / 2.5,
-			left:windowWidth/5.5,
-			borderRadius:20,
+			top: windowHeight / 2.5,
+			left: windowWidth / 5.5,
+			borderRadius: 20,
 			textAlign: 'center',
 			textAlignVertical: 'center',
-			justifyContent:"center",
-			backgroundColor:'white',
+			justifyContent: 'center',
+			backgroundColor: 'white',
 			// height: windowHeight  / 5,
-			width: windowWidth  / 1.5,
+			width: windowWidth / 1.5,
 			fontSize: 20,
 			fontWeight: 'bold',
-			padding: 20
-			
+			padding: 20,
 		},
 		modalTestText: {
-			
 			textAlign: 'center',
 			textAlignVertical: 'center',
 			fontSize: 20,
 			fontWeight: 'bold',
 			color: themes[theme].primaryColor,
-			
 		},
 		modalVisualisation: {
 			position: 'absolute',
-			top:windowHeight  / 4,
-			left:windowWidth/5.5,
-			borderRadius:20,
+			top: windowHeight / 4,
+			left: windowWidth / 5.5,
+			borderRadius: 20,
 			textAlign: 'center',
 			textAlignVertical: 'center',
-			justifyContent:"center",
-			backgroundColor:'white',
-			height: windowHeight  / 2,
-			width: windowWidth  / 1.5,
+			justifyContent: 'center',
+			backgroundColor: 'white',
+			height: windowHeight / 2,
+			width: windowWidth / 1.5,
 			fontSize: 20,
 			fontWeight: 'bold',
-			
 		},
 		modalVisualisationText: {
-			
 			textAlign: 'center',
 			textAlignVertical: 'center',
 			fontSize: 20,
 			fontWeight: 'bold',
 			color: themes[theme].primaryColor,
-			
 		},
 		modalVisualisationTextLien: {
-			
 			textAlign: 'center',
 			textAlignVertical: 'center',
 			fontSize: 20,
 			fontWeight: 'bold',
 			color: 'blue',
-			textDecorationLine:"underline"
-			
+			textDecorationLine: 'underline',
 		},
 		modalFiltreText: {
 			// textAlign: 'center',
@@ -726,7 +714,7 @@ const Menu = ({route, navigation}) => {
 			// fontWeight:900,
 			// margin: 2,
 			paddingHorizontal: 5,
-	
+
 			fontWeight: 'bold',
 		},
 		modalPlat: {
@@ -762,7 +750,7 @@ const Menu = ({route, navigation}) => {
 			borderWidth: 5,
 			borderColor: 'black',
 		},
-	
+
 		modalView: {
 			// margin: 20,
 			backgroundColor: themes[theme].quadColor,
@@ -787,7 +775,7 @@ const Menu = ({route, navigation}) => {
 		},
 		grille: {
 			height: windowHeight * 0.93,
-	
+
 			// alignItems: 'center',
 			// alignItems: 'flex-start',
 			flexDirection: 'row',
@@ -797,7 +785,7 @@ const Menu = ({route, navigation}) => {
 			fontSize: 24,
 			fontWeight: '600',
 		},
-	
+
 		plat: {
 			backgroundColor: themes[theme].secondaryColor,
 			elevation: 18,
@@ -840,8 +828,7 @@ const Menu = ({route, navigation}) => {
 			// borderWidth:2,
 			color: themes[theme].primaryColor,
 		},
-	
-	
+
 		demiJour: {
 			textAlign: 'center',
 			textAlignVertical: 'center',
@@ -871,13 +858,14 @@ const Menu = ({route, navigation}) => {
 			paddingHorizontal: '5%',
 			backgroundColor: themes[theme].secondaryColor,
 			position: 'absolute',
-			padding: 5,
-			bottom:0,
-			left:0,
-			right:0
+			padding: 4,
+			bottom: 0,
+			left: 0,
+			right: 0,
 		},
 		BarreMidiSoir: {
-			height: '4.2%',
+			height: '5%',
+			marginBottom:'1%',
 			flexDirection: 'row',
 			justifyContent: 'space-around',
 			alignItems: 'center',
@@ -888,7 +876,7 @@ const Menu = ({route, navigation}) => {
 			// flexDirection: 'row',
 			// flexWrap: 'wrap',
 			marginBottom: 27,
-	
+
 			// pad:5,
 			justifyContent: 'flex-start',
 			alignItems: 'flex-start',
@@ -901,7 +889,6 @@ const Menu = ({route, navigation}) => {
 			textAlignVertical: 'center',
 			marginVertical: '30%',
 			height: windowHeight / 10,
-			
 		},
 		textJourAujourdhui: {
 			fontWeight: '400',
@@ -914,267 +901,247 @@ const Menu = ({route, navigation}) => {
 			borderRadius: 10,
 			height: windowHeight / 10,
 		},
-	
 	});
 	return (
-		<LinearGradient  colors={['#736e67','#e0dbb4','#fffce8']} >
-		{/* <LinearGradient  colors={['#fffce8','#f5f1d5','#e0dbb4']} > */}
-		{/* <LinearGradient  colors={['#acc5fc', '#789df0', '#517bd6']} > */}
-	 {/* <LinearGradient  colors={['#e4e4f0','#bebecc','#a8aab5']} > */}
-	{/* <LinearGradient  colors={['#d3d3e0','#bebecc','#9899a3']} > */}
-		<GestureRecognizer
-			style={styles.appContainer}
-			onSwipeLeft={state => semainePlus(state)}
-			onSwipeRight={state => semaineMoins(state)}
-			config={config}>
-			{/* <BarreJourSemaine /> */}
-			<BarreMidiSoir />
-			<View style={{height: '88%'}}>
-				<PTRView onRefresh={_refresh}>
-					<View style={styles.grille}>
-						<BarreJourSemaine />
-						<Modal animationType="slide" transparent={true} visible={modal1Visible}>
-							<View style={styles.modalTest}>
-								<Text style={styles.modalTestText}>Voulez-vous la modifier les menus de cette semaine et supprimer sa validation?</Text>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => modifierSemaine('oui')}>
-									<Text style={styles.textStyle}>oui</Text>
-								</Pressable>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
+		<LinearGradient colors={['#736e67', '#e0dbb4', '#fffce8']}>
+			{/* <LinearGradient  colors={['#fffce8','#f5f1d5','#e0dbb4']} > */}
+			{/* <LinearGradient  colors={['#acc5fc', '#789df0', '#517bd6']} > */}
+			{/* <LinearGradient  colors={['#e4e4f0','#bebecc','#a8aab5']} > */}
+			{/* <LinearGradient  colors={['#d3d3e0','#bebecc','#9899a3']} > */}
+			<GestureRecognizer
+				style={styles.appContainer}
+				onSwipeLeft={state => semainePlus(state)}
+				onSwipeRight={state => semaineMoins(state)}
+				config={config}>
+				{/* <BarreJourSemaine /> */}
+				<BarreMidiSoir />
+				<View style={{height: '100%'}}>
+					<PTRView onRefresh={_refresh}>
+						<View style={styles.grille}>
+							<BarreJourSemaine />
+							<Modal animationType="slide" transparent={true} visible={modal1Visible}>
+								<View style={styles.modalTest}>
+									<Text style={styles.modalTestText}>Voulez-vous la modifier les menus de cette semaine et supprimer sa validation?</Text>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => modifierSemaine('oui')}>
+										<Text style={styles.textStyle}>oui</Text>
+									</Pressable>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
 
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => modifierSemaine('non')}>
-									<Text style={styles.textStyle}>non</Text>
-								</Pressable>
-							</View>
-						</Modal>
-						<Modal animationType="slide" transparent={true} visible={modalSynchroMenuVisible}>
-							<View style={styles.modalTest}>
-								<Text style={styles.modalTestText}>
-									{`Attention : les menus ne sont pas les mêmes que ceux en ligne. le dernier enregistrement a été fait ${textEnregistrementPlat}.  Voulez-vous importer vos menus ou les exporter ?`}
-								</Text>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => importerMenu()}>
-									<Text style={styles.textStyle}>importer</Text>
-								</Pressable>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => exporterMenu()}>
-									<Text style={styles.textStyle}>exporter</Text>
-								</Pressable>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => setModalSynchroMenuVisible(false)}>
-									<Text style={styles.textStyle}>Annuler</Text>
-								</Pressable>
-							</View>
-						</Modal>
-						<Modal animationType="slide" transparent={true} visible={modalConnectionVisible}>
-							<View style={styles.modalTest}>
-								<Text style={styles.modalTestText}>
-									Attention : vous ne semblez pas connecté à internet. vos modifications ne seront pas prise en compte en ligne
-								</Text>
-
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										marginTop: 15,
-										borderRadius: 10,
-
-										height: 50,
-									}}
-									onPress={() => setModalConnectionVisible(false)}>
-									<Text style={styles.textStyle}>ok</Text>
-								</Pressable>
-							</View>
-						</Modal>
-						<Modal animationType="slide" transparent={true} visible={modalUserVisible}>
-							<View style={styles.modalTest}>
-								<Text style={styles.modalTestText}>Bonjour, qui es-tu?</Text>
-
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										marginTop: 15,
-										borderRadius: 10,
-
-										height: 50,
-									}}
-									onPress={() => {
-										setUser('anne');
-										setModalUserVisible(false);
-									}}>
-									<Text style={styles.textStyle}>Anne</Text>
-								</Pressable>
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										marginTop: 15,
-										borderRadius: 10,
-
-										height: 50,
-									}}
-									onPress={() => {
-										setUser('ludo');
-										setModalUserVisible(false);
-									}}>
-									<Text style={styles.textStyle}>Ludo</Text>
-								</Pressable>
-							</View>
-						</Modal>
-						<Modal animationType="slide" transparent={true} visible={modalPlatVisible}>
-							<View style={styles.modalVisualisation}>
-								<Text>ingredients</Text>
-								<Text style={styles.modalVisualisationText}>{visualisationPlat ? visualisationPlat.ingredients : "pas d'ingredients?"}</Text>
-								<Text>{'\n'}</Text>
-								<View>
-									<Text>Recette :</Text>
-									{visualisationPlat && visualisationPlat.url ? (
-										<Pressable onPress={visualisationPlat ? () => Linking.openURL(visualisationPlat.url) : null}>
-											<Text style={styles.modalVisualisationTextLien}>{visualisationPlat.url}</Text>
-										</Pressable>
-									) : (
-										<Text style={styles.modalVisualisationText}> Pas de recette en ligne</Text>
-									)}
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => modifierSemaine('non')}>
+										<Text style={styles.textStyle}>non</Text>
+									</Pressable>
 								</View>
-								<Text>{'\n'}</Text>
-								<Text>{'\n'}</Text>
+							</Modal>
+							<Modal animationType="slide" transparent={true} visible={modalSynchroMenuVisible}>
+								<View style={styles.modalTest}>
+									<Text style={styles.modalTestText}>
+										{`Attention : les menus ne sont pas les mêmes que ceux en ligne. le dernier enregistrement a été fait ${textEnregistrementPlat}.  Voulez-vous importer vos menus ou les exporter ?`}
+									</Text>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => importerMenu()}>
+										<Text style={styles.textStyle}>importer</Text>
+									</Pressable>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
 
-								<Pressable
-									style={{
-										backgroundColor: themes[theme].secondaryColor,
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										borderRadius: 10,
-										height: 30,
-									}}
-									onPress={() => setModalPlatVisible(false)}>
-									<Text style={styles.textStyle}>ok</Text>
-								</Pressable>
-							</View>
-						</Modal>
-						<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-							{/* {console.log('listePlatChoisi')}
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => exporterMenu()}>
+										<Text style={styles.textStyle}>exporter</Text>
+									</Pressable>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => setModalSynchroMenuVisible(false)}>
+										<Text style={styles.textStyle}>Annuler</Text>
+									</Pressable>
+								</View>
+							</Modal>
+							<Modal animationType="slide" transparent={true} visible={modalConnectionVisible}>
+								<View style={styles.modalTest}>
+									<Text style={styles.modalTestText}>
+										Attention : vous ne semblez pas connecté à internet. vos modifications ne seront pas prise en compte en ligne
+									</Text>
+
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											marginTop: 15,
+											borderRadius: 10,
+
+											height: 50,
+										}}
+										onPress={() => setModalConnectionVisible(false)}>
+										<Text style={styles.textStyle}>ok</Text>
+									</Pressable>
+								</View>
+							</Modal>
+							<Modal animationType="slide" transparent={true} visible={modalUserVisible}>
+								<View style={styles.modalTest}>
+									<Text style={styles.modalTestText}>Bonjour, qui es-tu?</Text>
+
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											marginTop: 15,
+											borderRadius: 10,
+
+											height: 50,
+										}}
+										onPress={() => {
+											setUser('anne');
+											setModalUserVisible(false);
+										}}>
+										<Text style={styles.textStyle}>Anne</Text>
+									</Pressable>
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											marginTop: 15,
+											borderRadius: 10,
+
+											height: 50,
+										}}
+										onPress={() => {
+											setUser('ludo');
+											setModalUserVisible(false);
+										}}>
+										<Text style={styles.textStyle}>Ludo</Text>
+									</Pressable>
+								</View>
+							</Modal>
+							<Modal animationType="slide" transparent={true} visible={modalPlatVisible}>
+								<View style={styles.modalVisualisation}>
+									<Text>ingredients</Text>
+									<Text style={styles.modalVisualisationText}>{visualisationPlat ? visualisationPlat.ingredients : "pas d'ingredients?"}</Text>
+									<Text>{'\n'}</Text>
+									<View>
+										<Text>Recette :</Text>
+										{visualisationPlat && visualisationPlat.url ? (
+											<Pressable onPress={visualisationPlat ? () => Linking.openURL(visualisationPlat.url) : null}>
+												<Text style={styles.modalVisualisationTextLien}>{visualisationPlat.url}</Text>
+											</Pressable>
+										) : (
+											<Text style={styles.modalVisualisationText}> Pas de recette en ligne</Text>
+										)}
+									</View>
+									<Text>{'\n'}</Text>
+									<Text>{'\n'}</Text>
+
+									<Pressable
+										style={{
+											backgroundColor: themes[theme].secondaryColor,
+											alignItems: 'center',
+											justifyContent: 'center',
+											marginHorizontal: 10,
+											marginVertical: 5,
+											borderRadius: 10,
+											height: 30,
+										}}
+										onPress={() => setModalPlatVisible(false)}>
+										<Text style={styles.textStyle}>ok</Text>
+									</Pressable>
+								</View>
+							</Modal>
+							<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+								{/* {console.log('listePlatChoisi')}
 							{console.log(listePlatChoisi)} */}
 
-							{listePlatChoisi &&
-								listeDoublon &&
-								typeof listePlatChoisi != 'string' &&
-								listePlatChoisi.map((item, index) => {
-									// console.log('item', item);
-									// console.log('index', index);
-									// console.log('listeDoublon[index]', listeDoublon.filter(e=>e.plat==item));
-									const doublonItem = listeDoublon.filter(e => e.plat == item)[0];
-									
-									return (
-										// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
-										<Pressable
-											key={Math.random()}
-											style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
-											onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
-											onLongPress={() => lockPlat(index)}>
-											<Text style={styles.textPlat}>
-												{item}
-												
-												<Text style={{fontSize: 10, color: 'black'}}>
-													{doublonItem && doublonItem.indexs.length > 1
-														? '\n'+(doublonItem.indexs.indexOf(index) + 1) + '/' + doublonItem.indexs.length
-														: null}
-												</Text>
-												{numPlatDsSemaineChoisi[index] && (
-													<Text>
-														<Icon name="lock" size={15} color={themes[theme].primaryColor} />
+								{listePlatChoisi &&
+									listeDoublon &&
+									typeof listePlatChoisi != 'string' &&
+									listePlatChoisi.map((item, index) => {
+										// console.log('item', item);
+										// console.log('index', index);
+										// console.log('listeDoublon[index]', listeDoublon.filter(e=>e.plat==item));
+										const doublonItem = listeDoublon.filter(e => e.plat == item)[0];
+
+										return (
+											// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
+											<Pressable
+												key={Math.random()}
+												style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
+												onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
+												onLongPress={() => lockPlat(index)}>
+												<Text style={styles.textPlat}>
+													{item}
+
+													<Text style={{fontSize: 10, color: 'black'}}>
+														{doublonItem && doublonItem.indexs.length > 1
+															? '\n' + (doublonItem.indexs.indexOf(index) + 1) + '/' + doublonItem.indexs.length
+															: null}
 													</Text>
-												)}
-											</Text>
-										</Pressable>
-									);
-								})}
+													{numPlatDsSemaineChoisi[index] && (
+														<Text>
+															<Icon name="lock" size={15} color={themes[theme].primaryColor} />
+														</Text>
+													)}
+												</Text>
+											</Pressable>
+										);
+									})}
+							</View>
 						</View>
-					</View>
-				</PTRView>
-			</View>
-			<NavBar validee={semaineDejaValidé} />
-		</GestureRecognizer>
+					</PTRView>
+				</View>
+				<NavBar validee={semaineDejaValidé} />
+			</GestureRecognizer>
 		</LinearGradient>
 	);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 };
 
 export default Menu;
