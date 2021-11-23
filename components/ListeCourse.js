@@ -69,6 +69,8 @@ const ListeCourse = ({route}) => {
 		const [modalVisible, setModalVisible] = useState(false);
 		const [selectionné, setSelectionné] = useState(false);
 		const [selection, setSelection] = useState(null);
+
+		
 		const heightAnim = React.useRef(new Animated.Value(0)).current;
 		React.useEffect(() => {
 			// console.log(heightAnim);
