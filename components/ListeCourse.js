@@ -122,7 +122,7 @@ const ListeCourse = ({route}) => {
 					[
 						styles.item,
 						 {transform: [{scale: heightAnim}]},
-						{minHeight:selectionné?200:50}
+						{minHeight:selectionné?200:40}
 					]
 				}>
 					<Pressable style={{flex: 3}}>
@@ -134,8 +134,8 @@ const ListeCourse = ({route}) => {
 							
 							</Text>)}
 					</Pressable>
-					<Icon name="shopping-cart" size={40} style={{padding: 10}} color="#0f0052" onPress={acheter} />
-					<Icon name="trash" size={40} style={{padding: 10}} color="#0f0052" />
+					<Icon name="shopping-cart" size={20} style={{paddingRight: 15}} color="#585a5e" onPress={acheter} />
+					<Icon name="trash" size={20} style={{paddingRight: 15}} color="#585a5e" />
 				</Animated.View>
 			</View>
 		);
@@ -221,17 +221,17 @@ const styles = StyleSheet.create({
 		// borderRadius: 40,
 		// alignItems: 'center',
 		// justifyContent:'center'
-		backgroundColor: '#f5f7fa',
+		backgroundColor: '#F2EFEA',
 		elevation: 18,
 		borderRadius: 10,
 		// marginHorizontal: '3%',
 		// marginVertical: '3%',
 		justifyContent: 'center',
 		// width: '40%',
-		minHeight: 50,
+		minHeight: 40,
 	},
 	text: {
-		fontSize: 30,
+		fontSize: 20,
 	},
 	modalVisualisation: {
 		position: 'absolute',
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
 		textAlignVertical: 'center',
 		fontSize: 20,
 		fontWeight: 'bold',
-		color: '#754f9d',
+		color: '#585a5e',
 	},
 });
 export default ListeCourse;
