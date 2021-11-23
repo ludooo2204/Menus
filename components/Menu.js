@@ -142,7 +142,61 @@ const Menu = ({route, navigation}) => {
 	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
 	const [listeDoublon, setListeDoublon] = useState([]);
 	const [theme, setTheme] = useState(4);
-	const [value, setValue] = useState(0); // pour forcer un refresh TEST!!!
+	const [value, setValuee] = useState(0); // pour forcer un refresh TEST!!!
+
+	const scaleMenu = React.useRef(new Animated.Value(0)).current;
+	const tailleIcone = React.useRef(new Animated.Value(0)).current;
+	const animSwipe = React.useRef(new Animated.Value(0)).current;
+
+	React.useEffect(() => {
+		// console.log(heightAnim);
+		// On anime notre valeur jusqu'à la hauteur de la fenetre
+		Animated.parallel([
+			Animated.timing(scaleMenu, {
+				toValue: 1,
+				duration: 700,
+				useNativeDriver: true,
+				delay: 10,
+				// easing: Easing.bounce,
+				easing: Easing.elastic(1),
+			}),
+
+			Animated.timing(tailleIcone, {
+				toValue: 1,
+				duration: 700,
+				useNativeDriver: true,
+				delay: 10,
+				// easing: Easing.bounce,
+				easing: Easing.elastic(1),
+				// easing: Easing.ease(),
+			}),
+		]).start();
+	}, [listePlatChoisi]);
+	
+	const totolasticot = () => {
+		Animated.sequence([
+			Animated.timing(animSwipe, {
+				toValue: 1,
+				duration: 10,
+				useNativeDriver: true,
+				// delay: 10,
+				// easing: Easing.bounce,
+				// easing: Easing.elastic(1),
+				easing: Easing.ease,
+			}),
+			Animated.timing(animSwipe, {
+				toValue: 0,
+				duration: 100,
+				useNativeDriver: true,
+				// delay: 10,
+				// easing: Easing.bounce,
+				easing: Easing.ease,
+				// easing: Easing.elastic(1),
+			}),
+		]).start();
+	};
+
+	// }, [tailleIcone, scaleMenu]);
 
 	const windowWidth = useWindowDimensions().width;
 	const windowHeight = useWindowDimensions().height;
@@ -312,7 +366,7 @@ const Menu = ({route, navigation}) => {
 
 	const NavBar = ({validee}) => {
 		return (
-			<View style={styles.navbar}>
+			<Animated.View style={[styles.navbar, {transform: [{scale: tailleIcone}]}]}>
 				<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 				<Icon
 					name="bars"
@@ -324,7 +378,7 @@ const Menu = ({route, navigation}) => {
 				<Icon name="user" size={35} color={themes[theme].primaryColor} onPress={() => setModalUserVisible(true)} />
 				<Icon name={validee ? 'check-square-o' : 'square-o'} size={35} color={themes[theme].primaryColor} onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={35} color={themes[theme].primaryColor} onPress={preparationCourse} />
-			</View>
+			</Animated.View>
 		);
 	};
 
@@ -560,6 +614,7 @@ const Menu = ({route, navigation}) => {
 	};
 	const semainePlus = state => {
 		console.log(state);
+		totolasticot();
 		setDeltaSemaine(deltaSemaine => deltaSemaine + 1);
 	};
 	const semaineMoins = state => {
@@ -593,7 +648,7 @@ const Menu = ({route, navigation}) => {
 		if (typeof listePlatChoisiOnline.menu == 'string') array = JSON.parse(listePlatChoisiOnline.menu);
 		storeData(array);
 		setModalSynchroMenuVisible(false);
-		setValue(value => value + 1);
+		setValuee(value => value + 1);
 	};
 	const visualiserPlat = _plat => {
 		console.log(_plat);
@@ -796,6 +851,7 @@ const Menu = ({route, navigation}) => {
 			width: '40%',
 			// borderWidth:1,
 			height: windowHeight / 10,
+			// opacity: Number(PlatBulleAnim)
 		},
 		platLocked: {
 			justifyContent: 'center',
@@ -865,7 +921,7 @@ const Menu = ({route, navigation}) => {
 		},
 		BarreMidiSoir: {
 			height: '5%',
-			marginBottom:'1%',
+			marginBottom: '1%',
 			flexDirection: 'row',
 			justifyContent: 'space-around',
 			alignItems: 'center',
@@ -1097,7 +1153,21 @@ const Menu = ({route, navigation}) => {
 									</Pressable>
 								</View>
 							</Modal>
-							<View style={{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+							<Animated.View
+								style={[
+									{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'},
+									{
+										transform: [
+											{scale: scaleMenu},
+											{
+												scale: animSwipe.interpolate({
+													inputRange: [0, 1],
+													outputRange: [1,1.02],
+												}),
+											},
+										],
+									},
+								]}>
 								{/* {console.log('listePlatChoisi')}
 							{console.log(listePlatChoisi)} */}
 
@@ -1112,6 +1182,7 @@ const Menu = ({route, navigation}) => {
 
 										return (
 											// <Pressable key={Math.random()} style={styles.plat} onPress={() => toggleModal(item, index)}>
+
 											<Pressable
 												key={Math.random()}
 												style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
@@ -1134,7 +1205,7 @@ const Menu = ({route, navigation}) => {
 											</Pressable>
 										);
 									})}
-							</View>
+							</Animated.View>
 						</View>
 					</PTRView>
 				</View>
