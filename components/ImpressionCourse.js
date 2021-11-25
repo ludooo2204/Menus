@@ -35,7 +35,7 @@ const ImpressionCourse = ({route}) => {
 	const onShare = () => {
 		const result = Share.share({
 			message: stringToShare,
-            title:"Liste des courses",o
+            title:"Liste des courses",
     
 		}).then(() => console.log('partagéé'));
 	};
