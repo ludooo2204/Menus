@@ -6,15 +6,25 @@ import {themes} from './themes';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import {TextInput} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const ListeCourse = ({route}) => {
+const ListeCourse = ({route,navigation}) => {
 	const [listeCourse, setListeCourse] = useState(route.params.listePlatChoisiavecData);
 	const [listeIngredientAAfficher, setListeIngredientAAfficher] = useState([]);
-	console.log('liste course from navigation');
-	console.log(listeCourse);
+	const [listeCourseFinale, setListeCourseFinale] = useState([]);
+
+	useEffect(() => {
+		console.log('listeCourseFinale');
+		console.log('listeCourseFinale');
+		console.log('listeCourseFinale');
+		console.log('listeCourseFinale');
+		console.log(listeCourseFinale);
+	}, [listeCourseFinale]);
 	useEffect(() => {
 		const listeCourseSansDoublon = [...new Set(listeCourse)];
+		console.log('listeCourseSansDoublon');
+		console.log('listeCourseSansDoublon');
 		console.log('listeCourseSansDoublon');
 		console.log(listeCourseSansDoublon);
 		let listeIngredients = [];
@@ -63,19 +73,27 @@ const ListeCourse = ({route}) => {
 
 		console.log(listeFinaleArray);
 		setListeIngredientAAfficher(listeFinaleArray);
-	}, []);
+	}, [listeCourse]);
 
-	const Ingredient = ({itemString, item, delay, acheter}) => {
+	const Ingredient = ({itemString, item, delay, acheter, supprimer,modifierQtt}) => {
 		const [modalVisible, setModalVisible] = useState(false);
 		const [selectionné, setSelectionné] = useState(false);
 		const [selection, setSelection] = useState(null);
+		const [ingredientModifié, setIngredientModifié] = useState(false);
 
-		
-		const heightAnim = React.useRef(new Animated.Value(0)).current;
+
+
+		const scaleAnim = React.useRef(new Animated.Value(0)).current;
 		React.useEffect(() => {
-			// console.log(heightAnim);
+			// console.log('blablalbalbalb');
+			// console.log('blablalbalbalb');
+			// console.log('blablalbalbalb');
+			// console.log('blablalbalbalb');
+			// console.log('blablalbalbalb');
+			// console.log('blablalbalbalb');
+			// console.log(listeCourseFinale);
 			// On anime notre valeur jusqu'à la hauteur de la fenetre
-			Animated.timing(heightAnim, {
+			Animated.timing(scaleAnim, {
 				toValue: 1,
 				duration: 1000, // Durant 10 secondes
 				useNativeDriver: true, // Cela sera abordé plus tard
@@ -83,70 +101,147 @@ const ListeCourse = ({route}) => {
 				// easing: Easing.bounce,
 				easing: Easing.elastic(2),
 			}).start();
-		}, [heightAnim]);
+			// }, []);
+		}, [scaleAnim]);
 
 		const selectionnerItem = () => {
 			console.log('item');
-			const listePlatsObjetConcerné=([...new Set(listeCourse)].filter(e => e.ingredients.includes(item.Ingredient)));
-			const platConcernéNomPlat = listePlatsObjetConcerné.map(e=>e.nom_plat)
-			console.log(platConcernéNomPlat)
-			setSelectionné(!selectionné)
-			setSelection(platConcernéNomPlat)
-			// setModalVisible(true)
+			console.log('item');
+			console.log('item');
+			console.log('item');
+			console.log(item);
+			// animPopup();
+			const listePlatsObjetConcerné = [...new Set(listeCourse)].filter(e => e.ingredients.includes(item.Ingredient));
+			const platConcernéNomPlat = listePlatsObjetConcerné.map(e => e.nom_plat);
+			console.log(platConcernéNomPlat);
+			// setSelectionné(!selectionné);
+			setSelection(platConcernéNomPlat);
+			setModalVisible(true);
 		};
-		return (
-			<View>
-				{/* <Modal animationType="slide" transparent={true} visible={modalVisible}>
+
+		const ModalItemCourse = () => {
+			const [quantitéIngredients, setQuantitéIngredients] = useState(itemString);
+			const [inputQuantitéIngredients, setInputQuantitéIngredients] = useState(false);
+			// console.log('selection');
+			// console.log(selection);
+			const modifierQuantité = () => {
+				setInputQuantitéIngredients(true);
+			};
+			const handleModif = modification => {
+				setQuantitéIngredients(modification);
+				
+				console.log(modification);
+			};
+			const validerModif = () => {
+				modifierQtt(quantitéIngredients)
+				// console.log(quantitéIngredients)
+				setModalVisible(false);
+			};
+			const annulerModif = () => {
+				setModalVisible(false);
+			};
+			return (
+				<Modal animationType="slide" transparent={true} visible={modalVisible}>
 					<StatusBar backgroundColor="lightgrey" hidden></StatusBar>
 
 					<View style={styles.modalVisualisation}>
-						<Text style={styles.modalVisualisationText}>ingredients</Text>
-						<Text>sdg</Text>
+						{!inputQuantitéIngredients ? (
+							<Pressable onPress={modifierQuantité}>
+								<Text style={styles.modalVisualisationText}>{quantitéIngredients}</Text>
+							</Pressable>
+						) : (
+							<TextInput
+								// placeholder={quantitéIngredients}
+								autoFocus
+								style={styles.modalVisualisationTextInput}
+								value={quantitéIngredients}
+								onChangeText={e => handleModif(e)}
+								keyboardType="default"
+							/>
+						)}
+						<Text style={styles.modalVisualisationText}>Plats concernés :</Text>
+						{selection && selection.map((item, index) => <Text key={index}>{item}</Text>)}
 
-						<Pressable style={{
-										backgroundColor: '#d1dce8',
-										alignItems: 'center',
-										justifyContent: 'center',
-										marginHorizontal: 10,
-										marginVertical: 5,
-										borderRadius: 10,
-										height: 30,
-									}}>
-							<Text onPress={() => setModalVisible(false)} style={styles.text}>
-								QUITTER
-							</Text>
-						</Pressable>
+						<View style={{flexDirection: 'row'}}>
+							<Pressable
+								style={{
+									backgroundColor: '#F2EFEA',
+									alignItems: 'center',
+									justifyContent: 'center',
+									marginHorizontal: 10,
+									marginVertical: 5,
+									borderRadius: 10,
+									// height: 30,
+									padding: 10,
+									// position: "absolute",
+									// bottom:0
+								}}>
+								<Text onPress={validerModif} style={styles.text}>
+									Valider
+								</Text>
+							</Pressable>
+							<Pressable
+								style={{
+									backgroundColor: '#F2EFEA',
+									alignItems: 'center',
+									justifyContent: 'center',
+									marginHorizontal: 10,
+									marginVertical: 5,
+									borderRadius: 10,
+									// height: 30,
+									padding: 10,
+
+									// position: "absolute",
+									// bottom:0
+								}}>
+								<Text onPress={annulerModif} style={styles.text}>
+									Annuler
+								</Text>
+							</Pressable>
+						</View>
 					</View>
-				</Modal> */}
-				<Animated.View style={
-					[
+				</Modal>
+			);
+		};
+		return (
+			<View>
+				<ModalItemCourse />
+
+				<Animated.View
+					style={[
 						styles.item,
-						 {transform: [{scale: heightAnim}]},
-						{minHeight:selectionné?200:40}
-					]
-				}>
+						listeCourseFinale.length == 0 ? {transform: [{scale: scaleAnim}]} : null,
+
+						//  {minHeight: selectionné ? 200 : 40}
+					]}>
 					<Pressable style={{flex: 3}}>
-						<Text onPress={selectionnerItem} style={styles.text}>
-							{itemString}
-						</Text>
-						{selectionné&&selection.map((e)=><Text>
-						{e}
-							
-							</Text>)}
+						<View>
+							<Text onPress={selectionnerItem} style={styles.text}>
+								{itemString}
+							</Text>
+							{selectionné && selection.map(e => <Text>{e}</Text>)}
+						</View>
 					</Pressable>
-					<Icon name="shopping-cart" size={20} style={{paddingRight: 15}} color="#585a5e" onPress={acheter} />
-					<Icon name="trash" size={20} style={{paddingRight: 15}} color="#585a5e" />
+					<Icon name="shopping-cart" size={25} style={{paddingRight: 25}} color="#585a5e" onPress={acheter} />
+					<Icon name="trash" size={25} style={{paddingRight: 15}} color="#585a5e" onPress={supprimer} />
 				</Animated.View>
 			</View>
 		);
 	};
 
 	const calculQuantitéParUnité = _ingredients => {
+console.log("_ingredients")
+console.log(_ingredients)
+if(_ingredients.string) {
+	console.log("_ingredients.string")
+	console.log("_ingredients.string")
+	console.log("_ingredients.string")
+	console.log(_ingredients.string)
+	return _ingredients.string}
 		let quantitéAdditionnéEtCombiné = [];
 		let quantitéAdditionnéEtCombinéTemp = '';
 		let finalString = '';
 
-		// console.log(_ingredients.Ingredient);
 
 		const unitéUnique = [...new Set(_ingredients.quantité.map(e => e.unité))];
 		for (const iterator of unitéUnique) {
@@ -182,31 +277,116 @@ const ListeCourse = ({route}) => {
 		return finalString;
 	};
 
+	const acheter = (produitAAcheter, item, index) => {
+		// console.log('produitAAcheter');
+		// console.log('produitAAcheter');
+		// console.log('produitAAcheter');
+		// console.log('produitAAcheter');
+		// console.log('produitAAcheter');
+		// console.log(produitAAcheter);
+		// console.log('index');
+		// console.log(index);
+		// console.log('item');
+		// console.log(item);
+		// console.log('listeCourse');
+		// console.log(listeIngredientAAfficher);
+		let listeCourseTemp = [...listeIngredientAAfficher];
+		console.log(listeIngredientAAfficher.length);
+		listeCourseTemp.splice(index, 1);
+		console.log('listeCourseTemp');
+		console.log(listeCourseTemp);
+		setListeCourseFinale(listeCourseFinale => [...listeCourseFinale, produitAAcheter]);
+		setListeIngredientAAfficher(listeCourseTemp);
+	};
+	const supprimer = (produitASupprimer, item, index) => {
+		let listeCourseTemp = [...listeIngredientAAfficher];
+		listeCourseTemp.splice(index, 1);
+		setListeIngredientAAfficher(listeCourseTemp);
+	};
+	const modifierQtt = (produitASupprimer, item, index,modif) => {
+		
+		console.log(produitASupprimer, item, index,modif)
+		console.log(listeIngredientAAfficher)
+		let listeCourseTemp = [...listeIngredientAAfficher];
+		listeCourseTemp[index].string=modif
+		// let listeCourseTemp = [...listeIngredientAAfficher];
+		// listeCourseTemp.splice(index, 1);
+		setListeIngredientAAfficher(listeCourseTemp);
+	};
+	const Panier = () => {
+		const impressionCourses =()=>{
+			console.log(listeCourseFinale)
+			navigation.navigate('impressionCourse', {listeCourseFinale});
+
+
+		}
+		return (
+			<Pressable style={styles.panier} onPress={impressionCourses}>
+				<Icon name="shopping-basket" size={40} style={styles.panierIcone} color="#eb4034" />
+				<Text style={styles.panierQtt}>{listeCourseFinale.length}</Text>
+			</Pressable>
+		);
+	};
 	return (
-		<LinearGradient  colors={['#3d3c3a','#736e67']}  >
+		<LinearGradient colors={['#3d3c3a', '#736e67']}>
+			<ScrollView>
+				{listeIngredientAAfficher &&
+					listeIngredientAAfficher.map((item, index) => {
+						const delay = index * 10;
 
-		<ScrollView>
-			{listeIngredientAAfficher &&
-				listeIngredientAAfficher.map((item, index) => {
-					const delay = index * 10;
-
-					return (
-						<Ingredient
-							key={index}
-							item={item}
-							delay={delay}
-							itemString={calculQuantitéParUnité(item)}
-							selectionnerItem={() => selectionnerItem(item)}
-							acheter={() => console.log(calculQuantitéParUnité(item))}
-						/>
-					);
-				})}
-		</ScrollView>
+						return (
+							<Ingredient
+								key={index}
+								item={item}
+								delay={delay}
+								itemString={calculQuantitéParUnité(item)}
+								selectionnerItem={() => selectionnerItem(item)}
+								acheter={() => acheter(calculQuantitéParUnité(item), item, index)}
+								supprimer={() => supprimer(calculQuantitéParUnité(item), item, index)}
+								modifierQtt={(modif) => modifierQtt(calculQuantitéParUnité(item), item, index,modif)}
+							/>
+						);
+					})}
+			</ScrollView>
+			<Panier  />
 		</LinearGradient>
 	);
 };
 
 const styles = StyleSheet.create({
+	panier: {
+		position: 'absolute',
+		bottom: 30,
+		right: 30,
+		backgroundColor: '#F2EFEA',
+		// backgroundColor: 'white',
+		// justifyContent: 'center',
+		// alignItems: 'center',
+		height: windowWidth / 6,
+		width: windowWidth / 6,
+		borderRadius: 500,
+	},
+	panierIcone: {
+		position: 'relative',
+		left: 0,
+		top: '20%',
+		textAlignVertical: 'center',
+		textAlign: 'center',
+		// left: windowWidth / 30,
+		// backgroundColor: 'blue',
+	},
+	panierQtt: {
+		position: 'relative',
+		// position: 'absolute',
+		textAlignVertical: 'center',
+		textAlign: 'center',
+		bottom: '25%',
+		// left: windowWidth / 15,
+		left: 0,
+		fontSize: 30,
+		fontWeight: 'bold',
+	},
+
 	item: {
 		// height: '5%',
 		// backgroundColor: 'red',
@@ -240,18 +420,30 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		textAlign: 'center',
 		textAlignVertical: 'center',
-		justifyContent: 'center',
-		// display:'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		display: 'flex',
 		backgroundColor: 'white',
-		height: windowHeight / 4,
+		minHeight: windowHeight / 4,
 		width: windowWidth / 1.5,
 		fontSize: 20,
 		fontWeight: 'bold',
+		padding: 5,
 	},
 	modalVisualisationText: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
 		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#585a5e',
+	},
+	modalVisualisationTextInput: {
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		fontSize: 20,
+		borderWidth: 1,
+		borderRadius: 5,
+		backgroundColor: '#F2EFEA',
 		fontWeight: 'bold',
 		color: '#585a5e',
 	},

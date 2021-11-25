@@ -18,6 +18,7 @@ import {LogBox} from 'react-native';
 import HomeScreen from './HomeScreen';
 import NewPlat from './components/NewPlat';
 import Menu from './components/Menu';
+import ImpressionCourse from './components/ImpressionCourse';
 import UpdateUser from './UpdateUser';
 import ViewUser from './ViewUser';
 import ViewAllUser from './ViewAllUser';
@@ -45,7 +46,7 @@ const App = () => {
 				{/* <Stack.Screen name="Update" component={UpdateUser} /> */}
 				{/* <Stack.Screen name="View" component={ViewUser} /> */}
 				{/* <Stack.Screen name="ViewAll" component={ViewAllUser} /> */}
-				{/* <Stack.Screen name="Delete" component={DeleteUser} /> */}
+				<Stack.Screen name="impressionCourse" component={ImpressionCourse} />
 				<Stack.Screen name="filtreMenu" component={NewChoice} />
 				{/* <Stack.Screen name="newPlat" component={NewPlat} /> */}
 				<Stack.Screen name="listeCourse" component={ListeCourse} />

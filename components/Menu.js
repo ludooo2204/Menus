@@ -31,7 +31,6 @@ import axios from 'axios';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import LinearGradient from 'react-native-linear-gradient';
 
-
 console.log(NetInfo);
 
 const Menu = ({route, navigation}) => {
@@ -99,7 +98,7 @@ const Menu = ({route, navigation}) => {
 			}),
 		]).start();
 	}, [listePlatChoisi]);
-	
+
 	const totolasticot = () => {
 		Animated.sequence([
 			Animated.timing(animSwipe, {
@@ -114,6 +113,7 @@ const Menu = ({route, navigation}) => {
 			Animated.timing(animSwipe, {
 				toValue: 0,
 				duration: 100,
+
 				useNativeDriver: true,
 				// delay: 10,
 				// easing: Easing.bounce,
@@ -299,9 +299,9 @@ const Menu = ({route, navigation}) => {
 					name="bars"
 					size={35}
 					color={themes[theme].primaryColor}
-					onPress={() => setTheme(theme => (theme < themes.length - 1 ? theme + 1 : 0))}
+					// onPress={() => setTheme(theme => (theme < themes.length - 1 ? theme + 1 : 0))}
 				/>
-				<Text style={{fontSize: 16}}>{theme}</Text>
+				{/* <Text style={{fontSize: 16}}>{theme}</Text> */}
 				<Icon name="user" size={35} color={themes[theme].primaryColor} onPress={() => setModalUserVisible(true)} />
 				<Icon name={validee ? 'check-square-o' : 'square-o'} size={35} color={themes[theme].primaryColor} onPress={enregistrerSemaine} />
 				<Icon name="shopping-cart" size={35} color={themes[theme].primaryColor} onPress={preparationCourse} />
@@ -485,7 +485,7 @@ const Menu = ({route, navigation}) => {
 		console.log('BDDdatas');
 		console.log(bddDatas);
 		console.log(typeof bddDatas);
-		navigation.navigate('filtreMenu', { bdd: bddDatas,theme});
+		navigation.navigate('filtreMenu', {bdd: bddDatas, theme});
 		// navigation.navigate('filtreMenu', {paramsPlat, bdd: bddDatas});
 		setNumPlatDsSemaine(_numPlatDsSemaine);
 		let newArr = [...numPlatDsSemaineChoisi];
@@ -1084,16 +1084,9 @@ const Menu = ({route, navigation}) => {
 							<Animated.View
 								style={[
 									{flex: 30, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'},
+
 									{
-										transform: [
-											{scale: scaleMenu},
-											{
-												scale: animSwipe.interpolate({
-													inputRange: [0, 1],
-													outputRange: [1,1.02],
-												}),
-											},
-										],
+										transform: [{scale: scaleMenu}],
 									},
 								]}>
 								{/* {console.log('listePlatChoisi')}
@@ -1116,7 +1109,10 @@ const Menu = ({route, navigation}) => {
 												style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
 												onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
 												onLongPress={() => lockPlat(index)}>
-												<Text style={styles.textPlat}>
+												<Text
+													style={
+														styles.textPlat
+													}>
 													{item}
 
 													<Text style={{fontSize: 10, color: 'black'}}>
