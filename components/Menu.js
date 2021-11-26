@@ -12,7 +12,7 @@ import {
 	Modal,
 	ActivityIndicator,
 	Linking,
-	Button,
+TextInput,
 	Alert,
 	StyleSheet,
 } from 'react-native';
@@ -58,8 +58,25 @@ const Menu = ({route, navigation}) => {
 		false,
 		false,
 	]);
+	const [arrayModifierNbrRepas, setArrayModifierNbrRepas] = useState([
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+	]);
 	const [utilisateur, setUtilisateur] = useState(null);
 	const [modal1Visible, setModal1Visible] = useState(false);
+	const [modalModifierNbrRepasVisible, setModalModifierNbrRepasVisible] = useState(false);
 	const [modalSynchroMenuVisible, setModalSynchroMenuVisible] = useState(false);
 	const [modalConnectionVisible, setModalConnectionVisible] = useState(false);
 	const [modalPlatVisible, setModalPlatVisible] = useState(false);
@@ -68,7 +85,7 @@ const Menu = ({route, navigation}) => {
 	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
 	const [listeDoublon, setListeDoublon] = useState([]);
 	const [theme, setTheme] = useState(4);
-	const [ingredientsString, setIngredientsString] = useState("");
+	const [ingredientsString, setIngredientsString] = useState('');
 	const [value, setValuee] = useState(0); // pour forcer un refresh TEST!!!
 
 	const scaleMenu = React.useRef(new Animated.Value(0)).current;
@@ -145,7 +162,7 @@ const Menu = ({route, navigation}) => {
 					.then(reponse => reponse.json())
 					.then(data => {
 						// console.log('data from getPlats.php');
-						// console.log(data);
+						console.log(data);
 
 						storePlats(data);
 						setBddDatas(data);
@@ -182,6 +199,14 @@ const Menu = ({route, navigation}) => {
 		lireDatas(bddDatas);
 		if (bddDatas && !semaineDejaValidé) setListePlatChoisi(proposeMenu());
 	}, [bddDatas]);
+
+	useEffect(() => {
+		console.log(arrayModifierNbrRepas);
+		console.log(arrayModifierNbrRepas);
+		console.log(arrayModifierNbrRepas);
+		console.log(arrayModifierNbrRepas);
+	}, [arrayModifierNbrRepas]);
+
 	useEffect(() => {
 		if (listePlatChoisi && listePlatChoisi.length > 0) {
 			let doublon = [];
@@ -587,7 +612,7 @@ const Menu = ({route, navigation}) => {
 		// console.log(bddDatas.filter(e => e.nom_plat == _plat)[0]);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
-// Pour traiter les ingredients en string exploitable
+		// Pour traiter les ingredients en string exploitable
 		let listeIngredients = [];
 
 		// iterator.replace("\"","")
@@ -632,16 +657,15 @@ const Menu = ({route, navigation}) => {
 		}
 
 		// console.log(listeFinaleArray);
-		let stringArray=[]
-		let string=""
-		listeFinaleArray.map(e=>stringArray.push(calculQuantitéParUnité(e)))
+		let stringArray = [];
+		let string = '';
+		listeFinaleArray.map(e => stringArray.push(calculQuantitéParUnité(e)));
 		console.log(stringArray);
 		for (const iterator of stringArray) {
-			string+=iterator
-			string+="\n"
-
+			string += iterator;
+			string += '\n';
 		}
-setIngredientsString(string)
+		setIngredientsString(string);
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		setVisualisationPlat(bddDatas.filter(e => e.nom_plat == _plat)[0]);
@@ -793,7 +817,7 @@ setIngredientsString(string)
 			textAlignVertical: 'center',
 			margin: 10,
 			fontWeight: 'bold',
-			textDecorationLine:"underline",
+			textDecorationLine: 'underline',
 			color: themes[theme].primaryColor,
 		},
 		modalVisualisationTextLien: {
@@ -1003,6 +1027,20 @@ setIngredientsString(string)
 		},
 	});
 
+	const modifierNbrRepas = (item, index) => {
+		console.log(item);
+		console.log(index);
+		const doublonItem = listeDoublon.filter(e => e.plat == item)[0];
+
+		let newArr = [...arrayModifierNbrRepas];
+		newArr[index] = doublonItem.indexs.indexOf(index) + 1 + '/' + doublonItem.indexs.length;
+		setArrayModifierNbrRepas(newArr);
+
+		setModalModifierNbrRepasVisible(true);
+	};
+	const handleModif=()=>{
+		console.log("eded")
+	}
 	return (
 		<LinearGradient colors={['#736e67', '#e0dbb4', '#fffce8']}>
 			{/* <LinearGradient  colors={['#fffce8','#f5f1d5','#e0dbb4']} > */}
@@ -1055,7 +1093,7 @@ setIngredientsString(string)
 							<Modal animationType="slide" transparent={true} visible={modalSynchroMenuVisible}>
 								<View style={styles.modalTest}>
 									<Text style={styles.modalTestText}>
-										{`Attention : les menus ne sont pas les mêmes que ceux en ligne. le dernier enregistrement a été fait ${textEnregistrementPlat}.  Voulez-vous importer vos menus ou les exporter ?`}
+										{`Attention : les menus ne sont pas les mêmes que ceux en ligne. le dernier enregistrement a été fait le ${textEnregistrementPlat}.  Voulez-vous importer vos menus ou les exporter ?`}
 									</Text>
 									<Pressable
 										style={{
@@ -1068,7 +1106,7 @@ setIngredientsString(string)
 											height: 30,
 										}}
 										onPress={() => importerMenu()}>
-										<Text style={styles.textStyle}>importer</Text>
+										<Text style={styles.textStyle}>Importer</Text>
 									</Pressable>
 									<Pressable
 										style={{
@@ -1082,7 +1120,7 @@ setIngredientsString(string)
 											height: 30,
 										}}
 										onPress={() => exporterMenu()}>
-										<Text style={styles.textStyle}>exporter</Text>
+										<Text style={styles.textStyle}>Exporter</Text>
 									</Pressable>
 									<Pressable
 										style={{
@@ -1121,6 +1159,55 @@ setIngredientsString(string)
 										onPress={() => setModalConnectionVisible(false)}>
 										<Text style={styles.textStyle}>ok</Text>
 									</Pressable>
+								</View>
+							</Modal>
+							<Modal animationType="slide" transparent={true} visible={modalModifierNbrRepasVisible}>
+								<View style={styles.modalTest}>
+									<Text style={styles.modalTestText}>Modifier nombre de plat?</Text>
+
+<TextInput
+								// placeholder={quantitéIngredients}
+								autoFocus
+								style={styles.modalVisualisationTextInput}
+								value="toto"
+								onChangeText={e => handleModif(e)}
+								keyboardType="default"
+							/>
+									<View style={{flexDirection: 'row', margin: 10, marginTop: 25,justifyContent:"center"}}>
+										<Pressable
+											onPress={() => setModalModifierNbrRepasVisible(false)}
+											style={{
+												backgroundColor: '#F2EFEA',
+												alignItems: 'center',
+												justifyContent: 'center',
+												marginHorizontal: 10,
+												marginVertical: 5,
+												borderRadius: 10,
+												// height: 30,
+												padding: 10,
+												// position: "absolute",
+												// bottom:0
+											}}>
+											<Text style={styles.text}>Valider</Text>
+										</Pressable>
+										<Pressable
+											onPress={() => setModalModifierNbrRepasVisible(false)}
+											style={{
+												backgroundColor: '#F2EFEA',
+												alignItems: 'center',
+												justifyContent: 'center',
+												marginHorizontal: 10,
+												marginVertical: 5,
+												borderRadius: 10,
+												// height: 30,
+												padding: 10,
+
+												// position: "absolute",
+												// bottom:0
+											}}>
+											<Text style={styles.text}>Annuler</Text>
+										</Pressable>
+									</View>
 								</View>
 							</Modal>
 							<Modal animationType="slide" transparent={true} visible={modalUserVisible}>
@@ -1167,7 +1254,7 @@ setIngredientsString(string)
 							</Modal>
 							<Modal animationType="slide" transparent={true} visible={modalPlatVisible}>
 								<View style={styles.modalVisualisation}>
-									<Text style={styles.titre}>ingredients</Text>
+									<Text style={styles.titre}>Ingredients</Text>
 									<Text style={styles.modalVisualisationText}>{visualisationPlat ? ingredientsString : "pas d'ingredients?"}</Text>
 									<Text>{'\n'}</Text>
 									<View>
@@ -1225,7 +1312,7 @@ setIngredientsString(string)
 												key={Math.random()}
 												style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
 												onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
-												onLongPress={() => (semaineDejaValidé ? null : lockPlat(index))}>
+												onLongPress={() => (semaineDejaValidé ? modifierNbrRepas(item, index) : lockPlat(index))}>
 												<Text style={styles.textPlat}>
 													{item}
 

@@ -1,12 +1,12 @@
 import {transform} from '@babel/core';
 import React, {useState, useEffect} from 'react';
-import {View, ScrollView, Modal, StatusBar, Text, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
+import {View, ScrollView, Modal, StatusBar,TextInput, Text, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {themes} from './themes';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import {TextInput} from 'react-native-gesture-handler';
+// import {TextInput} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const ListeCourse = ({route,navigation}) => {
