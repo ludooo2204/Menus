@@ -68,12 +68,16 @@ const Menu = ({route, navigation}) => {
 	const [textEnregistrementPlat, setTextEnregistrementPlat] = useState('');
 	const [listeDoublon, setListeDoublon] = useState([]);
 	const [theme, setTheme] = useState(4);
+	const [ingredientsString, setIngredientsString] = useState("");
 	const [value, setValuee] = useState(0); // pour forcer un refresh TEST!!!
 
 	const scaleMenu = React.useRef(new Animated.Value(0)).current;
 	const tailleIcone = React.useRef(new Animated.Value(0)).current;
 	const animSwipe = React.useRef(new Animated.Value(0)).current;
 
+	useEffect(() => {
+		setNumPlatDsSemaineChoisi([false, false, false, false, false, false, false, false, false, false, false, false, false, false]);
+	}, [deltaSemaine]);
 	React.useEffect(() => {
 		// console.log(heightAnim);
 		// On anime notre valeur jusqu'à la hauteur de la fenetre
@@ -579,9 +583,112 @@ const Menu = ({route, navigation}) => {
 		setValuee(value => value + 1);
 	};
 	const visualiserPlat = _plat => {
-		console.log(_plat);
+		// console.log(_plat);
+		// console.log(bddDatas.filter(e => e.nom_plat == _plat)[0]);
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+// Pour traiter les ingredients en string exploitable
+		let listeIngredients = [];
+
+		// iterator.replace("\"","")
+		const temp = bddDatas.filter(e => e.nom_plat == _plat)[0].ingredients.split(',');
+		temp.pop();
+		for (let i = 0; i < temp.length; i++) {
+			const element = temp[i];
+			listeIngredients.push(temp[i]);
+		}
+
+		const listeCumulée = [...listeIngredients];
+		let arrayTemp = [];
+		let arrayTemp2 = [];
+		for (let i = 0; i < listeCumulée.length; i++) {
+			arrayTemp.push(listeCumulée[i]);
+			if (i % 3 == 2) {
+				arrayTemp2.push(arrayTemp);
+				arrayTemp = [];
+			}
+		}
+
+		const ingredientUnique = [...new Set(arrayTemp2.map(e => e[0]))];
+		// console.log(ingredientUnique);
+		let listeFinale = {};
+		for (const iterator of ingredientUnique) {
+			listeFinale[iterator] = [];
+			for (const j of arrayTemp2) {
+				if (iterator == j[0]) {
+					listeFinale[iterator].push({nbr: Number(j[1]), unité: j[2]});
+				}
+			}
+		}
+		console.log('listeFinale');
+		console.log(listeFinale);
+		const listeFinaleArray = [];
+		for (const key in listeFinale) {
+			if (Object.hasOwnProperty.call(listeFinale, key)) {
+				const element = listeFinale[key];
+				// console.log(element);
+				listeFinaleArray.push({Ingredient: key, quantité: listeFinale[key]});
+			}
+		}
+
+		// console.log(listeFinaleArray);
+		let stringArray=[]
+		let string=""
+		listeFinaleArray.map(e=>stringArray.push(calculQuantitéParUnité(e)))
+		console.log(stringArray);
+		for (const iterator of stringArray) {
+			string+=iterator
+			string+="\n"
+
+		}
+setIngredientsString(string)
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		setVisualisationPlat(bddDatas.filter(e => e.nom_plat == _plat)[0]);
 		setModalPlatVisible(true);
+	};
+
+	const calculQuantitéParUnité = _ingredients => {
+		console.log('_ingredients');
+		console.log(_ingredients);
+
+		let quantitéAdditionnéEtCombiné = [];
+		let quantitéAdditionnéEtCombinéTemp = '';
+		let finalString = '';
+
+		const unitéUnique = [...new Set(_ingredients.quantité.map(e => e.unité))];
+		console.log(unitéUnique);
+		for (const iterator of unitéUnique) {
+			let nouvelleQuantité = 0;
+			if (_ingredients.quantité.filter(unité => unité.unité == iterator).length > 0) {
+				// console.log(iterator);
+				// console.log('liste des quantités de meme unité');
+				// console.log(_ingredients.quantité.filter(unité => unité.unité == iterator));
+				for (const iterator2 of _ingredients.quantité.filter(unité => unité.unité == iterator)) {
+					nouvelleQuantité += iterator2.nbr;
+				}
+
+				// console.log('addition =', nouvelleQuantité+" "+iterator);
+				quantitéAdditionnéEtCombinéTemp = `${nouvelleQuantité} ${iterator == 'unité' ? '' : iterator}`;
+				quantitéAdditionnéEtCombiné.push(quantitéAdditionnéEtCombinéTemp);
+				// console.log(quantitéAdditionnéEtCombinéTemp, ' avec une longueur de ', quantitéAdditionnéEtCombinéTemp.length);
+			}
+		}
+		const arraySorted = quantitéAdditionnéEtCombiné.sort(function (a, b) {
+			return a.length - b.length;
+		});
+		for (let i = 0; i < arraySorted.length; i++) {
+			if (arraySorted[i].length > 3) {
+				arraySorted[i] = arraySorted[i] + ' de ';
+			}
+			finalString += arraySorted[i];
+			finalString += _ingredients.Ingredient;
+			finalString += arraySorted.length > 1 && i != arraySorted.length - 1 ? ' + ' : '';
+		}
+
+		// console.log(finalString);
+
+		return finalString;
 	};
 
 	const opacityAnim = React.useRef(new Animated.Value(0)).current;
@@ -668,7 +775,7 @@ const Menu = ({route, navigation}) => {
 			textAlignVertical: 'center',
 			justifyContent: 'center',
 			backgroundColor: 'white',
-			height: windowHeight / 2,
+			// height: windowHeight / 2,
 			width: windowWidth / 1.5,
 			fontSize: 20,
 			fontWeight: 'bold',
@@ -678,6 +785,15 @@ const Menu = ({route, navigation}) => {
 			textAlignVertical: 'center',
 			fontSize: 20,
 			fontWeight: 'bold',
+			color: themes[theme].primaryColor,
+		},
+		titre: {
+			fontSize: 30,
+			textAlign: 'center',
+			textAlignVertical: 'center',
+			margin: 10,
+			fontWeight: 'bold',
+			textDecorationLine:"underline",
 			color: themes[theme].primaryColor,
 		},
 		modalVisualisationTextLien: {
@@ -886,6 +1002,7 @@ const Menu = ({route, navigation}) => {
 			height: windowHeight / 10,
 		},
 	});
+
 	return (
 		<LinearGradient colors={['#736e67', '#e0dbb4', '#fffce8']}>
 			{/* <LinearGradient  colors={['#fffce8','#f5f1d5','#e0dbb4']} > */}
@@ -1050,11 +1167,11 @@ const Menu = ({route, navigation}) => {
 							</Modal>
 							<Modal animationType="slide" transparent={true} visible={modalPlatVisible}>
 								<View style={styles.modalVisualisation}>
-									<Text>ingredients</Text>
-									<Text style={styles.modalVisualisationText}>{visualisationPlat ? visualisationPlat.ingredients : "pas d'ingredients?"}</Text>
+									<Text style={styles.titre}>ingredients</Text>
+									<Text style={styles.modalVisualisationText}>{visualisationPlat ? ingredientsString : "pas d'ingredients?"}</Text>
 									<Text>{'\n'}</Text>
 									<View>
-										<Text>Recette :</Text>
+										<Text style={styles.titre}>Recette :</Text>
 										{visualisationPlat && visualisationPlat.url ? (
 											<Pressable onPress={visualisationPlat ? () => Linking.openURL(visualisationPlat.url) : null}>
 												<Text style={styles.modalVisualisationTextLien}>{visualisationPlat.url}</Text>
@@ -1108,11 +1225,8 @@ const Menu = ({route, navigation}) => {
 												key={Math.random()}
 												style={numPlatDsSemaineChoisi[index] ? styles.platLocked : styles.plat}
 												onPress={() => (semaineDejaValidé ? visualiserPlat(item) : filtreMenus(item, index))}
-												onLongPress={() => lockPlat(index)}>
-												<Text
-													style={
-														styles.textPlat
-													}>
+												onLongPress={() => (semaineDejaValidé ? null : lockPlat(index))}>
+												<Text style={styles.textPlat}>
 													{item}
 
 													<Text style={{fontSize: 10, color: 'black'}}>

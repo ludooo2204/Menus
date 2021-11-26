@@ -162,8 +162,9 @@ const ListeCourse = ({route,navigation}) => {
 						<Text style={styles.modalVisualisationText}>Plats concernés :</Text>
 						{selection && selection.map((item, index) => <Text key={index}>{item}</Text>)}
 
-						<View style={{flexDirection: 'row'}}>
+						<View style={{flexDirection: 'row',margin:10,marginTop:25}}>
 							<Pressable
+							 onPress={validerModif}
 								style={{
 									backgroundColor: '#F2EFEA',
 									alignItems: 'center',
@@ -176,11 +177,12 @@ const ListeCourse = ({route,navigation}) => {
 									// position: "absolute",
 									// bottom:0
 								}}>
-								<Text onPress={validerModif} style={styles.text}>
+								<Text style={styles.text}>
 									Valider
 								</Text>
 							</Pressable>
 							<Pressable
+							onPress={annulerModif}
 								style={{
 									backgroundColor: '#F2EFEA',
 									alignItems: 'center',
@@ -194,7 +196,7 @@ const ListeCourse = ({route,navigation}) => {
 									// position: "absolute",
 									// bottom:0
 								}}>
-								<Text onPress={annulerModif} style={styles.text}>
+								<Text  style={styles.text}>
 									Annuler
 								</Text>
 							</Pressable>
@@ -425,15 +427,17 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		backgroundColor: 'white',
 		minHeight: windowHeight / 4,
+
 		width: windowWidth / 1.5,
 		fontSize: 20,
 		fontWeight: 'bold',
-		padding: 5,
+		paddingTop: 25,
 	},
 	modalVisualisationText: {
 		textAlign: 'center',
 		textAlignVertical: 'center',
-		fontSize: 20,
+		fontSize: 25,
+		marginVertical:20,
 		fontWeight: 'bold',
 		color: '#585a5e',
 	},

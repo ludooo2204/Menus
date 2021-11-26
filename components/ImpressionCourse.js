@@ -89,6 +89,7 @@ const ImpressionCourse = ({route}) => {
 			fontSize: 30,
 			textAlign: 'center',
 			margin: 10,
+			
 		},
 	});
 	return (
